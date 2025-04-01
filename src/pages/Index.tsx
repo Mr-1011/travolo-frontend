@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 // Common components
 import PrivacyLevel from '@/components/PrivacyLevel';
@@ -85,11 +84,7 @@ const sampleConversationQuestions = [
   "What aspects of a destination are most important to you?"
 ];
 
-// Sample Recommendations
 const generateRecommendations = (preferences: UserPreferences, privacyLevel: PrivacyLevelType): Recommendation[] => {
-  // This is a simplified mock function
-  // In a real app, this would call an API with the user's preferences
-  
   const sampleRecommendations: Recommendation[] = [
     {
       id: 'santorini',
@@ -142,35 +137,27 @@ const generateRecommendations = (preferences: UserPreferences, privacyLevel: Pri
 };
 
 const Index = () => {
-  // State for managing the current stage and privacy level
   const [currentStage, setCurrentStage] = useState<Stage>(1);
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevelType>('minimal');
   const [showRecommendations, setShowRecommendations] = useState(false);
   
-  // User preferences for all stages
   const [preferences, setPreferences] = useState<UserPreferences>({
-    // Stage 1
     theme: '',
     temperature: [20],
     region: '',
     
-    // Stage 2
     activities: [],
     budget: '',
     duration: '',
     mood: '',
     
-    // Stage 3
     destinationRatings: {},
     
-    // Stage 4
     conversationInsights: [],
     
-    // Stage 5
     photos: []
   });
   
-  // State for chat in Stage 4
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -180,10 +167,8 @@ const Index = () => {
   ]);
   const [isTyping, setIsTyping] = useState(false);
   
-  // Recommendations
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   
-  // Stage progression handlers
   const handleContinueToNextStage = () => {
     const nextStage = (currentStage + 1) as Stage;
     setCurrentStage(nextStage);
@@ -207,7 +192,6 @@ const Index = () => {
   };
   
   const handleGetRecommendations = () => {
-    // Generate recommendations based on current preferences
     const newRecommendations = generateRecommendations(preferences, privacyLevel);
     setRecommendations(newRecommendations);
     setShowRecommendations(true);
@@ -218,12 +202,10 @@ const Index = () => {
   };
   
   const handleRegenerateRecommendations = () => {
-    // Regenerate recommendations (this could have some randomness in a real app)
     const newRecommendations = generateRecommendations(preferences, privacyLevel);
     setRecommendations(newRecommendations);
   };
   
-  // Stage 1 handlers
   const handleThemeSelect = (theme: string) => {
     setPreferences(prev => ({ ...prev, theme }));
   };
@@ -236,7 +218,6 @@ const Index = () => {
     setPreferences(prev => ({ ...prev, region }));
   };
   
-  // Stage 2 handlers
   const handleActivityToggle = (activityId: string) => {
     setPreferences(prev => {
       const activities = [...prev.activities];
@@ -264,7 +245,6 @@ const Index = () => {
     setPreferences(prev => ({ ...prev, mood }));
   };
   
-  // Stage 3 handlers
   const handleDestinationRatingChange = (destinationId: string, rating: number) => {
     setPreferences(prev => ({
       ...prev,
@@ -275,9 +255,7 @@ const Index = () => {
     }));
   };
   
-  // Stage 4 handlers
   const handleSendMessage = (message: string) => {
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       text: message,
@@ -287,9 +265,7 @@ const Index = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
     
-    // Simulate AI response (in a real app, this would call an API)
     setTimeout(() => {
-      // Get a random question from the sample questions
       const randomQuestion = sampleConversationQuestions[
         Math.floor(Math.random() * sampleConversationQuestions.length)
       ];
@@ -303,7 +279,6 @@ const Index = () => {
       setMessages(prev => [...prev, aiMessage]);
       setIsTyping(false);
       
-      // Save insights (simplified for this demo)
       setPreferences(prev => ({
         ...prev,
         conversationInsights: [...prev.conversationInsights, message]
@@ -311,12 +286,10 @@ const Index = () => {
     }, 1500);
   };
   
-  // Stage 5 handlers
   const handlePhotoUpload = (photos: string[]) => {
     setPreferences(prev => ({ ...prev, photos }));
   };
 
-  // Render the appropriate stage based on currentStage
   const renderCurrentStage = () => {
     if (showRecommendations) {
       return (
@@ -332,7 +305,7 @@ const Index = () => {
     switch(currentStage) {
       case 1:
         return (
-          <>
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <ThemeSelector 
               selectedTheme={preferences.theme}
               onThemeSelect={handleThemeSelect}
@@ -352,12 +325,12 @@ const Index = () => {
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
             />
-          </>
+          </div>
         );
         
       case 2:
         return (
-          <>
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <ActivitySelector 
               selectedActivities={preferences.activities}
               onActivityToggle={handleActivityToggle}
@@ -382,12 +355,12 @@ const Index = () => {
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
             />
-          </>
+          </div>
         );
         
       case 3:
         return (
-          <>
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <DestinationRating 
               destinations={destinations}
               ratings={preferences.destinationRatings}
@@ -398,12 +371,12 @@ const Index = () => {
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
             />
-          </>
+          </div>
         );
         
       case 4:
         return (
-          <>
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <ConversationInput 
               messages={messages}
               onSendMessage={handleSendMessage}
@@ -414,12 +387,12 @@ const Index = () => {
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
             />
-          </>
+          </div>
         );
         
       case 5:
         return (
-          <>
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <PhotoUpload 
               photos={preferences.photos}
               onPhotoUpload={handlePhotoUpload}
@@ -429,7 +402,7 @@ const Index = () => {
               onGetRecommendations={handleGetRecommendations}
               isFinalStage={true}
             />
-          </>
+          </div>
         );
         
       default:
@@ -439,9 +412,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <header className="bg-white shadow-sm">
+      <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-travel-dark">Travel Preference Tapestry</h1>
+          <h1 className="text-2xl font-bold text-travel-red">Travolo</h1>
           {!showRecommendations && <PrivacyLevel level={privacyLevel} />}
         </div>
       </header>
@@ -449,7 +422,7 @@ const Index = () => {
       <main className="container py-8">
         {!showRecommendations && (
           <div className="mb-8 text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-travel-dark">
               {currentStage === 1 && "Let's find your perfect destination"}
               {currentStage === 2 && "Tell us more about your preferences"}
               {currentStage === 3 && "Rate these vacation ideas"}
@@ -463,6 +436,19 @@ const Index = () => {
               {currentStage === 4 && "A quick conversation will help us better understand your preferences."}
               {currentStage === 5 && "Sharing vacation photos helps us recommend the most personalized destinations."}
             </p>
+            
+            <div className="flex justify-center mt-6 mb-2">
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((stage) => (
+                  <div 
+                    key={stage}
+                    className={`w-3 h-3 rounded-full ${
+                      stage <= currentStage ? 'bg-travel-teal' : 'bg-gray-300'
+                    } ${stage === currentStage ? 'w-4 h-4' : ''}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
         
@@ -473,7 +459,7 @@ const Index = () => {
       
       <footer className="bg-travel-dark text-white py-4 mt-auto">
         <div className="container text-center">
-          <p>Travel Preference Tapestry &copy; {new Date().getFullYear()}</p>
+          <p>Travolo &copy; {new Date().getFullYear()} — Find your perfect trip</p>
         </div>
       </footer>
     </div>

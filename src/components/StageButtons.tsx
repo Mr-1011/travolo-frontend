@@ -17,7 +17,7 @@ const StageButtons: React.FC<StageButtonsProps> = ({
     <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full">
       <Button 
         onClick={onGetRecommendations}
-        className="flex-1 bg-travel-teal hover:bg-travel-teal/90 text-white"
+        className="flex-1 bg-travel-red hover:bg-travel-red/90 text-white font-medium rounded-lg py-3 px-4"
       >
         🔍 {isFinalStage ? 'See Your Fully Personalized Recommendations' : 'See Recommendations Now'}
       </Button>
@@ -25,7 +25,7 @@ const StageButtons: React.FC<StageButtonsProps> = ({
       {!isFinalStage && onContinue && (
         <Button 
           onClick={onContinue}
-          className="flex-1 bg-travel-gold hover:bg-travel-gold/90 text-travel-dark"
+          className="flex-1 bg-travel-teal hover:bg-travel-teal/90 text-white font-medium rounded-lg py-3 px-4"
         >
           ✨ Continue (Better Personalization)
         </Button>
