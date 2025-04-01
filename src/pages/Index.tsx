@@ -499,12 +499,6 @@ const Index = () => {
           {renderCurrentStage()}
         </div>
       </main>
-      
-      <footer className="bg-travel-dark text-white py-4 mt-auto">
-        <div className="container text-center">
-          <p>Travolo &copy; {new Date().getFullYear()} — Find your perfect trip</p>
-        </div>
-      </footer>
     </div>
   );
 };
