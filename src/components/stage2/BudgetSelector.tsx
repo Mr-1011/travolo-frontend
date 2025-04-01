@@ -44,8 +44,8 @@ const BudgetSelector: React.FC<BudgetSelectorProps> = ({ selectedBudget, onBudge
             key={budget.id}
             className={`p-4 rounded-lg cursor-pointer transition-all ${
               selectedBudget === budget.id
-                ? 'bg-travel-teal/20 border-2 border-travel-teal'
-                : 'bg-white border border-gray-200 hover:border-travel-teal/50'
+                ? 'bg-blue-50 border-2 border-travel-blue'
+                : 'bg-white border border-gray-200 hover:border-travel-blue/50'
             }`}
             onClick={() => onBudgetSelect(budget.id)}
           >

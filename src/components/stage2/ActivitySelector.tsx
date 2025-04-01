@@ -29,8 +29,8 @@ const ActivitySelector: React.FC<ActivitySelectorProps> = ({ selectedActivities,
 
   return (
     <div className="w-full">
-      <h3 className="text-xl font-semibold mb-2">Drag your ideal activities into your suitcase</h3>
-      <p className="text-gray-500 mb-4">Select the activities you enjoy most while traveling</p>
+      <h3 className="text-xl font-semibold mb-2">Select your ideal activities</h3>
+      <p className="text-gray-500 mb-4">Choose the activities you enjoy most while traveling</p>
       
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -39,7 +39,7 @@ const ActivitySelector: React.FC<ActivitySelectorProps> = ({ selectedActivities,
               key={activity.id}
               className={`flex items-center p-3 rounded-md cursor-pointer transition-all ${
                 selectedActivities.includes(activity.id)
-                  ? 'bg-travel-teal text-white'
+                  ? 'bg-travel-blue text-white'
                   : 'bg-gray-50 hover:bg-gray-100'
               }`}
               onClick={() => onActivityToggle(activity.id)}

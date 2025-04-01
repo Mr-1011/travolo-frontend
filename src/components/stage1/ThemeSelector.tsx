@@ -30,7 +30,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ selectedTheme, onThemeSel
           <div
             key={theme.id}
             className={`theme-card ${
-              selectedTheme === theme.id ? 'border-2 border-travel-teal bg-travel-teal/10' : ''
+              selectedTheme === theme.id ? 'border-2 border-travel-blue bg-blue-50' : ''
             }`}
             onClick={() => onThemeSelect(theme.id)}
           >

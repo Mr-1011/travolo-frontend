@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwind-config";
 
 export default {
@@ -53,12 +54,13 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         travel: {
-          blue: "#1EAEDB",
-          darkBlue: "#156F8F",
+          blue: "#3c83f6", // Updated to the specified blue
+          darkBlue: "#1e60c8", // Darker shade of the specified blue
           light: "#F8F9FA",
           lightGray: "#E9ECEF",
           dark: "#333333",
           accent: "#F5A623",
+          teal: "#3c83f6", // Updated to the specified blue (previously used for teal)
         },
       },
       borderRadius: {

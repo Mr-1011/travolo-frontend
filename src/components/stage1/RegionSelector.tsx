@@ -31,7 +31,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onRegio
             key={region.id}
             className={`py-2 px-4 rounded-md transition-all ${
               selectedRegion === region.id
-                ? 'bg-travel-teal text-white'
+                ? 'bg-travel-blue text-white font-medium'
                 : 'bg-white hover:bg-gray-100 border border-gray-200'
             }`}
             onClick={() => onRegionSelect(region.id)}
