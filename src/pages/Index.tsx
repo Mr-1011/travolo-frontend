@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PrivacyLevel from '@/components/PrivacyLevel';
 import StageButtons from '@/components/StageButtons';
 import RecommendationsView from '@/components/RecommendationsView';
+import TitleScreen from '@/components/TitleScreen';
 
 // Stage 1 components
 import ThemeSelector from '@/components/stage1/ThemeSelector';
@@ -137,6 +138,7 @@ const generateRecommendations = (preferences: UserPreferences, privacyLevel: Pri
 };
 
 const Index = () => {
+  const [showTitleScreen, setShowTitleScreen] = useState(true);
   const [currentStage, setCurrentStage] = useState<Stage>(1);
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevelType>('minimal');
   const [showRecommendations, setShowRecommendations] = useState(false);
@@ -169,6 +171,10 @@ const Index = () => {
   
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   
+  const handleStartApp = () => {
+    setShowTitleScreen(false);
+  };
+  
   const handleContinueToNextStage = () => {
     const nextStage = (currentStage + 1) as Stage;
     setCurrentStage(nextStage);
@@ -188,6 +194,30 @@ const Index = () => {
         break;
       default:
         break;
+    }
+  };
+  
+  const handleBackToPreviousStage = () => {
+    if (currentStage > 1) {
+      const previousStage = (currentStage - 1) as Stage;
+      setCurrentStage(previousStage);
+      
+      switch(previousStage) {
+        case 1:
+          setPrivacyLevel('minimal');
+          break;
+        case 2:
+          setPrivacyLevel('low');
+          break;
+        case 3:
+          setPrivacyLevel('medium');
+          break;
+        case 4:
+          setPrivacyLevel('high');
+          break;
+        default:
+          break;
+      }
     }
   };
   
@@ -291,6 +321,10 @@ const Index = () => {
   };
 
   const renderCurrentStage = () => {
+    if (showTitleScreen) {
+      return <TitleScreen onStart={handleStartApp} />;
+    }
+    
     if (showRecommendations) {
       return (
         <RecommendationsView 
@@ -324,6 +358,7 @@ const Index = () => {
             <StageButtons 
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
+              currentStage={currentStage}
             />
           </div>
         );
@@ -354,6 +389,8 @@ const Index = () => {
             <StageButtons 
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
+              onBack={handleBackToPreviousStage}
+              currentStage={currentStage}
             />
           </div>
         );
@@ -370,6 +407,8 @@ const Index = () => {
             <StageButtons 
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
+              onBack={handleBackToPreviousStage}
+              currentStage={currentStage}
             />
           </div>
         );
@@ -386,6 +425,8 @@ const Index = () => {
             <StageButtons 
               onGetRecommendations={handleGetRecommendations}
               onContinue={handleContinueToNextStage}
+              onBack={handleBackToPreviousStage}
+              currentStage={currentStage}
             />
           </div>
         );
@@ -400,7 +441,9 @@ const Index = () => {
             
             <StageButtons 
               onGetRecommendations={handleGetRecommendations}
+              onBack={handleBackToPreviousStage}
               isFinalStage={true}
+              currentStage={currentStage}
             />
           </div>
         );
@@ -414,13 +457,13 @@ const Index = () => {
     <div className="min-h-screen w-full">
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-travel-red">Travolo</h1>
-          {!showRecommendations && <PrivacyLevel level={privacyLevel} />}
+          <h1 className="text-2xl font-bold text-travel-blue">Travolo</h1>
+          {!showRecommendations && !showTitleScreen && <PrivacyLevel level={privacyLevel} />}
         </div>
       </header>
       
       <main className="container py-8">
-        {!showRecommendations && (
+        {!showRecommendations && !showTitleScreen && (
           <div className="mb-8 text-center max-w-2xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-travel-dark">
               {currentStage === 1 && "Let's find your perfect destination"}
@@ -443,7 +486,7 @@ const Index = () => {
                   <div 
                     key={stage}
                     className={`w-3 h-3 rounded-full ${
-                      stage <= currentStage ? 'bg-travel-teal' : 'bg-gray-300'
+                      stage <= currentStage ? 'bg-travel-blue' : 'bg-gray-300'
                     } ${stage === currentStage ? 'w-4 h-4' : ''}`}
                   />
                 ))}

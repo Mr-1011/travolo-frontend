@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwind-config";
 
 export default {
@@ -53,15 +52,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom Travel App Colors
         travel: {
-          teal: "#2A9D8F",
-          dark: "#264653",
-          gold: "#E9C46A",
-          orange: "#F4A261",
-          red: "#E76F51",
+          blue: "#1EAEDB",
+          darkBlue: "#156F8F",
           light: "#F8F9FA",
           lightGray: "#E9ECEF",
+          dark: "#333333",
+          accent: "#F5A623",
         },
       },
       borderRadius: {
