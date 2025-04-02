@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
 import { ProgressIndicator } from '@/components/ProgressIndicator';
@@ -29,7 +28,7 @@ type StepDisplayProps = {
     handleRegionChange: (regions: string[]) => void;
     handleBudgetSelect: (budget: string) => void;
     handleDestinationRatingChange: (destinationId: string, rating: number) => void;
-    handlePhotoChange: (photos: {url: string; caption: string}[]) => void;
+    handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handleSendMessage: (message: string) => void;
   };
   isCurrentStepValid: boolean;
@@ -52,9 +51,9 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   onGetRecommendations,
 }) => {
   const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
-  
+
   const renderStepContent = () => {
-    switch(currentStep) {
+    switch (currentStep) {
       case 'travel-themes':
         return (
           <TravelThemesStep
@@ -62,17 +61,15 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onThemesChange={handlers.handleThemesChange}
           />
         );
-        
+
       case 'preferred-weather':
         return (
           <WeatherPreferenceStep
-            weatherPreference={preferences.weatherPreference}
             temperatureRange={preferences.temperatureRange}
-            onWeatherPreferenceChange={handlers.handleWeatherPreferenceChange}
             onTemperatureRangeChange={handlers.handleTemperatureRangeChange}
           />
         );
-        
+
       case 'travel-months':
         return (
           <TravelMonthsStep
@@ -80,7 +77,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onMonthsChange={handlers.handleMonthsChange}
           />
         );
-        
+
       case 'travel-duration':
         return (
           <TravelDurationStep
@@ -88,7 +85,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onDurationSelect={handlers.handleDurationSelect}
           />
         );
-        
+
       case 'preferred-region':
         return (
           <PreferredRegionStep
@@ -96,7 +93,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onRegionChange={handlers.handleRegionChange}
           />
         );
-        
+
       case 'travel-budget':
         return (
           <TravelBudgetStep
@@ -104,7 +101,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onBudgetSelect={handlers.handleBudgetSelect}
           />
         );
-        
+
       case 'rate-destinations':
         return (
           <DestinationRatingStep
@@ -113,7 +110,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onRatingChange={handlers.handleDestinationRatingChange}
           />
         );
-        
+
       case 'upload-photo':
         return (
           <PhotoUploadStep
@@ -121,16 +118,17 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onPhotoChange={handlers.handlePhotoChange}
           />
         );
-        
+
       case 'refine-preferences':
         return (
           <RefinePreferencesStep
             messages={messages}
             isLoading={isTyping}
             onSendMessage={handlers.handleSendMessage}
+            preferences={preferences}
           />
         );
-        
+
       default:
         return null;
     }
@@ -139,16 +137,16 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   return (
     <div className="flex flex-col h-full bg-white rounded-xl shadow-md">
       <div className="p-6 flex-1 overflow-y-auto">
-        <ProgressIndicator 
-          currentStep={currentStep} 
-          steps={questionSteps} 
+        <ProgressIndicator
+          currentStep={currentStep}
+          steps={questionSteps}
         />
-        
+
         <div className="my-4">
           {renderStepContent()}
         </div>
       </div>
-      
+
       <QuestionNavigation
         currentStep={currentStep}
         onNextStep={onNextStep}

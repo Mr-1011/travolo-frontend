@@ -4,9 +4,7 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cn } from "@/lib/utils";
 
 type WeatherPreferenceStepProps = {
-  weatherPreference: 'warm' | 'cool' | 'specific-range';
   temperatureRange: number[];
-  onWeatherPreferenceChange: (preference: 'warm' | 'cool' | 'specific-range') => void;
   onTemperatureRangeChange: (range: number[]) => void;
 };
 
@@ -38,8 +36,8 @@ const WeatherPreferenceStep: React.FC<WeatherPreferenceStepProps> = ({
                 <SliderPrimitive.Root
                   className="relative flex w-full touch-none select-none items-center"
                   value={temperatureRange}
-                  min={5}
-                  max={35}
+                  min={-10}
+                  max={40}
                   step={1}
                   onValueChange={onTemperatureRangeChange}
                 >
@@ -60,8 +58,8 @@ const WeatherPreferenceStep: React.FC<WeatherPreferenceStepProps> = ({
               </div>
 
               <div className="flex justify-between text-sm text-gray-500 mt-1">
-                <span>Cold (5°C)</span>
-                <span>Hot (35°C)</span>
+                <span>Very Cold (-10°C)</span>
+                <span>Very Hot (40°C)</span>
               </div>
 
               <p className="text-center mt-6 text-gray-600">

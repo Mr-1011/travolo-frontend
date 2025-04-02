@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Components
 import PageLayout from '@/components/layout/PageLayout';
 import TitleScreen from '@/components/TitleScreen';
@@ -8,6 +7,7 @@ import StepDisplay from '@/components/steps/StepDisplay';
 
 // Utilities & Hooks
 import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { usePersistedStep } from '@/hooks/usePersistedState';
 import { destinations } from '@/utils/recommendationUtils';
 
 // Types
@@ -26,10 +26,30 @@ const questionSteps = [
 ];
 
 const Index = () => {
-  const [showTitleScreen, setShowTitleScreen] = useState(true);
-  const [currentStep, setCurrentStep] = useState<QuestionStep>('travel-themes');
-  const [showRecommendations, setShowRecommendations] = useState(false);
-  
+  // Use persisted state for showTitleScreen
+  const [showTitleScreen, setShowTitleScreen] = useState<boolean>(() => {
+    const storedValue = localStorage.getItem('travel_app_showTitleScreen');
+    return storedValue ? JSON.parse(storedValue) : true;
+  });
+
+  // Use persisted state for currentStep
+  const [currentStep, setCurrentStep] = usePersistedStep('travel-themes' as QuestionStep);
+
+  // Use persisted state for showRecommendations
+  const [showRecommendations, setShowRecommendations] = useState<boolean>(() => {
+    const storedValue = localStorage.getItem('travel_app_showRecommendations');
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  // Save showTitleScreen and showRecommendations to localStorage
+  useEffect(() => {
+    localStorage.setItem('travel_app_showTitleScreen', JSON.stringify(showTitleScreen));
+  }, [showTitleScreen]);
+
+  useEffect(() => {
+    localStorage.setItem('travel_app_showRecommendations', JSON.stringify(showRecommendations));
+  }, [showRecommendations]);
+
   const {
     preferences,
     messages,
@@ -38,49 +58,66 @@ const Index = () => {
     handlers,
     isCurrentStepValid
   } = useUserPreferences();
-  
+
   const handleStartApp = () => {
     setShowTitleScreen(false);
   };
-  
+
   const handleNextStep = () => {
     const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
     if (currentIndex < questionSteps.length - 1) {
       setCurrentStep(questionSteps[currentIndex + 1].id);
     }
   };
-  
+
   const handlePreviousStep = () => {
     const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
     if (currentIndex > 0) {
       setCurrentStep(questionSteps[currentIndex - 1].id);
     }
   };
-  
+
   const handleGetRecommendations = () => {
     handlers.handleGetRecommendations();
     setShowRecommendations(true);
   };
-  
+
   const handleBackToPreferences = () => {
     setShowRecommendations(false);
   };
-  
+
+  const handleRestartProcess = () => {
+    // Reset all user preferences
+    handlers.resetAllPreferences();
+
+    // Go back to the first step
+    setCurrentStep('travel-themes' as QuestionStep);
+
+    // Close recommendations view
+    setShowRecommendations(false);
+
+    // Clear URL parameters except for step=1
+    const url = new URL(window.location.href);
+    url.search = '?step=1';
+    window.history.replaceState({}, '', url.toString());
+  };
+
   const renderContent = () => {
     if (showTitleScreen) {
       return <TitleScreen onStart={handleStartApp} />;
     }
-    
+
     if (showRecommendations) {
       return (
-        <RecommendationsView 
+        <RecommendationsView
           recommendations={recommendations}
           onRegenerateRecommendations={handlers.handleRegenerateRecommendations}
           onBackToForm={handleBackToPreferences}
+          onRestartProcess={handleRestartProcess}
         />
       );
     }
-    
+
     return (
       <StepDisplay
         currentStep={currentStep}
