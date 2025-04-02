@@ -137,25 +137,27 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-8 h-[550px] flex flex-col">
+    <div className="bg-white rounded-xl shadow-md p-6 mb-8 flex flex-col h-full min-h-[600px]">
       <ProgressIndicator 
         currentStep={currentStep} 
         steps={questionSteps} 
       />
       
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto my-4">
         {renderStepContent()}
       </div>
       
-      <QuestionNavigation
-        currentStep={currentStep}
-        onNextStep={onNextStep}
-        onPreviousStep={onPreviousStep}
-        onGetRecommendations={onGetRecommendations}
-        isFirstStep={currentStep === questionSteps[0].id}
-        isLastStep={currentStep === questionSteps[questionSteps.length - 1].id}
-        isCurrentStepValid={isCurrentStepValid}
-      />
+      <div className="mt-auto pt-4">
+        <QuestionNavigation
+          currentStep={currentStep}
+          onNextStep={onNextStep}
+          onPreviousStep={onPreviousStep}
+          onGetRecommendations={onGetRecommendations}
+          isFirstStep={currentStep === questionSteps[0].id}
+          isLastStep={currentStep === questionSteps[questionSteps.length - 1].id}
+          isCurrentStepValid={isCurrentStepValid}
+        />
+      </div>
     </div>
   );
 };
