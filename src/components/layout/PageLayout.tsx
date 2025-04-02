@@ -20,16 +20,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, navigationBar }) => {
           {children}
         </div>
       </main>
-
-      {navigationBar && (
-        <div className="sticky bottom-0 left-0 right-0 z-10 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
-          <div className="container">
-            <div className="max-w-4xl mx-auto">
-              {navigationBar}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

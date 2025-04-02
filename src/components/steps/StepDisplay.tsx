@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
 import { ProgressIndicator } from '@/components/ProgressIndicator';
@@ -136,19 +137,27 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="bg-white rounded-xl shadow-md flex-1 overflow-y-auto">
-        <div className="p-6">
-          <ProgressIndicator 
-            currentStep={currentStep} 
-            steps={questionSteps} 
-          />
-          
-          <div className="my-4">
-            {renderStepContent()}
-          </div>
+    <div className="flex flex-col h-full bg-white rounded-xl shadow-md">
+      <div className="p-6 flex-1 overflow-y-auto">
+        <ProgressIndicator 
+          currentStep={currentStep} 
+          steps={questionSteps} 
+        />
+        
+        <div className="my-4">
+          {renderStepContent()}
         </div>
       </div>
+      
+      <QuestionNavigation
+        currentStep={currentStep}
+        onNextStep={onNextStep}
+        onPreviousStep={onPreviousStep}
+        onGetRecommendations={onGetRecommendations}
+        isFirstStep={currentStep === questionSteps[0].id}
+        isLastStep={currentStep === questionSteps[questionSteps.length - 1].id}
+        isCurrentStepValid={isCurrentStepValid}
+      />
     </div>
   );
 };
