@@ -10,7 +10,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-xl border bg-card text-card-foreground shadow-md overflow-hidden",
       className
     )}
     {...props}
@@ -77,4 +77,31 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+const CardImage = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { src: string; alt?: string }
+>(({ className, src, alt = "", ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("relative h-48 w-full overflow-hidden", className)}
+    {...props}
+  >
+    <img
+      src={src}
+      alt={alt}
+      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+  </div>
+))
+CardImage.displayName = "CardImage"
+
+export { 
+  Card, 
+  CardHeader, 
+  CardFooter, 
+  CardTitle, 
+  CardDescription, 
+  CardContent, 
+  CardImage 
+}

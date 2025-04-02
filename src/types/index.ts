@@ -1,28 +1,45 @@
 
 export type PrivacyLevel = 'minimal' | 'low' | 'medium' | 'high' | 'highest';
 
-export type Stage = 1 | 2 | 3 | 4 | 5;
+export type QuestionStep = 
+  | 'travel-themes' 
+  | 'preferred-weather'
+  | 'travel-months'
+  | 'travel-duration'
+  | 'preferred-region'
+  | 'travel-budget'
+  | 'rate-destinations'
+  | 'upload-photo'
+  | 'refine-preferences';
 
 export type UserPreferences = {
-  // Stage 1 - Minimal Privacy
-  theme: string;
-  temperature: number[];
-  region: string;
+  // Step 1: Travel Themes
+  travelThemes: string[];
   
-  // Stage 2 - Detailed Preferences
-  activities: string[];
-  budget: string;
-  duration: string;
-  mood: string;
+  // Step 2: Preferred Weather
+  weatherPreference: 'warm' | 'cool' | 'specific-range';
+  temperatureRange: number[];
   
-  // Stage 3 - Destination Ratings
+  // Step 3: Best Months to Travel
+  travelMonths: string[];
+  
+  // Step 4: Travel Duration
+  travelDuration: string;
+  
+  // Step 5: Preferred Region
+  preferredRegions: string[];
+  
+  // Step 6: Travel Budget
+  travelBudget: string;
+  
+  // Step 7: Destination Ratings
   destinationRatings: Record<string, number>;
   
-  // Stage 4 - Conversation
-  conversationInsights: string[];
+  // Step 8: Photo Upload
+  photos: {url: string; caption: string}[];
   
-  // Stage 5 - Photo Upload
-  photos: string[];
+  // Step 9: Conversation Insights
+  conversationInsights: string[];
 };
 
 export type Destination = {

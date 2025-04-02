@@ -1,39 +1,42 @@
+
 import React, { useState } from 'react';
-// Common components
-import PrivacyLevel from '@/components/PrivacyLevel';
-import StageButtons from '@/components/StageButtons';
+// Components
+import ProgressIndicator from '@/components/ProgressIndicator';
+import QuestionNavigation from '@/components/QuestionNavigation';
 import RecommendationsView from '@/components/RecommendationsView';
 import TitleScreen from '@/components/TitleScreen';
 
-// Stage 1 components
-import ThemeSelector from '@/components/stage1/ThemeSelector';
-import TemperatureSelector from '@/components/stage1/TemperatureSelector';
-import RegionSelector from '@/components/stage1/RegionSelector';
-
-// Stage 2 components
-import ActivitySelector from '@/components/stage2/ActivitySelector';
-import BudgetSelector from '@/components/stage2/BudgetSelector';
-import DurationSelector from '@/components/stage2/DurationSelector';
-import MoodSelector from '@/components/stage2/MoodSelector';
-
-// Stage 3 components
-import DestinationRating from '@/components/stage3/DestinationRating';
-
-// Stage 4 components
-import ConversationInput from '@/components/stage4/ConversationInput';
-
-// Stage 5 components
-import PhotoUpload from '@/components/stage5/PhotoUpload';
+// Step Components
+import TravelThemesStep from '@/components/steps/TravelThemesStep';
+import WeatherPreferenceStep from '@/components/steps/WeatherPreferenceStep';
+import TravelMonthsStep from '@/components/steps/TravelMonthsStep';
+import TravelDurationStep from '@/components/steps/TravelDurationStep';
+import PreferredRegionStep from '@/components/steps/PreferredRegionStep';
+import TravelBudgetStep from '@/components/steps/TravelBudgetStep';
+import DestinationRatingStep from '@/components/steps/DestinationRatingStep';
+import PhotoUploadStep from '@/components/steps/PhotoUploadStep';
+import RefinePreferencesStep from '@/components/steps/RefinePreferencesStep';
 
 // Types
 import { 
-  Stage, 
-  PrivacyLevel as PrivacyLevelType, 
+  QuestionStep, 
   UserPreferences,
   Message,
   Destination,
   Recommendation 
 } from '@/types';
+
+const questionSteps = [
+  { id: 'travel-themes' as QuestionStep, label: 'Travel Themes' },
+  { id: 'preferred-weather' as QuestionStep, label: 'Weather Preference' },
+  { id: 'travel-months' as QuestionStep, label: 'Travel Months' },
+  { id: 'travel-duration' as QuestionStep, label: 'Trip Duration' },
+  { id: 'preferred-region' as QuestionStep, label: 'Regions' },
+  { id: 'travel-budget' as QuestionStep, label: 'Budget' },
+  { id: 'rate-destinations' as QuestionStep, label: 'Rate Destinations' },
+  { id: 'upload-photo' as QuestionStep, label: 'Upload Photo' },
+  { id: 'refine-preferences' as QuestionStep, label: 'Refine Preferences' },
+];
 
 const destinations: Destination[] = [
   {
@@ -85,7 +88,7 @@ const sampleConversationQuestions = [
   "What aspects of a destination are most important to you?"
 ];
 
-const generateRecommendations = (preferences: UserPreferences, privacyLevel: PrivacyLevelType): Recommendation[] => {
+const generateRecommendations = (preferences: UserPreferences): Recommendation[] => {
   const sampleRecommendations: Recommendation[] = [
     {
       id: 'santorini',
@@ -139,25 +142,37 @@ const generateRecommendations = (preferences: UserPreferences, privacyLevel: Pri
 
 const Index = () => {
   const [showTitleScreen, setShowTitleScreen] = useState(true);
-  const [currentStage, setCurrentStage] = useState<Stage>(1);
-  const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevelType>('minimal');
+  const [currentStep, setCurrentStep] = useState<QuestionStep>('travel-themes');
   const [showRecommendations, setShowRecommendations] = useState(false);
   
   const [preferences, setPreferences] = useState<UserPreferences>({
-    theme: '',
-    temperature: [20],
-    region: '',
+    // Step 1: Travel Themes
+    travelThemes: [],
     
-    activities: [],
-    budget: '',
-    duration: '',
-    mood: '',
+    // Step 2: Preferred Weather
+    weatherPreference: 'warm',
+    temperatureRange: [15, 25],
     
+    // Step 3: Best Months to Travel
+    travelMonths: [],
+    
+    // Step 4: Travel Duration
+    travelDuration: '',
+    
+    // Step 5: Preferred Region
+    preferredRegions: [],
+    
+    // Step 6: Travel Budget
+    travelBudget: '',
+    
+    // Step 7: Destination Ratings
     destinationRatings: {},
     
-    conversationInsights: [],
+    // Step 8: Photo Upload
+    photos: [],
     
-    photos: []
+    // Step 9: Conversation Insights
+    conversationInsights: [],
   });
   
   const [messages, setMessages] = useState<Message[]>([
@@ -175,54 +190,22 @@ const Index = () => {
     setShowTitleScreen(false);
   };
   
-  const handleContinueToNextStage = () => {
-    const nextStage = (currentStage + 1) as Stage;
-    setCurrentStage(nextStage);
-    
-    switch(nextStage) {
-      case 2:
-        setPrivacyLevel('low');
-        break;
-      case 3:
-        setPrivacyLevel('medium');
-        break;
-      case 4:
-        setPrivacyLevel('high');
-        break;
-      case 5:
-        setPrivacyLevel('highest');
-        break;
-      default:
-        break;
+  const handleNextStep = () => {
+    const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
+    if (currentIndex < questionSteps.length - 1) {
+      setCurrentStep(questionSteps[currentIndex + 1].id);
     }
   };
   
-  const handleBackToPreviousStage = () => {
-    if (currentStage > 1) {
-      const previousStage = (currentStage - 1) as Stage;
-      setCurrentStage(previousStage);
-      
-      switch(previousStage) {
-        case 1:
-          setPrivacyLevel('minimal');
-          break;
-        case 2:
-          setPrivacyLevel('low');
-          break;
-        case 3:
-          setPrivacyLevel('medium');
-          break;
-        case 4:
-          setPrivacyLevel('high');
-          break;
-        default:
-          break;
-      }
+  const handlePreviousStep = () => {
+    const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
+    if (currentIndex > 0) {
+      setCurrentStep(questionSteps[currentIndex - 1].id);
     }
   };
   
   const handleGetRecommendations = () => {
-    const newRecommendations = generateRecommendations(preferences, privacyLevel);
+    const newRecommendations = generateRecommendations(preferences);
     setRecommendations(newRecommendations);
     setShowRecommendations(true);
   };
@@ -232,49 +215,45 @@ const Index = () => {
   };
   
   const handleRegenerateRecommendations = () => {
-    const newRecommendations = generateRecommendations(preferences, privacyLevel);
+    const newRecommendations = generateRecommendations(preferences);
     setRecommendations(newRecommendations);
   };
   
-  const handleThemeSelect = (theme: string) => {
-    setPreferences(prev => ({ ...prev, theme }));
+  // Theme handlers
+  const handleThemesChange = (themes: string[]) => {
+    setPreferences(prev => ({ ...prev, travelThemes: themes }));
   };
   
-  const handleTemperatureChange = (temperature: number[]) => {
-    setPreferences(prev => ({ ...prev, temperature }));
+  // Weather handlers
+  const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
+    setPreferences(prev => ({ ...prev, weatherPreference: preference }));
   };
   
-  const handleRegionSelect = (region: string) => {
-    setPreferences(prev => ({ ...prev, region }));
+  const handleTemperatureRangeChange = (range: number[]) => {
+    setPreferences(prev => ({ ...prev, temperatureRange: range }));
   };
   
-  const handleActivityToggle = (activityId: string) => {
-    setPreferences(prev => {
-      const activities = [...prev.activities];
-      const index = activities.indexOf(activityId);
-      
-      if (index >= 0) {
-        activities.splice(index, 1);
-      } else {
-        activities.push(activityId);
-      }
-      
-      return { ...prev, activities };
-    });
+  // Month handlers
+  const handleMonthsChange = (months: string[]) => {
+    setPreferences(prev => ({ ...prev, travelMonths: months }));
   };
   
-  const handleBudgetSelect = (budget: string) => {
-    setPreferences(prev => ({ ...prev, budget }));
-  };
-  
+  // Duration handlers
   const handleDurationSelect = (duration: string) => {
-    setPreferences(prev => ({ ...prev, duration }));
+    setPreferences(prev => ({ ...prev, travelDuration: duration }));
   };
   
-  const handleMoodSelect = (mood: string) => {
-    setPreferences(prev => ({ ...prev, mood }));
+  // Region handlers
+  const handleRegionChange = (regions: string[]) => {
+    setPreferences(prev => ({ ...prev, preferredRegions: regions }));
   };
   
+  // Budget handlers
+  const handleBudgetSelect = (budget: string) => {
+    setPreferences(prev => ({ ...prev, travelBudget: budget }));
+  };
+  
+  // Rating handlers
   const handleDestinationRatingChange = (destinationId: string, rating: number) => {
     setPreferences(prev => ({
       ...prev,
@@ -285,6 +264,12 @@ const Index = () => {
     }));
   };
   
+  // Photo handlers
+  const handlePhotoChange = (photos: {url: string; caption: string}[]) => {
+    setPreferences(prev => ({ ...prev, photos }));
+  };
+  
+  // Message handlers
   const handleSendMessage = (message: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -316,11 +301,23 @@ const Index = () => {
     }, 1500);
   };
   
-  const handlePhotoUpload = (photos: string[]) => {
-    setPreferences(prev => ({ ...prev, photos }));
+  // Validation
+  const isCurrentStepValid = () => {
+    switch (currentStep) {
+      case 'travel-themes':
+        return preferences.travelThemes.length > 0;
+      case 'travel-duration':
+        return !!preferences.travelDuration;
+      case 'preferred-region':
+        return preferences.preferredRegions.length > 0;
+      case 'travel-budget':
+        return !!preferences.travelBudget;
+      default:
+        return true;
+    }
   };
-
-  const renderCurrentStage = () => {
+  
+  const renderCurrentStep = () => {
     if (showTitleScreen) {
       return <TitleScreen onStart={handleStartApp} />;
     }
@@ -329,174 +326,128 @@ const Index = () => {
       return (
         <RecommendationsView 
           recommendations={recommendations}
-          privacyLevel={privacyLevel}
           onRegenerateRecommendations={handleRegenerateRecommendations}
           onBackToForm={handleBackToPreferences}
         />
       );
     }
     
-    switch(currentStage) {
-      case 1:
-        return (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <ThemeSelector 
-              selectedTheme={preferences.theme}
-              onThemeSelect={handleThemeSelect}
+    const stepContent = () => {
+      switch(currentStep) {
+        case 'travel-themes':
+          return (
+            <TravelThemesStep
+              selectedThemes={preferences.travelThemes}
+              onThemesChange={handleThemesChange}
             />
-            
-            <TemperatureSelector 
-              temperature={preferences.temperature}
-              onTemperatureChange={handleTemperatureChange}
+          );
+          
+        case 'preferred-weather':
+          return (
+            <WeatherPreferenceStep
+              weatherPreference={preferences.weatherPreference}
+              temperatureRange={preferences.temperatureRange}
+              onWeatherPreferenceChange={handleWeatherPreferenceChange}
+              onTemperatureRangeChange={handleTemperatureRangeChange}
             />
-            
-            <RegionSelector 
-              selectedRegion={preferences.region}
-              onRegionSelect={handleRegionSelect}
+          );
+          
+        case 'travel-months':
+          return (
+            <TravelMonthsStep
+              selectedMonths={preferences.travelMonths}
+              onMonthsChange={handleMonthsChange}
             />
-            
-            <StageButtons 
-              onGetRecommendations={handleGetRecommendations}
-              onContinue={handleContinueToNextStage}
-              currentStage={currentStage}
-            />
-          </div>
-        );
-        
-      case 2:
-        return (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <ActivitySelector 
-              selectedActivities={preferences.activities}
-              onActivityToggle={handleActivityToggle}
-            />
-            
-            <BudgetSelector 
-              selectedBudget={preferences.budget}
-              onBudgetSelect={handleBudgetSelect}
-            />
-            
-            <DurationSelector 
-              selectedDuration={preferences.duration}
+          );
+          
+        case 'travel-duration':
+          return (
+            <TravelDurationStep
+              selectedDuration={preferences.travelDuration}
               onDurationSelect={handleDurationSelect}
             />
-            
-            <MoodSelector 
-              selectedMood={preferences.mood}
-              onMoodSelect={handleMoodSelect}
+          );
+          
+        case 'preferred-region':
+          return (
+            <PreferredRegionStep
+              selectedRegions={preferences.preferredRegions}
+              onRegionChange={handleRegionChange}
             />
-            
-            <StageButtons 
-              onGetRecommendations={handleGetRecommendations}
-              onContinue={handleContinueToNextStage}
-              onBack={handleBackToPreviousStage}
-              currentStage={currentStage}
+          );
+          
+        case 'travel-budget':
+          return (
+            <TravelBudgetStep
+              selectedBudget={preferences.travelBudget}
+              onBudgetSelect={handleBudgetSelect}
             />
-          </div>
-        );
-        
-      case 3:
-        return (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <DestinationRating 
+          );
+          
+        case 'rate-destinations':
+          return (
+            <DestinationRatingStep
               destinations={destinations}
               ratings={preferences.destinationRatings}
               onRatingChange={handleDestinationRatingChange}
             />
-            
-            <StageButtons 
-              onGetRecommendations={handleGetRecommendations}
-              onContinue={handleContinueToNextStage}
-              onBack={handleBackToPreviousStage}
-              currentStage={currentStage}
-            />
-          </div>
-        );
-        
-      case 4:
-        return (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <ConversationInput 
-              messages={messages}
-              onSendMessage={handleSendMessage}
-              isLoading={isTyping}
-            />
-            
-            <StageButtons 
-              onGetRecommendations={handleGetRecommendations}
-              onContinue={handleContinueToNextStage}
-              onBack={handleBackToPreviousStage}
-              currentStage={currentStage}
-            />
-          </div>
-        );
-        
-      case 5:
-        return (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <PhotoUpload 
+          );
+          
+        case 'upload-photo':
+          return (
+            <PhotoUploadStep
               photos={preferences.photos}
-              onPhotoUpload={handlePhotoUpload}
+              onPhotoChange={handlePhotoChange}
             />
-            
-            <StageButtons 
-              onGetRecommendations={handleGetRecommendations}
-              onBack={handleBackToPreviousStage}
-              isFinalStage={true}
-              currentStage={currentStage}
+          );
+          
+        case 'refine-preferences':
+          return (
+            <RefinePreferencesStep
+              messages={messages}
+              isLoading={isTyping}
+              onSendMessage={handleSendMessage}
             />
-          </div>
-        );
+          );
+          
+        default:
+          return null;
+      }
+    };
+    
+    return (
+      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+        <ProgressIndicator 
+          currentStep={currentStep} 
+          steps={questionSteps} 
+        />
         
-      default:
-        return null;
-    }
+        {stepContent()}
+        
+        <QuestionNavigation
+          currentStep={currentStep}
+          onNextStep={handleNextStep}
+          onPreviousStep={handlePreviousStep}
+          onGetRecommendations={handleGetRecommendations}
+          isFirstStep={currentStep === questionSteps[0].id}
+          isLastStep={currentStep === questionSteps[questionSteps.length - 1].id}
+          isCurrentStepValid={isCurrentStepValid()}
+        />
+      </div>
+    );
   };
 
   return (
     <div className="min-h-screen w-full">
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-travel-blue">Travolo</h1>
-          {!showRecommendations && !showTitleScreen && <PrivacyLevel level={privacyLevel} />}
+          <h1 className="text-2xl font-bold text-[#3c83f6]">Travolo</h1>
         </div>
       </header>
       
       <main className="container py-8">
-        {!showRecommendations && !showTitleScreen && (
-          <div className="mb-8 text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-travel-dark">
-              {currentStage === 1 && "Let's find your perfect destination"}
-              {currentStage === 2 && "Tell us more about your preferences"}
-              {currentStage === 3 && "Rate these vacation ideas"}
-              {currentStage === 4 && "Let's chat about your travel style"}
-              {currentStage === 5 && "Share photos from your favorite vacations"}
-            </h2>
-            <p className="text-gray-600">
-              {currentStage === 1 && "Start with some basic preferences. You can get recommendations now or continue for better results."}
-              {currentStage === 2 && "Let's get more specific about your ideal trip."}
-              {currentStage === 3 && "Rate these destinations to help us understand what you like."}
-              {currentStage === 4 && "A quick conversation will help us better understand your preferences."}
-              {currentStage === 5 && "Sharing vacation photos helps us recommend the most personalized destinations."}
-            </p>
-            
-            <div className="flex justify-center mt-6 mb-2">
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((stage) => (
-                  <div 
-                    key={stage}
-                    className={`w-3 h-3 rounded-full ${
-                      stage <= currentStage ? 'bg-travel-blue' : 'bg-gray-300'
-                    } ${stage === currentStage ? 'w-4 h-4' : ''}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-        
         <div className="max-w-4xl mx-auto">
-          {renderCurrentStage()}
+          {renderCurrentStep()}
         </div>
       </main>
     </div>
