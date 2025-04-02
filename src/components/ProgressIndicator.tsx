@@ -10,7 +10,7 @@ type ProgressIndicatorProps = {
   }[];
 };
 
-const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
+export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   currentStep,
   steps
 }) => {
@@ -56,5 +56,3 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
     </div>
   );
 };
-
-export default ProgressIndicator;
