@@ -23,7 +23,8 @@ import {
   UserPreferences,
   Message,
   Destination,
-  Recommendation 
+  Recommendation,
+  PrivacyLevel
 } from '@/types';
 
 const questionSteps = [
@@ -144,6 +145,8 @@ const Index = () => {
   const [showTitleScreen, setShowTitleScreen] = useState(true);
   const [currentStep, setCurrentStep] = useState<QuestionStep>('travel-themes');
   const [showRecommendations, setShowRecommendations] = useState(false);
+  // Add privacy level state with default value
+  const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>('medium');
   
   const [preferences, setPreferences] = useState<UserPreferences>({
     // Step 1: Travel Themes
@@ -326,6 +329,7 @@ const Index = () => {
       return (
         <RecommendationsView 
           recommendations={recommendations}
+          privacyLevel={privacyLevel}
           onRegenerateRecommendations={handleRegenerateRecommendations}
           onBackToForm={handleBackToPreferences}
         />
