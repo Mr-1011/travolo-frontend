@@ -5,6 +5,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import TitleScreen from '@/components/TitleScreen';
 import RecommendationsView from '@/components/RecommendationsView';
 import StepDisplay from '@/components/steps/StepDisplay';
+import QuestionNavigation from '@/components/QuestionNavigation';
 
 // Utilities & Hooks
 import { useUserPreferences } from '@/hooks/useUserPreferences';
@@ -67,6 +68,24 @@ const Index = () => {
     setShowRecommendations(false);
   };
   
+  const renderNavigationBar = () => {
+    if (showTitleScreen || showRecommendations) {
+      return null;
+    }
+
+    return (
+      <QuestionNavigation
+        currentStep={currentStep}
+        onNextStep={handleNextStep}
+        onPreviousStep={handlePreviousStep}
+        onGetRecommendations={handleGetRecommendations}
+        isFirstStep={currentStep === questionSteps[0].id}
+        isLastStep={currentStep === questionSteps[questionSteps.length - 1].id}
+        isCurrentStepValid={isCurrentStepValid(currentStep)}
+      />
+    );
+  };
+  
   const renderContent = () => {
     if (showTitleScreen) {
       return <TitleScreen onStart={handleStartApp} />;
@@ -101,7 +120,7 @@ const Index = () => {
   };
 
   return (
-    <PageLayout>
+    <PageLayout navigationBar={renderNavigationBar()}>
       {renderContent()}
     </PageLayout>
   );
