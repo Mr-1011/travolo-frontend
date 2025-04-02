@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 // Components
 import ProgressIndicator from '@/components/ProgressIndicator';
@@ -145,36 +144,18 @@ const Index = () => {
   const [showTitleScreen, setShowTitleScreen] = useState(true);
   const [currentStep, setCurrentStep] = useState<QuestionStep>('travel-themes');
   const [showRecommendations, setShowRecommendations] = useState(false);
-  // Add privacy level state with default value
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>('medium');
   
   const [preferences, setPreferences] = useState<UserPreferences>({
-    // Step 1: Travel Themes
     travelThemes: [],
-    
-    // Step 2: Preferred Weather
     weatherPreference: 'warm',
     temperatureRange: [15, 25],
-    
-    // Step 3: Best Months to Travel
     travelMonths: [],
-    
-    // Step 4: Travel Duration
     travelDuration: '',
-    
-    // Step 5: Preferred Region
     preferredRegions: [],
-    
-    // Step 6: Travel Budget
     travelBudget: '',
-    
-    // Step 7: Destination Ratings
     destinationRatings: {},
-    
-    // Step 8: Photo Upload
     photos: [],
-    
-    // Step 9: Conversation Insights
     conversationInsights: [],
   });
   
@@ -222,12 +203,10 @@ const Index = () => {
     setRecommendations(newRecommendations);
   };
   
-  // Theme handlers
   const handleThemesChange = (themes: string[]) => {
     setPreferences(prev => ({ ...prev, travelThemes: themes }));
   };
   
-  // Weather handlers
   const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
     setPreferences(prev => ({ ...prev, weatherPreference: preference }));
   };
@@ -236,27 +215,22 @@ const Index = () => {
     setPreferences(prev => ({ ...prev, temperatureRange: range }));
   };
   
-  // Month handlers
   const handleMonthsChange = (months: string[]) => {
     setPreferences(prev => ({ ...prev, travelMonths: months }));
   };
   
-  // Duration handlers
   const handleDurationSelect = (duration: string) => {
     setPreferences(prev => ({ ...prev, travelDuration: duration }));
   };
   
-  // Region handlers
   const handleRegionChange = (regions: string[]) => {
     setPreferences(prev => ({ ...prev, preferredRegions: regions }));
   };
   
-  // Budget handlers
   const handleBudgetSelect = (budget: string) => {
     setPreferences(prev => ({ ...prev, travelBudget: budget }));
   };
   
-  // Rating handlers
   const handleDestinationRatingChange = (destinationId: string, rating: number) => {
     setPreferences(prev => ({
       ...prev,
@@ -267,12 +241,10 @@ const Index = () => {
     }));
   };
   
-  // Photo handlers
   const handlePhotoChange = (photos: {url: string; caption: string}[]) => {
     setPreferences(prev => ({ ...prev, photos }));
   };
   
-  // Message handlers
   const handleSendMessage = (message: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -304,7 +276,6 @@ const Index = () => {
     }, 1500);
   };
   
-  // Validation
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 'travel-themes':
@@ -420,13 +391,15 @@ const Index = () => {
     };
     
     return (
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-md p-6 mb-8 h-[550px] flex flex-col">
         <ProgressIndicator 
           currentStep={currentStep} 
           steps={questionSteps} 
         />
         
-        {stepContent()}
+        <div className="flex-1 overflow-hidden">
+          {stepContent()}
+        </div>
         
         <QuestionNavigation
           currentStep={currentStep}
