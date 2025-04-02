@@ -94,4 +94,19 @@
   .airbnb-button {
     @apply bg-travel-blue text-white font-medium rounded-lg py-3 px-4 hover:bg-travel-darkBlue transition-colors;
   }
+  
+  /* Cinematic text styling */
+  .text-shadow-lg {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+  }
+  
+  .card-hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-hover-effect:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
 }

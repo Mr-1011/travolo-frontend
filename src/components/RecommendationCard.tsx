@@ -46,7 +46,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation 
         <div className="absolute bottom-0 left-0 p-6 w-full">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-2xl font-bold text-white">{recommendation.name}</h3>
+              <h3 className="text-2xl font-bold text-white tracking-wide text-shadow-lg">{recommendation.name}</h3>
               <p className="text-sm text-gray-200 mt-1">{recommendation.country}</p>
             </div>
             <div className="bg-white/90 rounded-full px-3 py-1 text-sm font-bold flex items-center">

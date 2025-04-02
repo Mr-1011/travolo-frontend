@@ -105,7 +105,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
               <div className="absolute bottom-0 w-full p-3 text-white">
-                <p className="font-medium">{theme.name}</p>
+                <p className="font-medium text-xl tracking-wide text-shadow-lg">{theme.name}</p>
               </div>
               
               {selectedThemes.includes(theme.id) && (
