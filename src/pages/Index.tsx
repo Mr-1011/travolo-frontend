@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 // Components
 import PageLayout from '@/components/layout/PageLayout';
@@ -10,7 +11,7 @@ import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { destinations } from '@/utils/recommendationUtils';
 
 // Types
-import { QuestionStep, PrivacyLevel } from '@/types';
+import { QuestionStep } from '@/types';
 
 const questionSteps = [
   { id: 'travel-themes' as QuestionStep, label: 'Travel Themes' },
@@ -28,7 +29,6 @@ const Index = () => {
   const [showTitleScreen, setShowTitleScreen] = useState(true);
   const [currentStep, setCurrentStep] = useState<QuestionStep>('travel-themes');
   const [showRecommendations, setShowRecommendations] = useState(false);
-  const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>('medium');
   
   const {
     preferences,
@@ -75,7 +75,6 @@ const Index = () => {
       return (
         <RecommendationsView 
           recommendations={recommendations}
-          privacyLevel={privacyLevel}
           onRegenerateRecommendations={handlers.handleRegenerateRecommendations}
           onBackToForm={handleBackToPreferences}
         />

@@ -6,39 +6,20 @@ import { RefreshCcw } from 'lucide-react';
 
 type RecommendationsViewProps = {
   recommendations: Recommendation[];
-  privacyLevel: 'minimal' | 'low' | 'medium' | 'high' | 'highest';
   onRegenerateRecommendations: () => void;
   onBackToForm: () => void;
 };
 
 const RecommendationsView: React.FC<RecommendationsViewProps> = ({ 
   recommendations, 
-  privacyLevel,
   onRegenerateRecommendations,
   onBackToForm
 }) => {
-  const getMatchExplanation = () => {
-    switch(privacyLevel) {
-      case 'minimal':
-        return 'These recommendations are based on your basic theme, temperature and region preferences.';
-      case 'low':
-        return 'These recommendations are based on your activities, budget, trip duration, and mood preferences.';
-      case 'medium':
-        return 'These recommendations are based on your destination ratings and the preferences you shared previously.';
-      case 'high':
-        return 'These recommendations are based on your conversational insights and all previous preferences.';
-      case 'highest':
-        return 'These fully personalized recommendations are based on your photos and all previous preferences.';
-      default:
-        return 'These recommendations are based on your preferences.';
-    }
-  };
-  
   return (
     <div className="w-full">
       <div className="mb-8 text-center">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">Your Travel Recommendations</h2>
-        <p className="text-gray-600">{getMatchExplanation()}</p>
+        <p className="text-gray-600">These recommendations are based on your preferences.</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
