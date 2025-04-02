@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
@@ -34,14 +33,16 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
       </Button>
 
       <div className="flex space-x-3">
-        <Button
-          variant="outline"
-          onClick={onGetRecommendations}
-          className="text-[#3c83f6] border-[#3c83f6]"
-        >
-          <Sparkles className="mr-2 h-4 w-4" /> Get Recommendations
-        </Button>
-        
+        {!isLastStep && (
+          <Button
+            variant="outline"
+            onClick={onGetRecommendations}
+            className="text-[#3c83f6] border-[#3c83f6]"
+          >
+            <Sparkles className="mr-2 h-4 w-4" /> Get Recommendations
+          </Button>
+        )}
+
         {!isLastStep && (
           <Button
             onClick={onNextStep}
@@ -50,7 +51,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             Next <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         )}
-        
+
         {isLastStep && (
           <Button
             onClick={onGetRecommendations}
