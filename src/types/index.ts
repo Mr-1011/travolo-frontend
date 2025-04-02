@@ -1,6 +1,4 @@
 
-export type PrivacyLevel = 'minimal' | 'low' | 'medium' | 'high' | 'highest';
-
 export type QuestionStep = 
   | 'travel-themes' 
   | 'preferred-weather'
