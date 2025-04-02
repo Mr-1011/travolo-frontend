@@ -15,15 +15,17 @@ const WeatherPreferenceStep: React.FC<WeatherPreferenceStepProps> = ({
   onTemperatureRangeChange 
 }) => {
   return (
-    <div className="w-full flex flex-col h-[400px]">
-      <ScrollArea className="flex-1 pr-4">
-        <h2 className="text-2xl font-bold mb-2">Preferred Weather</h2>
-        <p className="text-gray-600 mb-6">What temperature range do you prefer for your trip?</p>
-        
-        <TemperatureSelector
-          temperature={temperatureRange}
-          onTemperatureChange={onTemperatureRangeChange}
-        />
+    <div className="w-full h-full flex flex-col">
+      <ScrollArea className="flex-1">
+        <div className="pr-4 pb-4">
+          <h2 className="text-2xl font-bold mb-2">Preferred Weather</h2>
+          <p className="text-gray-600 mb-6">What temperature range do you prefer for your trip?</p>
+          
+          <TemperatureSelector
+            temperature={temperatureRange}
+            onTemperatureChange={onTemperatureRangeChange}
+          />
+        </div>
       </ScrollArea>
     </div>
   );

@@ -24,7 +24,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   isCurrentStepValid
 }) => {
   return (
-    <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 sticky bottom-0 bg-white">
+    <div className="flex justify-between mt-auto pt-4 border-t border-gray-200 bg-white w-full">
       <Button
         variant="outline"
         onClick={onPreviousStep}
