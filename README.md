@@ -1,73 +1,96 @@
-# Welcome to your Lovable project
+# Vacation Recommendation Wizard
 
-## Project info
+A progressive web application that helps users discover personalized travel destinations based on their preferences and interests.
 
-**URL**: https://lovable.dev/projects/7163089f-8f93-41a4-851d-0caa7fd95ec1
+## Project Overview
 
-## How can I edit this code?
+This application guides users through a step-by-step questionnaire to gather travel preferences, then provides tailored vacation recommendations. The user journey includes:
 
-There are several ways of editing your application.
+1. **Welcome Screen**: Introduction to the application
+2. **Travel Themes**: Select interests (adventure, relaxation, culture, etc.)
+3. **Weather Preference**: Choose preferred climate conditions
+4. **Travel Months**: Select ideal time periods for travel
+5. **Trip Duration**: Specify length of stay
+6. **Preferred Regions**: Select geographic areas of interest
+7. **Budget**: Indicate spending capacity
+8. **Destination Ratings**: Rate sample destinations to refine recommendations
+9. **Photo Upload**: Share travel photos for inspiration
+10. **Refine Preferences**: Final adjustments before receiving recommendations
+11. **Recommendations View**: Display of personalized travel suggestions
 
-**Use Lovable**
+## Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7163089f-8f93-41a4-851d-0caa7fd95ec1) and start prompting.
+- **React**: Frontend framework
+- **TypeScript**: Type-safe JavaScript
+- **Vite**: Fast build tooling
+- **shadcn/ui**: Component library
+- **Tailwind CSS**: Utility-first CSS framework
+- **React Router**: Navigation
+- **React Query**: Data fetching and state management
 
-Changes made via Lovable will be committed automatically to this repo.
+## Project Structure
 
-**Use your preferred IDE**
+```
+src/
+├── components/       # UI components
+│   ├── steps/        # Step-specific components
+│   ├── ui/           # Reusable UI components
+│   └── layout/       # Layout components
+├── hooks/            # Custom React hooks
+├── lib/              # Libraries and integrations
+├── pages/            # Page components
+├── types/            # TypeScript type definitions
+├── utils/            # Utility functions
+└── App.tsx           # Main application component
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- Node.js (v16 or newer)
+- npm
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+# Clone the repository
+git clone <repository-url>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Navigate to the project directory
+cd <project-directory>
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Install dependencies
+npm install
+```
+
+### Development
+
+```bash
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+# Build the application
+npm run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Preview the production build locally
+npm run preview
+```
 
-## What technologies are used for this project?
+## Features
 
-This project is built with:
+- Multi-step preference collection
+- Interactive UI with real-time feedback
+- Photo upload capabilities
+- Personalized travel recommendations
+- Responsive design for all devices
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## License
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/7163089f-8f93-41a4-851d-0caa7fd95ec1) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License - see the LICENSE file for details.
