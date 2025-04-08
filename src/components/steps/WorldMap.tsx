@@ -1,9 +1,12 @@
 import React from 'react';
+import SvgComponent from './SvgComponent'; // Import the SvgComponent
 
 type WorldMapProps = {
   selectedRegions: string[];
   onRegionChange: (regions: string[]) => void;
 };
+
+const allRegionIds = ['north_america', 'south_america', 'europe', 'africa', 'middle_east', 'asia', 'oceania'];
 
 const WorldMap: React.FC<WorldMapProps> = ({ selectedRegions, onRegionChange }) => {
   const handleRegionClick = (regionId: string) => {
@@ -12,138 +15,61 @@ const WorldMap: React.FC<WorldMapProps> = ({ selectedRegions, onRegionChange }) 
       if (selectedRegions.includes('anywhere')) {
         onRegionChange(selectedRegions.filter(id => id !== 'anywhere'));
       } else {
+        // Select all regions *except* 'anywhere'
         onRegionChange(['anywhere']);
       }
     } else {
       // Handle normal region toggle
+      let newRegions;
       if (selectedRegions.includes(regionId)) {
-        onRegionChange(selectedRegions.filter(id => id !== regionId));
+        // Deselect the clicked region
+        newRegions = selectedRegions.filter(id => id !== regionId);
       } else {
+        // Select the clicked region
         // Remove "Anywhere" if it was selected
-        const newRegions = selectedRegions.filter(id => id !== 'anywhere');
-        onRegionChange([...newRegions, regionId]);
+        newRegions = [...selectedRegions.filter(id => id !== 'anywhere'), regionId];
       }
+      onRegionChange(newRegions);
     }
   };
 
-  // Base color for unselected regions
-  const baseColor = "#e2e8f0"; // light gray
-  // Color for selected regions
-  const selectedColor = "#3b82f6"; // blue
+  // Base color for unselected regions (used in legend)
+  const baseColor = "#e2e8f0"; // light gray (slate-200)
+  // Color for selected regions (used in legend)
+  const selectedColor = "#3b82f6"; // blue (blue-500)
+
+  const isAnywhereSelected = selectedRegions.includes('anywhere');
+  const displayedRegions = isAnywhereSelected ? allRegionIds : selectedRegions;
 
   return (
-    <div className="w-full">
-      <svg
-        viewBox="0 0 1000 500"
-        className="w-full h-auto border rounded-lg"
+    <div className="w-full flex flex-col items-center"> {/* Center content */}
+      {/* Render the SvgComponent with props */}
+      <SvgComponent
+        selectedRegions={displayedRegions} // Pass displayedRegions based on 'anywhere' state
+        onRegionClick={handleRegionClick}
+        className="w-full max-w-4xl h-auto border rounded-lg mb-4" // Limit max width, add margin
         aria-label="World Map"
+      />
+
+      {/* Anywhere button - Keep outside the SVG for easier layout */}
+      <button
+        onClick={() => handleRegionClick('anywhere')}
+        className={`px-4 py-2 rounded-full border transition-colors ${isAnywhereSelected
+          ? 'bg-blue-500 text-white border-blue-500'
+          : 'bg-slate-300 text-slate-700 border-slate-300 hover:bg-slate-400'
+          }`}
       >
-        {/* Europe */}
-        <path
-          d="M500 170 L550 150 L580 155 L590 170 L570 190 L560 210 L530 220 L500 210 L490 190 z"
-          fill={selectedRegions.includes('europe') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('europe')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="Europe"
-        />
-
-        {/* Asia */}
-        <path
-          d="M590 170 L650 150 L700 160 L720 180 L710 240 L670 260 L630 250 L600 230 L580 210 L570 190 z"
-          fill={selectedRegions.includes('asia') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('asia')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="Asia"
-        />
-
-        {/* Africa */}
-        <path
-          d="M500 210 L530 220 L550 240 L560 270 L540 320 L520 330 L490 310 L480 270 L490 240 z"
-          fill={selectedRegions.includes('africa') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('africa')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="Africa"
-        />
-
-        {/* North America */}
-        <path
-          d="M300 150 L350 140 L400 160 L380 200 L350 240 L320 230 L290 200 L280 170 z"
-          fill={selectedRegions.includes('north_america') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('north_america')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="North America"
-        />
-
-        {/* South America */}
-        <path
-          d="M350 240 L370 260 L380 300 L360 340 L330 320 L320 280 L330 250 z"
-          fill={selectedRegions.includes('south_america') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('south_america')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="South America"
-        />
-
-        {/* Middle East */}
-        <path
-          d="M560 210 L580 210 L600 230 L590 250 L570 260 L550 240 L530 220 z"
-          fill={selectedRegions.includes('middle_east') ? selectedColor : baseColor}
-          stroke="#fff"
-          strokeWidth="2"
-          onClick={() => handleRegionClick('middle_east')}
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="Middle East"
-        />
-
-        {/* Anywhere button at the bottom */}
-        <g onClick={() => handleRegionClick('anywhere')} className="cursor-pointer">
-          <rect
-            x="450"
-            y="400"
-            width="100"
-            height="30"
-            rx="15"
-            fill={selectedRegions.includes('anywhere') ? selectedColor : "#cbd5e1"}
-            className="hover:opacity-80 transition-opacity"
-          />
-          <text
-            x="500"
-            y="420"
-            textAnchor="middle"
-            fill="#fff"
-            fontSize="14"
-            fontWeight="bold"
-          >
-            Anywhere
-          </text>
-        </g>
-
-        {/* Region labels */}
-        <text x="525" y="180" fontSize="12" textAnchor="middle">Europe</text>
-        <text x="650" y="200" fontSize="12" textAnchor="middle">Asia</text>
-        <text x="520" y="280" fontSize="12" textAnchor="middle">Africa</text>
-        <text x="330" y="190" fontSize="12" textAnchor="middle">North America</text>
-        <text x="350" y="300" fontSize="12" textAnchor="middle">South America</text>
-        <text x="570" y="235" fontSize="12" textAnchor="middle">Middle East</text>
-      </svg>
+        Anywhere
+      </button>
 
       {/* Legend showing which colors represent selected/unselected */}
       <div className="flex items-center gap-4 mt-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4" style={{ backgroundColor: baseColor }}></div>
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: baseColor }}></div> {/* Rounded legend color box */}
           <span>Unselected</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4" style={{ backgroundColor: selectedColor }}></div>
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: selectedColor }}></div> {/* Rounded legend color box */}
           <span>Selected</span>
         </div>
       </div>
