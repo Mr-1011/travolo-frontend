@@ -4,6 +4,7 @@ export type QuestionStep =
   | 'travel-months'
   | 'travel-duration'
   | 'preferred-region'
+  | 'origin-location'
   | 'travel-budget'
   | 'rate-destinations'
   | 'upload-photo'
@@ -25,16 +26,19 @@ export type UserPreferences = {
   // Step 5: Preferred Region
   preferredRegions: string[];
 
-  // Step 6: Travel Budget
+  // New Step: Origin Location
+  originLocation: { name: string; lat: number; lon: number } | null;
+
+  // Step 6 becomes Step 7: Travel Budget
   travelBudget: string;
 
-  // Step 7: Destination Ratings
+  // Step 8: Destination Ratings
   destinationRatings: Record<string, number>;
 
-  // Step 8: Photo Upload
+  // Step 9: Photo Upload
   photos: { url: string; caption: string }[];
 
-  // Step 9: Conversation Insights
+  // Step 10: Conversation Insights
   conversationInsights: string[];
 };
 

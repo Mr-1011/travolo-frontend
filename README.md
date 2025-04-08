@@ -1,4 +1,4 @@
-# Vacation Recommendation Wizard
+# Travolo
 
 A progressive web application that helps users discover personalized travel destinations based on their preferences and interests.
 

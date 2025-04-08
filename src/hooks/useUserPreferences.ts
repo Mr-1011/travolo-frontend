@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserPreferences, Message, Destination, Recommendation } from '@/types';
+import { UserPreferences, Message, Destination, Recommendation, QuestionStep } from '@/types';
 import { generateRecommendations } from '@/utils/recommendationUtils';
 
 // Sample conversation starters
@@ -17,6 +17,7 @@ export const defaultPreferences: UserPreferences = {
   travelMonths: [],
   travelDuration: '',
   preferredRegions: [],
+  originLocation: null,
   travelBudget: '',
   destinationRatings: {},
   photos: [],
@@ -120,6 +121,10 @@ export function useUserPreferences() {
     setPreferences(prev => ({ ...prev, preferredRegions: regions }));
   };
 
+  const handleOriginLocationChange = (location: { name: string; lat: number; lon: number } | null) => {
+    setPreferences(prev => ({ ...prev, originLocation: location }));
+  };
+
   const handleBudgetSelect = (budget: string) => {
     setPreferences(prev => ({ ...prev, travelBudget: budget }));
   };
@@ -136,6 +141,10 @@ export function useUserPreferences() {
 
   const handlePhotoChange = (photos: { url: string; caption: string }[]) => {
     setPreferences(prev => ({ ...prev, photos }));
+  };
+
+  const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
+    console.log('Weather preference changed:', preference);
   };
 
   const handleSendMessage = (message: string) => {
@@ -183,7 +192,7 @@ export function useUserPreferences() {
     setRecommendations(newRecommendations);
   };
 
-  const isCurrentStepValid = (currentStep: string) => {
+  const isCurrentStepValid = (currentStep: QuestionStep) => {
     switch (currentStep) {
       case 'travel-themes':
         return preferences.travelThemes.length > 0;
@@ -191,6 +200,8 @@ export function useUserPreferences() {
         return !!preferences.travelDuration;
       case 'preferred-region':
         return preferences.preferredRegions.length > 0;
+      case 'origin-location':
+        return !!preferences.originLocation;
       case 'travel-budget':
         return !!preferences.travelBudget;
       default:
@@ -227,10 +238,12 @@ export function useUserPreferences() {
     recommendations,
     handlers: {
       handleThemesChange,
+      handleWeatherPreferenceChange,
       handleTemperatureRangeChange,
       handleMonthsChange,
       handleDurationSelect,
       handleRegionChange,
+      handleOriginLocationChange,
       handleBudgetSelect,
       handleDestinationRatingChange,
       handlePhotoChange,

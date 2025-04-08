@@ -11,6 +11,7 @@ import TravelBudgetStep from '@/components/steps/TravelBudgetStep';
 import DestinationRatingStep from '@/components/steps/DestinationRatingStep';
 import PhotoUploadStep from '@/components/steps/PhotoUploadStep';
 import RefinePreferencesStep from '@/components/steps/RefinePreferencesStep';
+import OriginLocationStep from '@/components/steps/OriginLocationStep';
 
 type StepDisplayProps = {
   currentStep: QuestionStep;
@@ -26,6 +27,7 @@ type StepDisplayProps = {
     handleMonthsChange: (months: string[]) => void;
     handleDurationSelect: (duration: string) => void;
     handleRegionChange: (regions: string[]) => void;
+    handleOriginLocationChange: (location: { name: string; lat: number; lon: number } | null) => void;
     handleBudgetSelect: (budget: string) => void;
     handleDestinationRatingChange: (destinationId: string, rating: number) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
@@ -91,6 +93,14 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
           <PreferredRegionStep
             selectedRegions={preferences.preferredRegions}
             onRegionChange={handlers.handleRegionChange}
+          />
+        );
+
+      case 'origin-location':
+        return (
+          <OriginLocationStep
+            originLocation={preferences.originLocation}
+            onOriginLocationChange={handlers.handleOriginLocationChange}
           />
         );
 

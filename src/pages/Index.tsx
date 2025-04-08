@@ -11,7 +11,7 @@ import { usePersistedStep } from '@/hooks/usePersistedState';
 import { destinations } from '@/utils/recommendationUtils';
 
 // Types
-import { QuestionStep } from '@/types';
+import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
 
 const questionSteps = [
   { id: 'travel-themes' as QuestionStep, label: 'Travel Themes' },
@@ -19,6 +19,7 @@ const questionSteps = [
   { id: 'travel-months' as QuestionStep, label: 'Travel Months' },
   { id: 'travel-duration' as QuestionStep, label: 'Trip Duration' },
   { id: 'preferred-region' as QuestionStep, label: 'Regions' },
+  { id: 'origin-location' as QuestionStep, label: 'Origin Location' },
   { id: 'travel-budget' as QuestionStep, label: 'Budget' },
   { id: 'rate-destinations' as QuestionStep, label: 'Rate Destinations' },
   { id: 'upload-photo' as QuestionStep, label: 'Upload Photo' },
