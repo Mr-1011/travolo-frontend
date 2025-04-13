@@ -29,7 +29,7 @@ type StepDisplayProps = {
     handleRegionChange: (regions: string[]) => void;
     handleOriginLocationChange: (location: { name: string; lat: number; lon: number } | null) => void;
     handleBudgetSelect: (budget: string) => void;
-    handleDestinationRatingChange: (destinationId: string, rating: number) => void;
+    handleDestinationRatingChange: (destinationId: string, rating: "like" | "dislike" | null) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handleSendMessage: (message: string) => void;
   };
