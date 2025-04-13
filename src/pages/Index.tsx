@@ -8,7 +8,7 @@ import StepDisplay from '@/components/StepDisplay';
 // Utilities & Hooks
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { usePersistedStep } from '@/hooks/usePersistedState';
-import { destinations } from '@/utils/recommendationUtils';
+import { fetchDestinations } from '@/utils/recommendationUtils';
 
 // Types
 import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
@@ -42,6 +42,9 @@ const Index = () => {
     return storedValue ? JSON.parse(storedValue) : false;
   });
 
+  // State for destinations
+  const [ratingDestinations, setRatingDestinations] = useState<Destination[]>([]);
+
   // Save showTitleScreen and showRecommendations to localStorage
   useEffect(() => {
     localStorage.setItem('travel_app_showTitleScreen', JSON.stringify(showTitleScreen));
@@ -50,6 +53,21 @@ const Index = () => {
   useEffect(() => {
     localStorage.setItem('travel_app_showRecommendations', JSON.stringify(showRecommendations));
   }, [showRecommendations]);
+
+  // Fetch destinations from API when component mounts
+  useEffect(() => {
+    const loadDestinations = async () => {
+      try {
+        const apiDestinations = await fetchDestinations();
+        setRatingDestinations(apiDestinations);
+      } catch (error) {
+        console.error('Failed to load destinations:', error);
+        // If API fails, we'll have an empty array
+      }
+    };
+
+    loadDestinations();
+  }, []);
 
   const {
     preferences,
@@ -128,7 +146,7 @@ const Index = () => {
       <StepDisplay
         currentStep={currentStep}
         questionSteps={questionSteps}
-        destinations={destinations}
+        destinations={ratingDestinations}
         preferences={preferences}
         messages={messages}
         isTyping={isTyping}

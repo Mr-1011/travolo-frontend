@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { UserPreferences, Message, Destination, Recommendation, QuestionStep } from '@/types';
-import { generateRecommendations } from '@/utils/recommendationUtils';
 
 // Sample conversation starters
 const sampleConversationQuestions = [
@@ -8,6 +7,55 @@ const sampleConversationQuestions = [
   "What's one travel experience you've always wanted to try?",
   "Describe your ideal evening during a vacation.",
   "What aspects of a destination are most important to you?"
+];
+
+// Sample recommendations to use when generating recommendations
+const sampleRecommendations: Recommendation[] = [
+  {
+    id: 'santorini',
+    name: 'Santorini',
+    country: 'Greece',
+    description: 'Famous for its dramatic views, stunning sunsets, white-washed houses, and blue domes.',
+    image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1974&auto=format&fit=crop',
+    matchScore: 96,
+    features: ['Beach', 'Culture', 'Relaxation', 'Scenic Views'],
+    activities: [
+      'Watch the sunset in Oia',
+      'Visit black sand beaches',
+      'Explore ancient ruins',
+      'Enjoy local cuisine and wines'
+    ]
+  },
+  {
+    id: 'kyoto',
+    name: 'Kyoto',
+    country: 'Japan',
+    description: 'Ancient capital with over 1,600 Buddhist temples, imperial palaces, and traditional gardens.',
+    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop',
+    matchScore: 92,
+    features: ['Culture', 'History', 'Food', 'Temples'],
+    activities: [
+      'Visit Fushimi Inari Shrine',
+      'Experience a traditional tea ceremony',
+      'Explore bamboo forests',
+      'Try authentic Japanese cuisine'
+    ]
+  },
+  {
+    id: 'barcelona',
+    name: 'Barcelona',
+    country: 'Spain',
+    description: 'A vibrant city known for stunning architecture, Mediterranean beaches, and lively culture.',
+    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?q=80&w=2070&auto=format&fit=crop',
+    matchScore: 88,
+    features: ['City', 'Beach', 'Architecture', 'Nightlife'],
+    activities: [
+      'Explore Gaudí\'s masterpieces',
+      'Stroll down Las Ramblas',
+      'Relax on Barceloneta Beach',
+      'Enjoy tapas and sangria'
+    ]
+  }
 ];
 
 // Export the default preferences to be used elsewhere
@@ -129,14 +177,19 @@ export function useUserPreferences() {
     setPreferences(prev => ({ ...prev, travelBudget: budget }));
   };
 
-  const handleDestinationRatingChange = (destinationId: string, rating: number) => {
-    setPreferences(prev => ({
-      ...prev,
-      destinationRatings: {
-        ...prev.destinationRatings,
-        [destinationId]: rating
-      }
-    }));
+  const handleDestinationRatingChange = (destinationId: string, rating: 'like' | 'dislike' | null) => {
+    setPreferences(prev => {
+      const currentRating = prev.destinationRatings[destinationId];
+      const newRating = currentRating === rating ? null : rating; // Toggle or set
+
+      return {
+        ...prev,
+        destinationRatings: {
+          ...prev.destinationRatings,
+          [destinationId]: newRating
+        }
+      };
+    });
   };
 
   const handlePhotoChange = (photos: { url: string; caption: string }[]) => {
@@ -181,15 +234,15 @@ export function useUserPreferences() {
   const handleGetRecommendations = () => {
     // Log the complete user preferences for debugging
     console.log('Get Recommendations clicked - User Preferences:', JSON.stringify(preferences, null, 2));
-    const newRecommendations = generateRecommendations(preferences);
-    setRecommendations(newRecommendations);
+    // Use sample recommendations temporarily until we implement the real recommendation API
+    setRecommendations(sampleRecommendations);
   };
 
   const handleRegenerateRecommendations = () => {
     // Log the complete user preferences for debugging
     console.log('Find My Perfect Trip clicked - User Preferences:', JSON.stringify(preferences, null, 2));
-    const newRecommendations = generateRecommendations(preferences);
-    setRecommendations(newRecommendations);
+    // Use sample recommendations temporarily until we implement the real recommendation API
+    setRecommendations(sampleRecommendations);
   };
 
   const isCurrentStepValid = (currentStep: QuestionStep) => {

@@ -32,8 +32,8 @@ export type UserPreferences = {
   // Step 6 becomes Step 7: Travel Budget
   travelBudget: string;
 
-  // Step 8: Destination Ratings
-  destinationRatings: Record<string, number>;
+  // Step 8: Destination Ratings - Changed to store 'like', 'dislike', or null
+  destinationRatings: Record<string, 'like' | 'dislike' | null>;
 
   // Step 9: Photo Upload
   photos: { url: string; caption: string }[];

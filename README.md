@@ -6,12 +6,12 @@ A progressive web application that helps users discover personalized travel dest
 
 This application guides users through a step-by-step questionnaire to gather travel preferences, then provides tailored vacation recommendations. The user journey includes:
 
-1. **Welcome Screen**: Introduction to the application
-2. **Travel Themes**: Select interests (adventure, relaxation, culture, etc.)
-3. **Weather Preference**: Choose preferred climate conditions
-4. **Travel Months**: Select ideal time periods for travel
-5. **Trip Duration**: Specify length of stay
-6. **Preferred Regions**: Select geographic areas of interest
+1. **Travel Themes**: Select interests (adventure, relaxation, culture, etc.)
+2. **Weather Preference**: Choose preferred climate conditions
+3. **Travel Months**: Select ideal time periods for travel
+4. **Trip Duration**: Specify length of stay
+5. **Preferred Regions**: Select geographic areas of interest
+6. **Origin Location**: Specify your starting location
 7. **Budget**: Indicate spending capacity
 8. **Destination Ratings**: Rate sample destinations to refine recommendations
 9. **Photo Upload**: Share travel photos for inspiration
