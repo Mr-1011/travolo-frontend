@@ -42,7 +42,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
               onClick={onGetRecommendations}
               className="text-[#3c83f6] border-[#3c83f6]"
             >
-              <Sparkles className="mr-2 h-4 w-4" /> Get Recommendations
+              <Sparkles className="mr-2 h-4 w-4" /> Submit Now
             </Button>
           )}
 

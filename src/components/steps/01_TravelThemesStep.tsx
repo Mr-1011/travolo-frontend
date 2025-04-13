@@ -89,7 +89,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
       <h2 className="text-2xl font-bold mb-2">Select Your Preferred Travel Themes</h2>
       <p className="text-gray-600 mb-6">What kind of experiences are you looking for?</p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {themes.map((theme) => (
           <div
             key={theme.id}
