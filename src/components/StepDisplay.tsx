@@ -147,8 +147,8 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md mb-20">
-      <div className="p-6 flex-1 overflow-y-auto">
+    <div className="flex flex-col h-full bg-white rounded-xl shadow-md pb-10">
+      <div className="p-6 flex-1 overflow-y-auto min-h-[90vh]">
         <ProgressIndicator
           currentStep={currentStep}
           steps={questionSteps}
@@ -160,7 +160,6 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
       </div>
 
       <QuestionNavigation
-        className="fixed bottom-0 inset-x-0 z-10 bg-white border-t border-gray-200"
         currentStep={currentStep}
         onNextStep={onNextStep}
         onPreviousStep={onPreviousStep}
