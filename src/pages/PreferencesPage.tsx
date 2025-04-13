@@ -35,21 +35,6 @@ const PreferencesPage = () => {
   // State for destinations
   const [ratingDestinations, setRatingDestinations] = useState<Destination[]>([]);
 
-  // Fetch destinations from API when component mounts
-  useEffect(() => {
-    const loadDestinations = async () => {
-      try {
-        const apiDestinations = await fetchDestinations();
-        setRatingDestinations(apiDestinations);
-      } catch (error) {
-        console.error('Failed to load destinations:', error);
-        // If API fails, we'll have an empty array
-      }
-    };
-
-    loadDestinations();
-  }, []);
-
   const {
     preferences,
     messages,
@@ -59,30 +44,16 @@ const PreferencesPage = () => {
     isCurrentStepValid
   } = useUserPreferences();
 
-  // Effect to navigate when recommendations are ready
-  useEffect(() => {
-    if (recommendations && recommendations.length > 0) {
-      // Check if we are *not* already on the results page before navigating
-      // This prevents potential loops if the hook updates recommendations again
-      // while already on the results page (though unlikely with current setup).
-      // A check for a specific state flag set before calling handleGetRecommendations
-      // might be more robust.
-      navigate('/results', { state: { recommendations } });
-
-      // Optional: Clear recommendations in the hook's state after navigating
-      // to prevent re-navigation if the user goes back and forth?
-      // handlers.clearRecommendations(); // Assuming such a handler exists
-    }
-  }, [recommendations, navigate]);
-
   const handleNextStep = () => {
     const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
     if (currentIndex < questionSteps.length - 1) {
       setCurrentStep(questionSteps[currentIndex + 1].id);
     } else {
-      // If it's the last step, trigger recommendation generation
-      handlers.handleGetRecommendations(); // Call the handler to fetch/generate
-      // Navigation will happen via the useEffect above when recommendations are ready
+      // Last step: Call handler with navigation callback
+      console.log("Last step reached, calling handleGetRecommendations with navigation callback");
+      handlers.handleGetRecommendations((newRecommendations) => {
+        navigate('/results', { state: { recommendations: newRecommendations } });
+      });
     }
   };
 
@@ -93,10 +64,12 @@ const PreferencesPage = () => {
     }
   };
 
-  // Modified to trigger recommendation generation
+  // Modified to call handler with navigation callback
   const handleGetRecommendations = () => {
-    handlers.handleGetRecommendations();
-    // Navigation happens via useEffect
+    console.log("handleGetRecommendations called with navigation callback");
+    handlers.handleGetRecommendations((newRecommendations) => {
+      navigate('/results', { state: { recommendations: newRecommendations } });
+    });
   };
 
   const handleRestartProcess = () => {

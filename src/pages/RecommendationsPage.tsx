@@ -3,10 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import RecommendationsView from '@/components/RecommendationsView';
 import { Recommendation } from '@/types'; // Import Recommendation type
+import { useUserPreferences } from '@/hooks/useUserPreferences'; // Import the hook
 
 const RecommendationsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { handlers } = useUserPreferences(); // Get handlers from the hook
   const recommendations = location.state?.recommendations as Recommendation[] | undefined;
 
   // Handle case where recommendations are not passed (e.g., direct navigation)
@@ -20,12 +22,12 @@ const RecommendationsPage = () => {
   }
 
   const handleRegenerateRecommendations = () => {
-    // This likely needs more complex logic, potentially involving navigating back
-    // to the preferences page or re-triggering the generation process.
-    // For now, just log a message.
-    console.log("Regenerate recommendations clicked - further implementation needed");
-    // Possibly navigate back to preferences with a flag to regenerate?
-    // navigate('/preferences', { state: { regenerate: true } });
+    // Call the regenerate handler from the hook, providing a navigation callback
+    console.log("Regenerate recommendations clicked");
+    handlers.handleRegenerateRecommendations((newRecommendations) => {
+      // Re-navigate to the same page but with new state
+      navigate('/results', { state: { recommendations: newRecommendations }, replace: true });
+    });
   };
 
   const handleBackToForm = () => {
@@ -33,7 +35,8 @@ const RecommendationsPage = () => {
   };
 
   const handleRestartProcess = () => {
-    // Consider clearing preferences state here if necessary
+    console.log("Restart process clicked");
+    handlers.resetAllPreferences(); // Reset preferences via the hook
     navigate('/'); // Navigate back to the start page
   };
 

@@ -231,18 +231,27 @@ export function useUserPreferences() {
     }, 1500);
   };
 
-  const handleGetRecommendations = () => {
-    // Log the complete user preferences for debugging
-    console.log('Get Recommendations clicked - User Preferences:', JSON.stringify(preferences, null, 2));
-    // Use sample recommendations temporarily until we implement the real recommendation API
-    setRecommendations(sampleRecommendations);
+  const handleGetRecommendations = (onComplete?: (recommendations: Recommendation[]) => void) => {
+    console.log('Get Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
+    // Simulate potential async operation
+    setTimeout(() => {
+      const newRecommendations = sampleRecommendations; // In reality, fetch/generate here
+      setRecommendations(newRecommendations);
+      console.log('Recommendations set, calling onComplete callback');
+      onComplete?.(newRecommendations); // Call callback if provided
+    }, 50); // Short delay to simulate async
   };
 
-  const handleRegenerateRecommendations = () => {
-    // Log the complete user preferences for debugging
-    console.log('Find My Perfect Trip clicked - User Preferences:', JSON.stringify(preferences, null, 2));
-    // Use sample recommendations temporarily until we implement the real recommendation API
-    setRecommendations(sampleRecommendations);
+  const handleRegenerateRecommendations = (onComplete?: (recommendations: Recommendation[]) => void) => {
+    console.log('Regenerate Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
+    // Simulate potential async operation
+    setTimeout(() => {
+      // Modify sample data slightly for regeneration effect if desired
+      const regeneratedRecommendations = sampleRecommendations.map(r => ({ ...r, matchScore: r.matchScore - Math.floor(Math.random() * 5) }));
+      setRecommendations(regeneratedRecommendations);
+      console.log('Recommendations regenerated, calling onComplete callback');
+      onComplete?.(regeneratedRecommendations);
+    }, 50); // Short delay to simulate async
   };
 
   const isCurrentStepValid = (currentStep: QuestionStep) => {

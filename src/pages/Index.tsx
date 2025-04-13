@@ -9,7 +9,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleStartApp = () => {
-    navigate('/preferences'); // Navigate to the new preferences route
+    navigate('/preferences?step=1'); // Navigate to the new preferences route
   };
 
   return (
