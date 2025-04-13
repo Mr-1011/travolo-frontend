@@ -131,10 +131,10 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
           {error}
         </p>
       )}
-      {!error && isConfirmed && (
+      {!error && isConfirmed && originLocation && (
         <p className="mt-2 text-sm text-green-600 flex items-center">
           <CheckCircle className="h-4 w-4 mr-1" />
-          Location set to: {originLocation?.name} ({originLocation?.lat.toFixed(4)}, {originLocation?.lon.toFixed(4)})
+          Location set to: {originLocation.name} ({originLocation.lat?.toFixed(4) ?? 'N/A'}, {originLocation.lon?.toFixed(4) ?? 'N/A'})
         </p>
       )}
       {!OPENCAGE_API_KEY && (

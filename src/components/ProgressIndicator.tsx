@@ -7,19 +7,19 @@ type ProgressIndicatorProps = {
     id: QuestionStep;
     label: string;
   }[];
+  onNavigateToStep: (stepId: QuestionStep) => void;
 };
 
 export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   currentStep,
-  steps
+  steps,
+  onNavigateToStep
 }) => {
   const currentIndex = steps.findIndex(step => step.id === currentStep);
 
   return (
     <div className="mb-8">
-      {/* Combined progress bar and steps */}
       <div className="relative w-full mt-2 mb-4">
-        {/* Progress bar */}
         <div className="absolute w-full h-1 bg-gray-200 top-4 rounded">
           <div
             className="absolute left-0 top-0 h-full bg-[#3c83f6] rounded transition-all duration-300"
@@ -27,24 +27,25 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
           ></div>
         </div>
 
-        {/* Step circles */}
         <div className="flex justify-between items-center w-full relative">
           {steps.map((step, index) => {
-            // Determine status
             const isActive = step.id === currentStep;
             const isCompleted = index < currentIndex;
+            const isClickable = index <= currentIndex;
 
             return (
               <div
                 key={step.id}
                 className="flex flex-col items-center"
+                onClick={isClickable ? () => onNavigateToStep(step.id) : undefined}
               >
                 <div
                   className={`flex items-center justify-center w-8 h-8 rounded-full
-                    ${isActive ? 'bg-[#3c83f6] text-white' :
+                    ${isActive ? 'bg-[#3c83f6] text-white font-bold' :
                       isCompleted ? 'bg-[#3c83f6] text-white' :
-                        index <= currentIndex ? 'bg-[#3c83f6] text-white' : 'bg-gray-200 text-gray-500'}
+                        'bg-gray-200 text-gray-500'}
                     transition-all duration-200 z-10
+                    ${isClickable ? 'cursor-pointer hover:ring-2 hover:ring-[#3c83f6] hover:ring-offset-2' : 'cursor-default'}
                   `}
                 >
                   {index + 1}

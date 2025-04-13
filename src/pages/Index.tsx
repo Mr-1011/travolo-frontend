@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TitleScreen from '@/components/TitleScreen';
 import RecommendationsView from '@/components/RecommendationsView';
-import StepDisplay from '@/components/steps/StepDisplay';
+import StepDisplay from '@/components/StepDisplay';
 
 // Utilities & Hooks
 import { useUserPreferences } from '@/hooks/useUserPreferences';
@@ -103,6 +103,11 @@ const Index = () => {
     window.history.replaceState({}, '', url.toString());
   };
 
+  // New handler to navigate directly to a specific step
+  const handleNavigateToStep = (stepId: QuestionStep) => {
+    setCurrentStep(stepId);
+  };
+
   const renderContent = () => {
     if (showTitleScreen) {
       return <TitleScreen onStart={handleStartApp} />;
@@ -132,6 +137,7 @@ const Index = () => {
         onNextStep={handleNextStep}
         onPreviousStep={handlePreviousStep}
         onGetRecommendations={handleGetRecommendations}
+        onNavigateToStep={handleNavigateToStep}
       />
     );
   };

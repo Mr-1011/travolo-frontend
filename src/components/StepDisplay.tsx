@@ -2,16 +2,16 @@ import React from 'react';
 import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
 import { ProgressIndicator } from '@/components/ProgressIndicator';
 import QuestionNavigation from '@/components/QuestionNavigation';
-import TravelThemesStep from '@/components/steps/TravelThemesStep';
-import WeatherPreferenceStep from '@/components/steps/WeatherPreferenceStep';
-import TravelMonthsStep from '@/components/steps/TravelMonthsStep';
-import TravelDurationStep from '@/components/steps/TravelDurationStep';
-import PreferredRegionStep from '@/components/steps/PreferredRegionStep';
-import TravelBudgetStep from '@/components/steps/TravelBudgetStep';
-import DestinationRatingStep from '@/components/steps/DestinationRatingStep';
-import PhotoUploadStep from '@/components/steps/PhotoUploadStep';
-import RefinePreferencesStep from '@/components/steps/RefinePreferencesStep';
-import OriginLocationStep from '@/components/steps/OriginLocationStep';
+import TravelThemesStep from '@/components/steps/01_TravelThemesStep';
+import WeatherPreferenceStep from '@/components/steps/02_WeatherPreferenceStep';
+import TravelMonthsStep from '@/components/steps/03_TravelMonthsStep';
+import TravelDurationStep from '@/components/steps/04_TravelDurationStep';
+import PreferredRegionStep from '@/components/steps/05_PreferredRegionStep';
+import TravelBudgetStep from '@/components/steps/07_TravelBudgetStep';
+import DestinationRatingStep from '@/components/steps/08_DestinationRatingStep';
+import PhotoUploadStep from '@/components/steps/09_PhotoUploadStep';
+import RefinePreferencesStep from '@/components/steps/10_RefinePreferencesStep';
+import OriginLocationStep from '@/components/steps/06_OriginLocationStep';
 
 type StepDisplayProps = {
   currentStep: QuestionStep;
@@ -37,6 +37,7 @@ type StepDisplayProps = {
   onNextStep: () => void;
   onPreviousStep: () => void;
   onGetRecommendations: () => void;
+  onNavigateToStep: (stepId: QuestionStep) => void;
 };
 
 const StepDisplay: React.FC<StepDisplayProps> = ({
@@ -51,6 +52,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   onNextStep,
   onPreviousStep,
   onGetRecommendations,
+  onNavigateToStep,
 }) => {
   const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
 
@@ -150,8 +152,8 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
         <ProgressIndicator
           currentStep={currentStep}
           steps={questionSteps}
+          onNavigateToStep={onNavigateToStep}
         />
-
         <div className="my-4">
           {renderStepContent()}
         </div>
