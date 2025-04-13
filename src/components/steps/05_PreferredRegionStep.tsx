@@ -34,25 +34,6 @@ const PreferredRegionStep: React.FC<PreferredRegionStepProps> = ({
         selectedRegions={selectedRegions}
         onRegionChange={onRegionChange}
       />
-
-      {/* Show selected regions as text below the map */}
-      <div className="mt-4">
-        <p className="text-sm font-medium">Selected regions:</p>
-        <div className="flex flex-wrap gap-2 mt-1">
-          {selectedRegions.length === 0 ? (
-            <span className="text-gray-500 text-sm">None selected</span>
-          ) : (
-            selectedRegions.map(regionId => (
-              <span
-                key={regionId}
-                className="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded"
-              >
-                {regions.find(r => r.id === regionId)?.name || regionId}
-              </span>
-            ))
-          )}
-        </div>
-      </div>
     </div>
   );
 };

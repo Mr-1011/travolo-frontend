@@ -31,6 +31,7 @@ const SvgComponent = ({
       xmlns="http://www.w3.org/2000/svg"
       data-name="Ebene 1"
       viewBox="0 0 950.78 568.14"
+      style={{ padding: '16px' }} // Add padding to the SVG
       {...props} // Spread remaining props onto the SVG element
     >
       <path

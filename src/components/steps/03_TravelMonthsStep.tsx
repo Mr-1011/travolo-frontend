@@ -26,10 +26,9 @@ const TravelMonthsStep: React.FC<TravelMonthsStepProps> = ({
   return (
     <div className="w-full h-full flex flex-col">
       <ScrollArea className="flex-1">
-        <div className="pr-4 pb-4">
+        <div>
           <h2 className="text-2xl font-bold mb-2">Travel Time</h2>
           <p className="text-gray-600 mb-6">When would you like to travel? Select all months that work for you.</p>
-
           <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
             {months.map((month) => {
               const isSelected = selectedMonths.includes(month);
@@ -58,12 +57,6 @@ const TravelMonthsStep: React.FC<TravelMonthsStepProps> = ({
                 </button>
               );
             })}
-          </div>
-
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">Selected months:</span> {selectedMonths.length > 0 ? selectedMonths.join(', ') : 'None selected'}
-            </p>
           </div>
         </div>
       </ScrollArea>

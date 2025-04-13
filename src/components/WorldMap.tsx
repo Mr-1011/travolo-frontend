@@ -42,34 +42,36 @@ const WorldMap: React.FC<WorldMapProps> = ({ selectedRegions, onRegionChange }) 
   const displayedRegions = isAnywhereSelected ? allRegionIds : selectedRegions;
 
   return (
-    <div className="w-full flex flex-col items-center"> {/* Center content */}
+    <div className="w-full relative">
       {/* Render the SvgComponent with props */}
       <SvgComponent
         selectedRegions={displayedRegions} // Pass displayedRegions based on 'anywhere' state
         onRegionClick={handleRegionClick}
-        className="w-full max-w-4xl h-auto border rounded-lg mb-4" // Limit max width, add margin
+        className="w-full max-w-4xl h-auto border rounded-lg mx-auto"
         aria-label="World Map"
       />
 
-      {/* Anywhere button - Keep outside the SVG for easier layout */}
-      <button
-        onClick={() => handleRegionClick('anywhere')}
-        className={`px-4 py-2 rounded-full border transition-colors ${isAnywhereSelected
-          ? 'bg-blue-500 text-white border-blue-500'
-          : 'bg-slate-300 text-slate-700 border-slate-300 hover:bg-slate-400'
-          }`}
-      >
-        Anywhere
-      </button>
+      {/* Anywhere button in the center bottom */}
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+        <button
+          onClick={() => handleRegionClick('anywhere')}
+          className={`px-4 py-2 rounded border transition-colors ${isAnywhereSelected
+            ? 'bg-blue-500 text-white border-blue-500'
+            : 'bg-slate-300 text-slate-700 border-slate-300 hover:bg-slate-400'
+            }`}
+        >
+          Select All
+        </button>
+      </div>
 
-      {/* Legend showing which colors represent selected/unselected */}
-      <div className="flex items-center gap-4 mt-4 text-sm">
+      {/* Legend at the bottom left, stacked vertically */}
+      <div className="absolute bottom-4 left-4 flex flex-col gap-1 text-sm bg-white/80 px-3 py-2 rounded">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded" style={{ backgroundColor: baseColor }}></div> {/* Rounded legend color box */}
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: baseColor }}></div>
           <span>Unselected</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded" style={{ backgroundColor: selectedColor }}></div> {/* Rounded legend color box */}
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: selectedColor }}></div>
           <span>Selected</span>
         </div>
       </div>
