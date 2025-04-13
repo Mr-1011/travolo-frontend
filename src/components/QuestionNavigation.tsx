@@ -31,7 +31,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
         onClick={onPreviousStep}
         disabled={isFirstStep}
       >
-        <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+        <ChevronLeft className="mr-2 h-4 w-4" /> Back
       </Button>
 
       <div className="flex space-x-3">
@@ -41,7 +41,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={onGetRecommendations}
             className="text-[#3c83f6] border-[#3c83f6]"
           >
-            <Sparkles className="mr-2 h-4 w-4" /> Submit Now
+            <Sparkles className="hidden sm:inline-block mr-2 h-4 w-4" /> Submit Now
           </Button>
         )}
 
@@ -59,7 +59,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={onGetRecommendations}
             className="bg-[#3c83f6]"
           >
-            <Sparkles className="mr-2 h-4 w-4" /> Find My Perfect Trip
+            <Sparkles className="hidden sm:inline-block mr-2 h-4 w-4" /> Find My Perfect Trip
           </Button>
         )}
       </div>
