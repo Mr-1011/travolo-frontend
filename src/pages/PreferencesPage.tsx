@@ -35,6 +35,24 @@ const PreferencesPage = () => {
   // State for destinations
   const [ratingDestinations, setRatingDestinations] = useState<Destination[]>([]);
 
+  // Fetch destinations when component mounts or when the current step is 'rate-destinations'
+  useEffect(() => {
+    const loadDestinations = async () => {
+      if (currentStep === 'rate-destinations') {
+        try {
+          console.log('Fetching destinations for rating step');
+          const destinations = await fetchDestinations();
+          console.log('Fetched destinations:', destinations);
+          setRatingDestinations(destinations);
+        } catch (error) {
+          console.error('Error fetching destinations:', error);
+        }
+      }
+    };
+
+    loadDestinations();
+  }, [currentStep]);
+
   const {
     preferences,
     messages,
@@ -72,15 +90,6 @@ const PreferencesPage = () => {
     });
   };
 
-  const handleRestartProcess = () => {
-    // Reset all user preferences
-    handlers.resetAllPreferences();
-    // Go back to the first step
-    setCurrentStep('travel-themes' as QuestionStep);
-    // Navigate back to home (Title Screen)
-    navigate('/');
-  };
-
   // New handler to navigate directly to a specific step
   const handleNavigateToStep = (stepId: QuestionStep) => {
     setCurrentStep(stepId);
@@ -96,11 +105,11 @@ const PreferencesPage = () => {
         preferences={preferences}
         messages={messages}
         isTyping={isTyping}
-        handlers={handlers} // Pass down handlers including the modified handleGetRecommendations
+        handlers={handlers}
         isCurrentStepValid={isCurrentStepValid(currentStep)}
         onNextStep={handleNextStep}
         onPreviousStep={handlePreviousStep}
-        onGetRecommendations={handleGetRecommendations} // Pass the modified handler
+        onGetRecommendations={handleGetRecommendations}
         onNavigateToStep={handleNavigateToStep}
       />
     );
