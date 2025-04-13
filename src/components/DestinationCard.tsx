@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
@@ -15,33 +15,45 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   rating,
   onRatingChange
 }) => {
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
+
   const getButtonVariant = (type: 'like' | 'dislike') => {
     return rating === type ? 'default' : 'outline';
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  const handleImageError = () => {
+    setImageLoading(false);
+    setImageError(true);
   };
 
   return (
     <Card key={destination.id} className="overflow-hidden rounded-xl transition-all duration-300 destination-card">
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/3 relative overflow-hidden bg-gray-200" style={{ aspectRatio: '4/5' }}>
-          {destination.image ? (
+          {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+
+          {destination.image && !imageError ? (
             <img
               src={destination.image}
               alt={destination.name}
-              className="w-full h-full object-cover destination-image"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                // Hide image container on error or show placeholder
-                target.parentElement?.classList.add('flex', 'items-center', 'justify-center', 'text-gray-500');
-                target.parentElement!.innerHTML = 'Image Error'; // Or some placeholder text/icon
-                target.remove(); // Remove the img element itself
-              }}
+              className={`w-full h-full object-cover destination-image ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-500">
-              No Image
+              {imageError ? 'Image Not Available' : 'No Image'}
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent md:bg-gradient-to-t md:from-black/60 md:via-black/30 md:to-transparent"></div>
 
           <div className="absolute bottom-0 left-0 p-4 md:hidden">
             <h4 className="text-lg font-semibold text-white">{destination.name}</h4>

@@ -51,19 +51,6 @@ const WorldMap: React.FC<WorldMapProps> = ({ selectedRegions, onRegionChange }) 
         aria-label="World Map"
       />
 
-      {/* Anywhere button in the center bottom */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-        <button
-          onClick={() => handleRegionClick('anywhere')}
-          className={`px-4 py-2 rounded border transition-colors ${isAnywhereSelected
-            ? 'bg-blue-500 text-white border-blue-500'
-            : 'bg-slate-300 text-slate-700 border-slate-300 hover:bg-slate-400'
-            }`}
-        >
-          Select All
-        </button>
-      </div>
-
       {/* Legend at the bottom left, stacked vertically */}
       <div className="absolute bottom-4 left-4 flex flex-col gap-1 text-sm bg-white/80 px-3 py-2 rounded">
         <div className="flex items-center gap-2">

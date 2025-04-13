@@ -147,8 +147,8 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md">
-      <div className="p-6 flex-1 overflow-y-auto pb-20">
+    <div className="flex flex-col h-full bg-white rounded-xl shadow-md mb-20">
+      <div className="p-6 flex-1 overflow-y-auto">
         <ProgressIndicator
           currentStep={currentStep}
           steps={questionSteps}

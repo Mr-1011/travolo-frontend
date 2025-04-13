@@ -13,6 +13,21 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   ratings,
   onRatingChange
 }) => {
+  // Show loading state if destinations array is empty
+  if (!destinations || destinations.length === 0) {
+    return (
+      <div className="w-full">
+        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <p className="text-gray-600 mb-6">Loading destinations for you to rate...</p>
+
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-gray-600">Loading destinations...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
