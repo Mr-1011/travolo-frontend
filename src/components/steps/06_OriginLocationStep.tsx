@@ -100,7 +100,8 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
         Where are you travelling from? Enter a city or country to help us refine recommendations.
       </p>
 
-      <div className="flex items-start space-x-2">
+      {/* Modified flex container for responsiveness */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-2 space-y-2 sm:space-y-0">
         <div className="flex-grow relative">
           <Input
             type="text"
@@ -115,7 +116,8 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
             <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500" />
           )}
         </div>
-        <Button onClick={handleSearch} disabled={isLoading || isConfirmed}>
+        {/* Make button full width on small screens */}
+        <Button onClick={handleSearch} disabled={isLoading || isConfirmed} className="w-full sm:w-auto">
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
