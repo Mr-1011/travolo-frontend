@@ -51,7 +51,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={onGetRecommendations}
             className="bg-[#3c83f6]"
           >
-            Find My Perfect Trip
+            Submit Now
           </Button>
         )}
 
@@ -100,7 +100,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
               onClick={onGetRecommendations}
               className="bg-[#3c83f6]"
             >
-              <Sparkles className="mr-2 h-4 w-4" /> Find My Perfect Trip
+              <Sparkles className="mr-2 h-4 w-4" /> Submit Now
             </Button>
           )}
         </div>
