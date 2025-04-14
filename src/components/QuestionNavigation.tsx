@@ -25,32 +25,24 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   isCurrentStepValid
 }) => {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-10 bg-white rounded-b-xl border-t border-gray-200 max-w-4xl mx-auto flex justify-between px-6 py-4">
-      <Button
-        variant="outline"
-        onClick={onPreviousStep}
-        disabled={isFirstStep}
-      >
-        <ChevronLeft className="mr-2 h-4 w-4" /> Back
-      </Button>
+    <div className="fixed bottom-0 inset-x-0 z-10 bg-white rounded-b-xl border-t border-gray-200 max-w-4xl mx-auto px-6 py-4">
+      <div className="flex sm:hidden justify-between items-center w-full">
+        <Button
+          variant="outline"
+          onClick={onPreviousStep}
+          disabled={isFirstStep}
+          className="flex-shrink-0"
+        >
+          <ChevronLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
 
-      <div className="flex space-x-3">
         {!isLastStep && (
           <Button
             variant="outline"
             onClick={onGetRecommendations}
             className="text-[#3c83f6] border-[#3c83f6]"
           >
-            <Sparkles className="hidden sm:inline-block mr-2 h-4 w-4" /> Submit Now
-          </Button>
-        )}
-
-        {!isLastStep && (
-          <Button
-            onClick={onNextStep}
-            disabled={!isCurrentStepValid}
-          >
-            Next <ChevronRight className="ml-2 h-4 w-4" />
+            Submit Now
           </Button>
         )}
 
@@ -59,9 +51,59 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={onGetRecommendations}
             className="bg-[#3c83f6]"
           >
-            <Sparkles className="hidden sm:inline-block mr-2 h-4 w-4" /> Find My Perfect Trip
+            Find My Perfect Trip
           </Button>
         )}
+
+        {!isLastStep && (
+          <Button
+            onClick={onNextStep}
+            disabled={!isCurrentStepValid}
+            className="flex-shrink-0"
+          >
+            Next <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        )}
+      </div>
+
+      <div className="hidden sm:flex justify-between items-center w-full">
+        <Button
+          variant="outline"
+          onClick={onPreviousStep}
+          disabled={isFirstStep}
+        >
+          <ChevronLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
+
+        <div className="flex space-x-3">
+          {!isLastStep && (
+            <Button
+              variant="outline"
+              onClick={onGetRecommendations}
+              className="text-[#3c83f6] border-[#3c83f6]"
+            >
+              <Sparkles className="mr-2 h-4 w-4" /> Submit Now
+            </Button>
+          )}
+
+          {!isLastStep && (
+            <Button
+              onClick={onNextStep}
+              disabled={!isCurrentStepValid}
+            >
+              Next <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+
+          {isLastStep && (
+            <Button
+              onClick={onGetRecommendations}
+              className="bg-[#3c83f6]"
+            >
+              <Sparkles className="mr-2 h-4 w-4" /> Find My Perfect Trip
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
