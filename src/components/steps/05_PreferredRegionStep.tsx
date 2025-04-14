@@ -1,6 +1,10 @@
 import React from 'react';
 import WorldMap from '../WorldMap';
 
+const baseColor = "#e2e8f0"; // light gray (slate-200)
+// Color for selected regions (used in legend)
+const selectedColor = "#3b82f6"; // blue (blue-500)
+
 type Region = {
   id: string;
   name: string;
@@ -34,6 +38,17 @@ const PreferredRegionStep: React.FC<PreferredRegionStepProps> = ({
         selectedRegions={selectedRegions}
         onRegionChange={onRegionChange}
       />
+      {/* Mobile legend */}
+      <div className="flex flex-col gap-1 text-sm bg-white/80 px-3 py-2 rounded md:hidden mt-3">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: baseColor }}></div>
+          <span>Unselected</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded" style={{ backgroundColor: selectedColor }}></div>
+          <span>Selected</span>
+        </div>
+      </div>
     </div>
   );
 };

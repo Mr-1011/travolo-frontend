@@ -52,7 +52,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ selectedRegions, onRegionChange }) 
       />
 
       {/* Legend at the bottom left, stacked vertically */}
-      <div className="absolute bottom-4 left-4 flex flex-col gap-1 text-sm bg-white/80 px-3 py-2 rounded">
+      <div className="absolute bottom-4 left-4 flex flex-col gap-1 text-sm bg-white/80 px-3 py-2 rounded hidden md:flex">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded" style={{ backgroundColor: baseColor }}></div>
           <span>Unselected</span>
