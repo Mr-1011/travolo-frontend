@@ -61,7 +61,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
           </div>
         </div>
 
-        <div className="p-6 w-full md:w-2/3">
+        <div className="p-6 w-full md:w-2/3 flex flex-col">
           <div className="hidden md:block">
             <h4 className="text-xl font-semibold">{destination.name}, {destination.country}</h4>
           </div>
@@ -74,9 +74,9 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             ))}
           </div>
 
-          <p className="text-gray-600 mb-6">{destination.description}</p>
+          <p className="text-gray-600 mb-4 flex-grow">{destination.description}</p>
 
-          <div className="flex flex-row gap-2 mt-4">
+          <div className="flex flex-row gap-2 mt-auto pt-4">
             <Button
               variant={getButtonVariant('like')}
               onClick={() => onRatingChange(destination.id, 'like')}
