@@ -22,11 +22,17 @@ export type ApiDestination = {
 };
 
 /**
- * Fetches random destinations from the API
+ * Fetches random destinations from the API (assumed to return 10 by default)
+ * @param excludeIds - Optional array of destination IDs to exclude.
  */
-export const fetchRandomDestinations = async (): Promise<ApiDestination[]> => {
+export const fetchRandomDestinations = async (excludeIds?: string[]): Promise<ApiDestination[]> => {
   try {
-    const response = await fetch('http://localhost:3001/api/destinations/random');
+    const url = new URL('http://localhost:3001/api/destinations/random');
+    if (excludeIds && excludeIds.length > 0) {
+      url.searchParams.append('exclude', excludeIds.join(','));
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);

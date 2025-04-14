@@ -29,7 +29,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
     // Apply fixed height and ensure content flexes correctly
     <Card key={destination.id} className="overflow-hidden rounded-xl transition-all duration-300 w-full flex flex-col" style={{ height: FIXED_CARD_HEIGHT }}>
       {/* Image container - Make it take a significant portion of height */}
-      <div className="w-full h-3/5 relative overflow-hidden bg-gray-200"> {/* Adjust height fraction as needed */}
+      <div className="w-full h-4/5 relative overflow-hidden bg-gray-200"> {/* Adjust height fraction as needed */}
         {imageLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
             <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -50,22 +50,17 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
           </div>
         )}
 
-        {/* Optional: Overlay title on image for mobile - adjust styling */}
-        {/*
-          <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/60 to-transparent w-full">
-            <h4 className="text-xl font-semibold text-white">{destination.name}</h4>
-            <p className="text-sm text-gray-200">{destination.country}</p>
-          </div>
-          */}
+
+        <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
+          <h4 className="text-2xl font-semibold text-white">{destination.name}</h4>
+          <p className="text-lg text-gray-200">{destination.country}</p>
+        </div>
+
       </div>
 
       {/* Content Area - Takes remaining height */}
       <div className="p-4 flex flex-col flex-grow"> {/* Use flex-grow */}
-        {/* Bigger Title */}
-        <h4 className="text-2xl font-semibold mb-1">{destination.name}</h4>
-        <p className="text-sm text-gray-500 mb-2">{destination.country}</p>
-
-        <div className="flex flex-wrap gap-1 my-2">
+        <div className="flex flex-wrap gap-1 mb-2">
           {destination.type.map((type, index) => (
             <span key={index} className="px-2 py-0.5 bg-gray-100 rounded-full text-xs font-medium text-gray-700">
               {type}
