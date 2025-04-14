@@ -126,8 +126,6 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
       case 'upload-photo':
         return (
           <PhotoUploadStep
-            photos={preferences.photos}
-            onPhotoChange={handlers.handlePhotoChange}
           />
         );
 
