@@ -286,11 +286,15 @@ export function useUserPreferences() {
     // Clear recommendations
     setRecommendations([]);
 
-    // Clear chat started state
-    localStorage.setItem('travel_app_chat_started', JSON.stringify(false));
+    // Clear specific localStorage items
+    localStorage.removeItem('travel_app_preferences');
+    localStorage.removeItem('travel_app_messages');
+    localStorage.removeItem('travel_app_recommendations');
+    localStorage.removeItem('travel_app_chat_started');
+    localStorage.removeItem('travel_app_step'); // Clear the persisted step
 
     // Log the reset
-    console.log('All preferences reset to default values');
+    console.log('All preferences and related storage reset to default values');
   };
 
   return {

@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
 export type Recommendation = {
   id: string;
@@ -20,98 +19,91 @@ type RecommendationCardProps = {
 };
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation }) => {
-  const [liked, setLiked] = React.useState(false);
-  
+  const [rating, setRating] = useState<'like' | 'dislike' | null>(null);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
+
+  const getButtonVariant = (type: 'like' | 'dislike') => {
+    return rating === type ? 'default' : 'outline';
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  const handleImageError = () => {
+    setImageLoading(false);
+    setImageError(true);
+  };
+
+  const handleRatingChange = (newRating: 'like' | 'dislike') => {
+    setRating(prevRating => prevRating === newRating ? null : newRating);
+  };
+
   return (
-    <Card className="overflow-hidden rounded-3xl transition-all duration-300 hover:shadow-lg bg-white flex flex-col h-full">
-      {/* Image section with gradient overlay and details */}
-      <div className="relative w-full h-[280px]">
-        <img 
-          src={recommendation.image} 
-          alt={recommendation.name}
-          className="object-cover w-full h-full"
-        />
-        
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-        
-        {/* Dot indicators to suggest multiple images like in the reference design */}
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-white/50"></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-white/50"></div>
-        </div>
-        
-        {/* Title and location */}
-        <div className="absolute bottom-0 left-0 p-6 w-full">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-2xl font-bold text-white tracking-wide text-shadow-lg">{recommendation.name}</h3>
-              <p className="text-sm text-gray-200 mt-1">{recommendation.country}</p>
-            </div>
-            <div className="bg-white/90 rounded-full px-3 py-1 text-sm font-bold flex items-center">
-              <span className="text-travel-blue">{recommendation.matchScore}% match</span>
-            </div>
+    <Card className="overflow-hidden rounded-xl transition-all duration-300 flex flex-col md:flex-row recommendation-card">
+      <div className="w-full md:w-1/3 relative overflow-hidden bg-gray-200" style={{ minHeight: '250px', maxHeight: '350px' }}>
+        {imageLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
-          
-          {/* Short description */}
-          <p className="text-sm text-gray-300 mt-2 line-clamp-2">{recommendation.description}</p>
-        </div>
-        
-        {/* Like button - top right */}
-        <button 
-          onClick={() => setLiked(!liked)}
-          className="absolute top-4 right-4 bg-black/30 p-2 rounded-full hover:bg-black/50 transition-colors"
-        >
-          <Heart 
-            className={`h-5 w-5 ${liked ? 'fill-red-500 text-red-500' : 'text-white'}`}
+        )}
+        {recommendation.image && !imageError ? (
+          <img
+            src={recommendation.image}
+            alt={recommendation.name}
+            className={`w-full h-full object-cover recommendation-image ${imageLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            style={{ aspectRatio: '4/5' }}
           />
-        </button>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-500 bg-gray-100">
+            {imageError ? 'Image Not Available' : 'No Image'}
+          </div>
+        )}
       </div>
-      
-      {/* Card content */}
-      <CardContent className="p-6 pt-4 flex-grow">
-        {/* Feature tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {recommendation.features.slice(0, 3).map((feature, index) => (
-            <span 
-              key={index} 
-              className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-medium"
-            >
+
+      <div className="p-5 md:p-6 w-full md:w-2/3 flex flex-col">
+        <div className="flex justify-between items-start mb-3">
+          <div>
+            <h3 className="text-xl font-semibold">{recommendation.name}</h3>
+            <p className="text-sm text-gray-500">{recommendation.country}</p>
+          </div>
+          <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-bold flex items-center whitespace-nowrap">
+            {recommendation.matchScore}% match
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 my-3">
+          {recommendation.features.map((feature, index) => (
+            <span key={index} className="px-2.5 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-700">
               {feature}
             </span>
           ))}
-          {recommendation.features.length > 3 && (
-            <span className="text-xs text-gray-500 flex items-center">
-              +{recommendation.features.length - 3} more
-            </span>
-          )}
         </div>
-        
-        {/* Top activities section */}
-        <div className="space-y-1">
-          <h4 className="font-medium text-sm text-gray-500">Top activities:</h4>
-          <ul className="space-y-1">
-            {recommendation.activities.slice(0, 2).map((activity, index) => (
-              <li key={index} className="text-gray-700 text-sm flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-travel-blue"></span>
-                {activity}
-              </li>
-            ))}
-            {recommendation.activities.length > 2 && (
-              <li className="text-xs text-travel-blue font-medium cursor-pointer hover:underline">
-                See all activities
-              </li>
-            )}
-          </ul>
+
+        <p className="text-gray-600 mb-4 flex-grow text-sm line-clamp-3">{recommendation.description}</p>
+
+        <div className="flex flex-row gap-2 mt-auto pt-4 border-t border-gray-100">
+          <Button
+            variant={getButtonVariant('like')}
+            onClick={() => handleRatingChange('like')}
+            aria-label={`Like ${recommendation.name}`}
+            className="flex-1 flex items-center justify-center gap-2"
+          >
+            <ThumbsUp className="h-5 w-5" /> Like
+          </Button>
+          <Button
+            variant={getButtonVariant('dislike')}
+            onClick={() => handleRatingChange('dislike')}
+            aria-label={`Dislike ${recommendation.name}`}
+            className="flex-1 flex items-center justify-center gap-2"
+          >
+            <ThumbsDown className="h-5 w-5" /> Dislike
+          </Button>
         </div>
-      </CardContent>
-      
-      <CardFooter className="px-6 pb-6 pt-0">
-        <Button className="w-full bg-travel-blue hover:bg-travel-darkBlue text-white rounded-full py-6">
-          View Details
-        </Button>
-      </CardFooter>
+      </div>
     </Card>
   );
 };

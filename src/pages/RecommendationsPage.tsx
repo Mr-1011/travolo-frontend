@@ -37,7 +37,7 @@ const RecommendationsPage = () => {
   const handleRestartProcess = () => {
     console.log("Restart process clicked");
     handlers.resetAllPreferences(); // Reset preferences via the hook
-    navigate('/'); // Navigate back to the start page
+    navigate('/preferences'); // Navigate back to the preferences page (will reset to step 1)
   };
 
   return (

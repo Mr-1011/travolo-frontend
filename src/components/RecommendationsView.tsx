@@ -1,13 +1,13 @@
 import React from 'react';
 import RecommendationCard, { Recommendation } from './RecommendationCard';
 import { Button } from '@/components/ui/button';
-import { RefreshCcw, ArrowLeft } from 'lucide-react';
+import { RefreshCcw, ArrowLeft, Home } from 'lucide-react';
 
 type RecommendationsViewProps = {
   recommendations: Recommendation[];
   onRegenerateRecommendations: () => void;
   onBackToForm: () => void;
-  onRestartProcess?: () => void;
+  onRestartProcess: () => void;
 };
 
 const RecommendationsView: React.FC<RecommendationsViewProps> = ({
@@ -17,34 +17,37 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
   onRestartProcess
 }) => {
   return (
-    <div className="w-full">
+    <div className="flex flex-col h-full bg-white rounded-xl shadow-md p-6">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Your Travel Recommendations</h2>
-        <p className="text-gray-600">These recommendations are based on your preferences.</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Your Travel Recommendations</h2>
+        <p className="text-lg text-gray-600">Here are some destinations tailored to your preferences.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8 flex-grow">
         {recommendations.map((recommendation) => (
           <RecommendationCard key={recommendation.id} recommendation={recommendation} />
         ))}
       </div>
 
-      <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-        <Button
-          onClick={onRestartProcess || onRegenerateRecommendations}
-          className="bg-travel-teal hover:bg-travel-teal/90 text-white flex items-center gap-2"
-        >
-          <RefreshCcw size={16} />
-          {onRestartProcess ? 'Start Over' : 'Try Another Recommendation'}
-        </Button>
-
+      <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
         <Button
           onClick={onBackToForm}
           variant="outline"
-          className="border-travel-teal text-travel-teal hover:bg-travel-teal/10"
+          className="border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-2 px-6 py-3 rounded-full text-base"
+          size="lg"
         >
-          <ArrowLeft size={16} className="mr-2" />
-          Back to Preferences
+          <ArrowLeft size={18} />
+          Edit Preferences
+        </Button>
+
+        <Button
+          onClick={onRestartProcess}
+          variant="ghost"
+          className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-2 px-6 py-3 rounded-full text-base"
+          size="lg"
+        >
+          <Home size={18} />
+          Start Over
         </Button>
       </div>
     </div>
