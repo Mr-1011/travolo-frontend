@@ -1,4 +1,5 @@
 import { Destination } from '@/types';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 /**
  * API response type from the random destinations endpoint
@@ -27,7 +28,7 @@ export type ApiDestination = {
  */
 export const fetchRandomDestinations = async (excludeIds?: string[]): Promise<ApiDestination[]> => {
   try {
-    const url = new URL('http://localhost:3001/api/destinations/random');
+    const url = new URL(`${API_BASE_URL}/api/destinations/random`);
     if (excludeIds && excludeIds.length > 0) {
       url.searchParams.append('exclude', excludeIds.join(','));
     }

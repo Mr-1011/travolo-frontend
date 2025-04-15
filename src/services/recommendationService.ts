@@ -1,4 +1,5 @@
 import { UserPreferences } from '@/types'; // Assuming you have a UserPreferences type
+import { API_BASE_URL } from '@/config/apiConfig'; // Import the base URL
 
 // Define the structure of a single recommendation returned by the backend
 // Based on the placeholder in recommendationService.js
@@ -29,7 +30,8 @@ type RecommendationsApiResponse = {
 export const fetchRecommendations = async (userPreferences: UserPreferences): Promise<ApiRecommendation[]> => {
   console.log("Sending user preferences to backend:", userPreferences);
   try {
-    const response = await fetch('http://localhost:3001/api/recommendations', {
+    // Construct the URL using the base URL
+    const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

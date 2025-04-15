@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '@/config/apiConfig'; // Import the base URL
+
 /**
  * Sends images to the backend for preference analysis.
  * @param {File[]} imageFiles - An array of image files (max 3).
@@ -19,7 +21,8 @@ export const analyzeImagePreferences = async (imageFiles: File[]): Promise<objec
   });
 
   try {
-    const response = await fetch('http://localhost:3001/api/preferences/analyze-images', {
+    // Construct the URL using the base URL
+    const response = await fetch(`${API_BASE_URL}/api/preferences/analyze-images`, {
       method: 'POST',
       body: formData,
       // No 'Content-Type' header needed; browser sets it correctly for FormData
