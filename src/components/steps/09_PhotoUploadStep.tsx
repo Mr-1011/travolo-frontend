@@ -131,33 +131,80 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = () => {
       </p>
 
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
+        className={`relative border-2 border-dashed rounded-lg p-8 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
           }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className="flex flex-col items-center">
-          <Upload size={40} className="text-gray-400 mb-2" />
-          <p className="text-lg font-medium mb-1">Drag and drop your photos here</p>
-          <p className="text-sm text-gray-500 mb-4">or click to browse files</p>
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          accept="image/jpeg, image/png, image/webp"
+          multiple
+          id="photo-upload"
+          className="hidden"
+          onChange={handleFileInput}
+          disabled={isUploading || photos.length >= 3}
+        />
 
-          <input
-            type="file"
-            accept="image/jpeg, image/png, image/webp"
-            multiple
-            id="photo-upload"
-            className="hidden"
-            onChange={handleFileInput}
-          />
-
-          <Button asChild>
-            <label htmlFor="photo-upload" className="cursor-pointer">
-              Browse Files
-            </label>
-          </Button>
-          <p className="text-xs text-gray-400 mt-2">Max 3 photos (JPG, PNG, WEBP)</p>
-        </div>
+        {photos.length === 0 ? (
+          // Initial State: Empty Dropzone
+          <div className="flex flex-col items-center">
+            <Upload size={40} className="text-gray-400 mb-2" />
+            <p className="text-lg font-medium mb-1">Drag and drop your photos here</p>
+            <p className="text-sm text-gray-500 mb-4">or click to browse files</p>
+            <Button asChild>
+              <label htmlFor="photo-upload" className="cursor-pointer">
+                Browse Files
+              </label>
+            </Button>
+            <p className="text-xs text-gray-400 mt-2">Max 3 photos (JPG, PNG, WEBP)</p>
+          </div>
+        ) : (
+          // State with Uploaded Photos
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-medium text-left">Uploaded Photos ({photos.length}/3):</h4>
+              {photos.length < 3 && (
+                <Button asChild variant="outline" size="sm" className="absolute top-4 right-4">
+                  <label htmlFor="photo-upload" className="cursor-pointer">
+                    Add more
+                  </label>
+                </Button>
+              )}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {photos.map((photo, index) => (
+                <div key={index} className="relative rounded-lg overflow-hidden border border-gray-200 aspect-square">
+                  <img
+                    src={photo.url}
+                    alt={`Uploaded ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5 hover:bg-black/70 disabled:opacity-50"
+                    onClick={() => removePhoto(index)}
+                    disabled={isUploading}
+                    aria-label={`Remove photo ${index + 1}`}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+              {/* Optional: Placeholder for adding more via drag/drop directly */}
+              {photos.length < 3 && (
+                <label
+                  htmlFor="photo-upload"
+                  className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg aspect-square text-gray-400 hover:border-gray-400 hover:text-gray-500 cursor-pointer"
+                >
+                  <Upload size={24} />
+                  <span className="text-xs mt-1 text-center">Add more</span>
+                </label>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {uploadStatus && (
@@ -167,36 +214,13 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = () => {
       )}
 
       {photos.length > 0 && (
-        <div className="mt-6">
-          <h4 className="font-medium mb-3">Uploaded Photos ({photos.length}/3):</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {photos.map((photo, index) => (
-              <div key={index} className="relative rounded-lg overflow-hidden border border-gray-200">
-                <div className="h-48">
-                  <img
-                    src={photo.url}
-                    alt={`Uploaded ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white disabled:opacity-50"
-                    onClick={() => removePhoto(index)}
-                    disabled={isUploading}
-                  >
-                    <X size={16} className="text-red-500" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 text-center">
-            <Button
-              onClick={handleUpload}
-              disabled={isUploading || photos.length === 0}
-            >
-              {isUploading ? 'Analyzing...' : 'Analyze Photos'}
-            </Button>
-          </div>
+        <div className="mt-6 text-center">
+          <Button
+            onClick={handleUpload}
+            disabled={isUploading || photos.length === 0}
+          >
+            {isUploading ? 'Analyzing...' : 'Analyze Photos'}
+          </Button>
         </div>
       )}
     </div>
