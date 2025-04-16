@@ -4,18 +4,22 @@ import { Input } from '@/components/ui/input';
 import { Upload, X } from 'lucide-react';
 import { analyzeImagePreferences } from '@/services/preferenceService';
 
+// Expected return type from the analysis service
+type AnalysisResult = {
+  adjustmentSuccessful: boolean;
+};
+
+// Type for a single photo object in the component state
 type Photo = {
   file: File;
   url: string;
 };
 
 type PhotoUploadStepProps = {
-  // Keep props simple for now, parent will manage state
-  // photos: Photo[]; 
-  // onPhotoChange: (photos: Photo[]) => void;
+  onAnalysisComplete: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
 };
 
-const PhotoUploadStep: React.FC<PhotoUploadStepProps> = () => {
+const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete }) => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -109,13 +113,41 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = () => {
 
     try {
       const filesToUpload = photos.map(p => p.file);
-      const result = await analyzeImagePreferences(filesToUpload);
-      console.log('Backend Analysis:', result);
-      setUploadStatus('Analysis complete! Preferences updated (simulated).');
+      // Call the service function - don't assume a strict type here
+      const result: unknown = await analyzeImagePreferences(filesToUpload);
+      console.log('Backend Analysis Result:', result);
+
+      // Safely determine success status
+      let success = false;
+      if (
+        typeof result === 'object' &&
+        result !== null &&
+        'adjustmentSuccessful' in result &&
+        typeof result.adjustmentSuccessful === 'boolean'
+      ) {
+        success = result.adjustmentSuccessful;
+      }
+
+      // Call the callback prop with the analysis summary
+      onAnalysisComplete({
+        photoCount: photos.length,
+        adjustmentSuccessful: success // Use the safely determined value
+      });
+
+      // Update UI based on success
+      if (success) {
+        setUploadStatus('Analysis complete! Your preferences have been updated based on the photos.');
+      } else {
+        setUploadStatus('Analysis complete, but preferences could not be automatically updated.');
+      }
 
     } catch (error) {
-      console.error('Upload failed:', error);
+      console.error('Upload or analysis failed:', error);
       setUploadStatus(`Error: ${error instanceof Error ? error.message : 'Upload failed'}`);
+      onAnalysisComplete({
+        photoCount: photos.length,
+        adjustmentSuccessful: false
+      });
     } finally {
       setIsUploading(false);
     }

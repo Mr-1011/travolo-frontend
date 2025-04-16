@@ -8,12 +8,12 @@ type TravelTheme = {
 };
 
 type TravelThemesStepProps = {
-  selectedThemes: string[];
-  onThemesChange: (themes: string[]) => void;
+  themeRatings: Record<string, number>;
+  onThemesChange: (selectedThemeIds: string[]) => void;
 };
 
 const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
-  selectedThemes,
+  themeRatings = {},
   onThemesChange
 }) => {
   // Track hover state for each theme card
@@ -77,11 +77,23 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
   ];
 
   const handleThemeToggle = (themeId: string) => {
-    if (selectedThemes.includes(themeId)) {
-      onThemesChange(selectedThemes.filter(id => id !== themeId));
+    // Ensure themeRatings is treated as an object even if initially undefined/empty
+    const currentRatings = themeRatings || {};
+    // Determine the current list of selected themes (rating === 5)
+    const currentlySelectedIds = Object.entries(currentRatings)
+      .filter(([, rating]) => rating === 5)
+      .map(([id]) => id);
+
+    let newSelectedIds: string[];
+    if (currentlySelectedIds.includes(themeId)) {
+      // If currently selected, remove it
+      newSelectedIds = currentlySelectedIds.filter(id => id !== themeId);
     } else {
-      onThemesChange([...selectedThemes, themeId]);
+      // If not selected, add it
+      newSelectedIds = [...currentlySelectedIds, themeId];
     }
+    // Call the callback with the updated list of selected theme IDs
+    onThemesChange(newSelectedIds);
   };
 
   return (
@@ -99,7 +111,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
             className={`
               relative rounded-lg cursor-pointer transition-all 
               border-2 shadow-sm card-hover-effect overflow-hidden
-              ${selectedThemes.includes(theme.id)
+              ${(themeRatings || {})[theme.id] === 5
                 ? 'border-[#3c83f6] ring-2 ring-[#3c83f6]'
                 : 'border-gray-200 hover:border-gray-300'
               }
@@ -112,13 +124,13 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 loading="lazy"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-black/70"></div>
               <div className="absolute bottom-0 w-full p-3 text-white">
                 <p
                   className={`
                     font-medium text-2xl tracking-wide text-shadow-lg
                     transition-transform duration-200 ease-in-out
-                    ${hoveredTheme === theme.id || selectedThemes.includes(theme.id) ? 'transform -translate-y-1' : ''}
+                    ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5 ? 'transform -translate-y-1' : ''}
                   `}
                 >
                   {theme.name}
@@ -127,7 +139,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                   className={`
                     text-sm text-gray-300 
                     transition-all duration-200 ease-in-out
-                    ${hoveredTheme === theme.id || selectedThemes.includes(theme.id)
+                    ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5
                       ? 'opacity-100 max-h-16 transform translate-y-0'
                       : 'opacity-0 max-h-0 transform translate-y-4 overflow-hidden'
                     }
@@ -137,10 +149,10 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 </p>
               </div>
 
-              {selectedThemes.includes(theme.id) && (
+              {(themeRatings || {})[theme.id] === 5 && (
                 <div className="absolute top-2 right-2">
-                  <div className="w-5 h-5 bg-[#3c83f6] rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <div className="w-6 h-6 bg-[#3c83f6] rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                   </div>

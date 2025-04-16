@@ -58,9 +58,30 @@ const sampleRecommendations: Recommendation[] = [
   }
 ];
 
+// Define all possible theme IDs
+const allThemeIds = [
+  'culture',
+  'adventure',
+  'nature',
+  'beaches',
+  'nightlife',
+  'cuisine',
+  'wellness',
+  'urban',
+  'seclusion',
+];
+
+// Helper function to create the default theme ratings (all set to 1)
+const createDefaultThemeRatings = (): Record<string, number> => {
+  return allThemeIds.reduce((acc, themeId) => {
+    acc[themeId] = 1; // Default rating
+    return acc;
+  }, {} as Record<string, number>);
+};
+
 // Export the default preferences to be used elsewhere
 export const defaultPreferences: UserPreferences = {
-  travelThemes: [],
+  travelThemes: createDefaultThemeRatings(), // Use helper for initial default
   temperatureRange: [-5, 30],
   travelMonths: [],
   travelDuration: '',
@@ -68,8 +89,8 @@ export const defaultPreferences: UserPreferences = {
   originLocation: null,
   travelBudget: '',
   destinationRatings: {},
-  photos: [],
-  conversationInsights: [],
+  photoAnalysis: { photoCount: 0, adjustmentSuccessful: false },
+  conversationSummary: { userMessageCount: 0 },
 };
 
 export function useUserPreferences() {
@@ -78,18 +99,54 @@ export function useUserPreferences() {
     const storedPreferences = localStorage.getItem('travel_app_preferences');
     if (storedPreferences) {
       try {
-        const parsed = JSON.parse(storedPreferences);
-        // Remove weatherPreference if it exists in stored data
+        let parsed = JSON.parse(storedPreferences);
+
+        // --- Theme Migration --- START
+        if (Array.isArray(parsed.travelThemes)) {
+          // Old format (string[]) found, migrate to Record<string, number>
+          const selectedThemes = parsed.travelThemes as string[];
+          const newThemeRatings: Record<string, number> = {};
+          allThemeIds.forEach(themeId => {
+            newThemeRatings[themeId] = selectedThemes.includes(themeId) ? 5 : 1;
+          });
+          parsed.travelThemes = newThemeRatings;
+        } else if (typeof parsed.travelThemes === 'object' && parsed.travelThemes !== null) {
+          // New format (Record<string, number>) found, ensure all keys exist
+          const currentRatings = parsed.travelThemes as Record<string, number>;
+          const completeRatings: Record<string, number> = {};
+          allThemeIds.forEach(themeId => {
+            completeRatings[themeId] = currentRatings[themeId] === 5 ? 5 : 1; // Keep 5s, default others to 1
+          });
+          parsed.travelThemes = completeRatings;
+        } else {
+          // Invalid or missing, initialize with defaults
+          parsed.travelThemes = createDefaultThemeRatings();
+        }
+        // --- Theme Migration --- END
+
+        // Migration/Compatibility: Check for old fields and initialize new ones if necessary
+        if ('photos' in parsed || !('photoAnalysis' in parsed)) {
+          parsed.photoAnalysis = { photoCount: parsed.photos?.length || 0, adjustmentSuccessful: false }; // Default adjustment to false
+          delete parsed.photos; // Remove old field
+        }
+        if ('conversationInsights' in parsed || !('conversationSummary' in parsed)) {
+          parsed.conversationSummary = { userMessageCount: parsed.conversationInsights?.length || 0 };
+          delete parsed.conversationInsights; // Remove old field
+        }
+        // Remove weatherPreference if it exists in stored data (legacy handling)
         if ('weatherPreference' in parsed) {
           const { weatherPreference, ...rest } = parsed;
-          return rest;
+          parsed = rest; // Update parsed object directly
         }
-        return parsed;
+
+        // Merge with defaults to ensure all fields are present
+        return { ...defaultPreferences, ...parsed };
       } catch (e) {
         console.warn('Failed to parse stored preferences:', e);
       }
     }
-    return defaultPreferences;
+    // Return a clean default state if nothing is stored or parsing failed
+    return { ...defaultPreferences };
   });
 
   // Load messages from localStorage if available
@@ -149,8 +206,15 @@ export function useUserPreferences() {
     localStorage.setItem('travel_app_recommendations', JSON.stringify(recommendations));
   }, [recommendations]);
 
-  const handleThemesChange = (themes: string[]) => {
-    setPreferences(prev => ({ ...prev, travelThemes: themes }));
+  // Updated handler: Accepts selected theme IDs (string[]) and updates the ratings Record
+  const handleThemesChange = (selectedThemeIds: string[]) => {
+    setPreferences(prev => {
+      const newThemeRatings: Record<string, number> = {};
+      allThemeIds.forEach(themeId => {
+        newThemeRatings[themeId] = selectedThemeIds.includes(themeId) ? 5 : 1;
+      });
+      return { ...prev, travelThemes: newThemeRatings };
+    });
   };
 
   const handleTemperatureRangeChange = (range: number[]) => {
@@ -192,8 +256,28 @@ export function useUserPreferences() {
     });
   };
 
+  // Updated to handle photo analysis summary
+  const handlePhotoAnalysisUpdate = (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => {
+    setPreferences(prev => ({
+      ...prev,
+      photoAnalysis: {
+        photoCount: analysis.photoCount,
+        adjustmentSuccessful: analysis.adjustmentSuccessful
+      }
+    }));
+  };
+
+  // Kept for compatibility or potential future use, logs a warning
   const handlePhotoChange = (photos: { url: string; caption: string }[]) => {
-    setPreferences(prev => ({ ...prev, photos }));
+    console.warn('handlePhotoChange is deprecated. Use handlePhotoAnalysisUpdate instead.');
+    // Optionally, update photo count if needed for basic compatibility
+    setPreferences(prev => ({
+      ...prev,
+      photoAnalysis: {
+        ...prev.photoAnalysis, // Keep existing adjustment status
+        photoCount: photos.length,
+      }
+    }));
   };
 
   const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
@@ -210,6 +294,14 @@ export function useUserPreferences() {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
 
+    // Increment user message count in preferences
+    setPreferences(prev => ({
+      ...prev,
+      conversationSummary: {
+        userMessageCount: (prev.conversationSummary?.userMessageCount || 0) + 1
+      }
+    }));
+
     setTimeout(() => {
       const randomQuestion = sampleConversationQuestions[
         Math.floor(Math.random() * sampleConversationQuestions.length)
@@ -224,10 +316,8 @@ export function useUserPreferences() {
       setMessages(prev => [...prev, aiMessage]);
       setIsTyping(false);
 
-      setPreferences(prev => ({
-        ...prev,
-        conversationInsights: [...prev.conversationInsights, message]
-      }));
+      // Removed direct update to conversationInsights
+      // Preferences are now updated above when the user message is sent
     }, 1500);
   };
 
@@ -257,7 +347,8 @@ export function useUserPreferences() {
   const isCurrentStepValid = (currentStep: QuestionStep) => {
     switch (currentStep) {
       case 'travel-themes':
-        return preferences.travelThemes.length > 0;
+        // Check if at least one theme has a rating of 5
+        return Object.values(preferences.travelThemes || {}).some(rating => rating === 5);
       case 'travel-duration':
         return !!preferences.travelDuration;
       case 'preferred-region':
@@ -273,8 +364,10 @@ export function useUserPreferences() {
 
   // Add a reset function to clear all user preferences
   const resetAllPreferences = () => {
-    // Reset preferences to default values
-    setPreferences({ ...defaultPreferences });
+    // Reset preferences to default values using the spread operator for a clean copy
+    // Ensure defaultPreferences uses the updated createDefaultThemeRatings()
+    const freshDefaults = { ...defaultPreferences, travelThemes: createDefaultThemeRatings() };
+    setPreferences(freshDefaults);
 
     // Reset messages to initial state
     setMessages([{
@@ -312,7 +405,8 @@ export function useUserPreferences() {
       handleOriginLocationChange,
       handleBudgetSelect,
       handleDestinationRatingChange,
-      handlePhotoChange,
+      handlePhotoChange, // Kept for potential compatibility, but logs warning
+      handlePhotoAnalysisUpdate, // New handler for photo analysis
       handleSendMessage,
       handleGetRecommendations,
       handleRegenerateRecommendations,

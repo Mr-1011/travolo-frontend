@@ -31,6 +31,7 @@ type StepDisplayProps = {
     handleBudgetSelect: (budget: string) => void;
     handleDestinationRatingChange: (destinationId: string, rating: "like" | "dislike" | null) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
+    handlePhotoAnalysisUpdate: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
     handleSendMessage: (message: string) => void;
   };
   isCurrentStepValid: boolean;
@@ -61,7 +62,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
       case 'travel-themes':
         return (
           <TravelThemesStep
-            selectedThemes={preferences.travelThemes}
+            themeRatings={preferences.travelThemes}
             onThemesChange={handlers.handleThemesChange}
           />
         );
@@ -126,6 +127,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
       case 'upload-photo':
         return (
           <PhotoUploadStep
+            onAnalysisComplete={handlers.handlePhotoAnalysisUpdate}
           />
         );
 

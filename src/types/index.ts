@@ -11,8 +11,8 @@ export type QuestionStep =
   | 'refine-preferences';
 
 export type UserPreferences = {
-  // Step 1: Travel Themes
-  travelThemes: string[];
+  // Step 1: Travel Themes - Now a Record for ratings
+  travelThemes: Record<string, number>;
 
   // Step 2: Preferred Weather
   temperatureRange: number[];
@@ -35,11 +35,11 @@ export type UserPreferences = {
   // Step 8: Destination Ratings - Changed to store 'like', 'dislike', or null
   destinationRatings: Record<string, 'like' | 'dislike' | null>;
 
-  // Step 9: Photo Upload
-  photos: { url: string; caption: string }[];
+  // Step 9: Photo Analysis Summary
+  photoAnalysis: { photoCount: number; adjustmentSuccessful: boolean };
 
-  // Step 10: Conversation Insights
-  conversationInsights: string[];
+  // Step 10: Conversation Summary
+  conversationSummary: { userMessageCount: number };
 };
 
 export type Destination = {
