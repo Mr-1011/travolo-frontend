@@ -22,7 +22,7 @@ export type ApiDestination = {
   image_url: string | null;
   avg_temp_monthly: Record<string, MonthlyTemperature> | null;
   ideal_durations: string[] | null;
-  budget: string | null;
+  budget_level: string | null;
 };
 
 /**
@@ -83,11 +83,10 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     description: apiDestination.short_description ||
       `Explore the wonders of ${apiDestination.city}, ${apiDestination.country}.`,
     image: apiDestination.image_url || '',
-    type: type, // Derived top types
-    // --- Map New Detailed Fields ---
-    categoryRatings: categoryRatings, // All ratings
+    type: type,
+    categoryRatings: categoryRatings,
     monthlyTemperatures: apiDestination.avg_temp_monthly ?? null,
     idealDurations: apiDestination.ideal_durations ?? null,
-    budget: apiDestination.budget ?? null,
+    budget: apiDestination.budget_level ?? null,
   };
 }; 

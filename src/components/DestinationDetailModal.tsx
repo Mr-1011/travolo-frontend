@@ -10,13 +10,32 @@ import { Destination } from '@/types';
 import TemperatureChart from './TemperatureChart';
 import { Maximize2, Minimize2 } from 'lucide-react';
 
-// Add a mapping for duration styles
+// Duration styles mapping
 const durationStyles: { [key: string]: { name: string; days?: string; icon: string } } = {
   'day trip': { name: 'Day trip', days: '1 day', icon: '🚌' },
   'weekend': { name: 'Weekend', days: '2–3 days', icon: '📅' },
   'short trip': { name: 'Short trip', days: '4–6 days', icon: '🧳' },
   'one week': { name: 'One week', days: '7–9 days', icon: '🧭' },
   'long trip': { name: 'Long trip', days: '10+ days', icon: '🌍' },
+};
+
+// Add Budget styles mapping
+const budgetStyles: { [key: string]: { name: string; description: string; icon: string } } = {
+  'budget': {
+    name: 'Budget',
+    description: 'Hostels, public transport, low-cost meals',
+    icon: '💸'
+  },
+  'mid-range': {
+    name: 'Mid-range',
+    description: '3-star hotels, restaurants, taxis',
+    icon: '💵'
+  },
+  'luxury': {
+    name: 'Luxury',
+    description: 'High-end stays, fine dining, private tours',
+    icon: '💎'
+  },
 };
 
 type DestinationDetailModalProps = {
@@ -33,6 +52,9 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   if (!isOpen || !destination) {
     return null;
   }
+
+  // Log destination details for debugging
+  console.log('Destination Details:', destination);
 
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -148,7 +170,28 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
             {destination.budget && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Typical Budget</h3>
-                <p className="text-gray-700 capitalize bg-blue-100 p-3 rounded text-center font-medium text-blue-800">{destination.budget}</p>
+                {(() => {
+                  const budgetKey = destination.budget.toLowerCase().replace(' ', '-'); // Handle potential variations like "Mid range"
+                  const style = budgetStyles[budgetKey];
+                  if (style) {
+                    return (
+                      <div className="grid grid-cols-2 sm:grid-cols-1 gap-3">
+                        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-gray-200 bg-gray-50 text-center">
+                          <span className="text-2xl mb-1">{style.icon}</span>
+                          <span className="font-medium text-sm text-gray-700">{style.name}</span>
+                          <span className="text-xs mt-0.5 text-gray-500">{style.description}</span>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    // Fallback to simple display if budget key doesn't match
+                    return (
+                      <p className="text-gray-700 capitalize bg-blue-100 p-3 rounded text-center font-medium text-blue-800">
+                        {destination.budget}
+                      </p>
+                    );
+                  }
+                })()}
               </div>
             )}
             {destination.idealDurations && destination.idealDurations.length > 0 && (
