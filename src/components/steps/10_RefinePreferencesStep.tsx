@@ -50,9 +50,18 @@ const RefinePreferencesStep: React.FC<RefinePreferencesStepProps> = ({
     localStorage.setItem('travel_app_chat_started', JSON.stringify(true));
 
     // Send initial system message with preferences
+    // Generate the list of selected themes dynamically
+    const allThemeKeys: (keyof Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>)[] = [
+      'culture', 'adventure', 'nature', 'beaches', 'nightlife', 'cuisine', 'wellness', 'urban', 'seclusion'
+    ];
+    const selectedThemes = allThemeKeys
+      .filter(key => preferences[key] === 5)
+      .map(key => key.charAt(0).toUpperCase() + key.slice(1)) // Capitalize for display
+      .join(', ');
+
     const systemPrompt = `I've analyzed your preferences: 
-    Themes: ${Array.isArray(preferences.travelThemes) ? preferences.travelThemes.join(', ') : 'None selected'}
-    Temperature: ${preferences.temperatureRange?.[0] || '-5'}°C to ${preferences.temperatureRange?.[1] || '30'}°C
+    Themes: ${selectedThemes || 'None selected'}
+    Temperature: ${preferences.temperatureRange?.[0] ?? '-5'}°C to ${preferences.temperatureRange?.[1] ?? '30'}°C
     When: ${preferences.travelMonths?.join(', ') || 'Any time'}
     Duration: ${preferences.travelDuration || 'Not specified'}
     Regions: ${preferences.preferredRegions?.join(', ') || 'Anywhere'}

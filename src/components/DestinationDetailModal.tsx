@@ -56,9 +56,6 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     return null;
   }
 
-  // Log destination details for debugging
-  console.log('Destination Details:', destination);
-
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const [isImageZoomed, setIsImageZoomed] = useState(false);
@@ -134,7 +131,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{destination.name}, {destination.country}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">{destination.city}, {destination.country}</DialogTitle>
         </DialogHeader>
 
         {/* Scrollable Content Area */}
@@ -155,7 +152,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
             {destination.image && !imageError ? (
               <img
                 src={destination.image}
-                alt={destination.name}
+                alt={destination.city}
                 className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
@@ -185,19 +182,33 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           </div>
 
           {/* Category Ratings Section */}
-          {destination.categoryRatings && Object.keys(destination.categoryRatings).length > 0 && (
+          {/* Check if at least one category rating exists */}
+          {(destination.culture !== null || destination.adventure !== null || destination.nature !== null || destination.beaches !== null || destination.nightlife !== null || destination.cuisine !== null || destination.wellness !== null || destination.urban !== null || destination.seclusion !== null) && (
             <div>
               <h3 className="text-lg font-semibold mb-3">Category Ratings</h3>
               <ul className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
-                {Object.entries(destination.categoryRatings)
-                  .sort(([keyA], [keyB]) => keyA.localeCompare(keyB)) // Sort alphabetically
-                  .map(([category, rating]) => {
+                {[ // Define categories and their corresponding property accessors
+                  { key: 'culture', name: 'Culture', value: destination.culture },
+                  { key: 'adventure', name: 'Adventure', value: destination.adventure },
+                  { key: 'nature', name: 'Nature', value: destination.nature },
+                  { key: 'beaches', name: 'Beaches', value: destination.beaches },
+                  { key: 'nightlife', name: 'Nightlife', value: destination.nightlife },
+                  { key: 'cuisine', name: 'Cuisine', value: destination.cuisine },
+                  { key: 'wellness', name: 'Wellness', value: destination.wellness },
+                  { key: 'urban', name: 'Urban', value: destination.urban },
+                  { key: 'seclusion', name: 'Seclusion', value: destination.seclusion },
+                ]
+                  .filter(category => category.value !== null) // Filter out null ratings using the direct value
+                  .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically by name
+                  .map((category) => {
+                    // Use the pre-accessed category.value which is guaranteed to be number | null
+                    const rating = category.value;
                     const ratingValue = typeof rating === 'number' ? Math.max(0, Math.min(5, rating)) : 0; // Clamp rating 0-5
                     const widthPercentage = ratingValue * 20; // 5 * 20 = 100%
                     return (
-                      <li key={category} className="space-y-1">
+                      <li key={category.key} className="space-y-1">
                         <div className="flex justify-between items-baseline">
-                          <span className="capitalize font-medium text-gray-800">{category.replace(/_/g, ' ')}</span>
+                          <span className="capitalize font-medium text-gray-800">{category.name}</span>
                           <span className="text-xs font-semibold text-gray-600">{rating ?? 'N/A'} / 5</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -208,7 +219,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
                             aria-valuemin={0}
                             aria-valuemax={5}
                             role="progressbar"
-                            aria-label={`${category} rating: ${ratingValue} out of 5`}
+                            aria-label={`${category.name} rating: ${ratingValue} out of 5`}
                           ></div>
                         </div>
                       </li>

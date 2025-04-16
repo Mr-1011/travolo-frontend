@@ -1,5 +1,6 @@
-import React from 'react';
-import RecommendationCard, { Recommendation } from './RecommendationCard';
+import React, { useState } from 'react';
+import RecommendationCard from './RecommendationCard';
+import { Recommendation } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw, ArrowLeft, Home } from 'lucide-react';
 
@@ -12,10 +13,26 @@ type RecommendationsViewProps = {
 
 const RecommendationsView: React.FC<RecommendationsViewProps> = ({
   recommendations,
-  onRegenerateRecommendations,
   onBackToForm,
   onRestartProcess
 }) => {
+  // Log the received recommendations data
+  console.log('Recommendations received in RecommendationsView:', JSON.stringify(recommendations, null, 2));
+
+  // State to manage ratings for all recommendations
+  const [ratings, setRatings] = useState<Record<string, 'like' | 'dislike' | null>>({});
+
+  // Handler to update ratings state
+  const handleRatingChange = (id: string, newRating: 'like' | 'dislike') => {
+    setRatings(prev => ({
+      ...prev,
+      // Toggle rating: if clicking the same rating again, set to null
+      [id]: prev[id] === newRating ? null : newRating
+    }));
+    // TODO: Add logic here to send rating updates back to the backend if needed
+    console.log(`Rating changed for ${id}: ${newRating}`);
+  };
+
   return (
     <div className="flex flex-col h-full bg-white rounded-xl shadow-md p-6">
       <div className="mb-8 text-center">
@@ -25,7 +42,12 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8 flex-grow">
         {recommendations.map((recommendation) => (
-          <RecommendationCard key={recommendation.id} recommendation={recommendation} />
+          <RecommendationCard
+            key={recommendation.id}
+            recommendation={recommendation}
+            rating={ratings[recommendation.id] || null}
+            onRatingChange={handleRatingChange}
+          />
         ))}
       </div>
 

@@ -6,17 +6,18 @@ import { API_BASE_URL } from '@/config/apiConfig'; // Import the base URL
 // TODO: Update this type when the backend returns actual destination data
 export type ApiRecommendation = {
   id: string;
-  city: string;
+  city: string;        // Will be mapped to 'name' in the frontend Recommendation type
   country: string;
-  reason: string; // Placeholder field
-  // Add other fields expected from the *actual* backend implementation later
-  // e.g., image_url, description, etc. matching ApiDestination from destinationService.ts
+  reason: string;      // Will be mapped to 'description'
+  image_url: string;   // Expected field for the image URL
+  match_score: number; // Expected field for the match score (e.g., 0-100)
+  features: string[];  // Expected field for features/tags
 };
 
 // Define the structure of the response from the /api/recommendations endpoint
 type RecommendationsApiResponse = {
   message: string;
-  preferences_received: UserPreferences; // Echoed preferences
+  recommendationRecordId: string; // ID of the saved preferences record
   recommendations: ApiRecommendation[];
 };
 

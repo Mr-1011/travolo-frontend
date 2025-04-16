@@ -50,7 +50,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             {destination.image && !imageError ? (
               <img
                 src={destination.image}
-                alt={destination.name}
+                alt={destination.city}
                 className={`w-full h-full object-cover destination-image transition-opacity duration-500 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
@@ -62,7 +62,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             )}
 
             <div className="absolute bottom-0 left-0 p-4 md:hidden">
-              <h4 className="text-lg font-semibold text-white">{destination.name}</h4>
+              <h4 className="text-lg font-semibold text-white">{destination.city}</h4>
               <p className="text-sm text-gray-200">{destination.country}</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             </div>
 
             <div className="hidden md:block pr-12">
-              <h4 className="text-xl font-semibold">{destination.name}, {destination.country}</h4>
+              <h4 className="text-xl font-semibold">{destination.city}, {destination.country}</h4>
             </div>
 
             <div className="flex flex-wrap gap-2 my-3">
@@ -97,7 +97,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               <Button
                 variant={getButtonVariant('dislike')}
                 onClick={() => onRatingChange(destination.id, 'dislike')}
-                aria-label={`Dislike ${destination.name}`}
+                aria-label={`Dislike ${destination.city}`}
                 className="flex-1 flex items-center justify-center gap-2"
               >
                 <ThumbsDown className="h-5 w-5" /> Dislike
@@ -105,7 +105,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               <Button
                 variant={getButtonVariant('like')}
                 onClick={() => onRatingChange(destination.id, 'like')}
-                aria-label={`Like ${destination.name}`}
+                aria-label={`Like ${destination.city}`}
                 className="flex-1 flex items-center justify-center gap-2"
               >
                 <ThumbsUp className="h-5 w-5" /> Like

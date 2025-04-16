@@ -39,7 +39,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
         {destination.image && !imageError ? (
           <img
             src={destination.image}
-            alt={destination.name}
+            alt={destination.city}
             className={`w-full h-full object-cover destination-image ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
             onLoad={handleImageLoad}
             onError={handleImageError}
@@ -52,7 +52,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
 
 
         <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
-          <h4 className="text-2xl font-semibold text-white">{destination.name}</h4>
+          <h4 className="text-2xl font-semibold text-white">{destination.city}</h4>
           <p className="text-lg text-gray-200">{destination.country}</p>
         </div>
 

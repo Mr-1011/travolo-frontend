@@ -34,13 +34,10 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
         setInitialLoading(true); // Ensure loading is true
         setErrorLoading(null);
         try {
-          console.log("Fetching initial 10 destinations...");
           const apiDestinations = await fetchRandomDestinations();
           fetchedDestinations = apiDestinations.map(mapApiToDestination);
-          console.log("Fetched initial 10:", fetchedDestinations);
           setAllDestinations(fetchedDestinations);
         } catch (error) {
-          console.error('Failed to load initial destinations:', error);
           setErrorLoading('Failed to load destinations. Please refresh or try again later.');
           setInitialLoading(false); // Stop loading on error
           return; // Exit if fetch failed
@@ -52,7 +49,6 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
 
       // Populate the initial renderable window
       const initialRenderable = fetchedDestinations.slice(0, RENDER_WINDOW_SIZE);
-      console.log("Initial renderable:", initialRenderable);
       setRenderableDestinations(initialRenderable);
       setNextDestinationIndex(initialRenderable.length); // Next index is the size of the initial window
       setInitialLoading(false); // Finish loading state
@@ -70,8 +66,6 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
 
   // Use useCallback to stabilize the function reference for TinderCard props
   const handleCardLeftScreen = useCallback((removedDestinationId: string) => {
-    console.log(`${removedDestinationId} left screen.`);
-
     setRenderableDestinations((prevRenderable) => {
       // Remove the swiped card from the renderable list
       const updatedRenderable = prevRenderable.filter(dest => dest.id !== removedDestinationId);
@@ -83,14 +77,12 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
         // Increment the index for the *next* card
         setNextDestinationIndex(prevIndex => prevIndex + 1);
       }
-      console.log("Updated renderable:", updatedRenderable);
       return updatedRenderable;
     });
 
   }, [nextDestinationIndex, allDestinations]);
 
   const swiped = (direction: string, destinationId: string) => {
-    console.log(`Swiped ${direction} on ${destinationId}`);
     const rating = direction === 'right' ? 'like' : 'dislike';
     onRatingChange(destinationId, rating);
   };

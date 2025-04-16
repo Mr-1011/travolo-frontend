@@ -1,5 +1,5 @@
 import React from 'react';
-import { QuestionStep, UserPreferences, Message, Destination } from '@/types';
+import { QuestionStep, UserPreferences, Destination } from '@/types';
 import { ProgressIndicator } from '@/components/ProgressIndicator';
 import QuestionNavigation from '@/components/QuestionNavigation';
 import TravelThemesStep from '@/components/steps/01_TravelThemesStep';
@@ -18,8 +18,6 @@ type StepDisplayProps = {
   questionSteps: { id: QuestionStep; label: string }[];
   destinations: Destination[];
   preferences: UserPreferences;
-  messages: Message[];
-  isTyping: boolean;
   handlers: {
     handleThemesChange: (themes: string[]) => void;
     handleWeatherPreferenceChange: (preference: 'warm' | 'cool' | 'specific-range') => void;
@@ -32,7 +30,8 @@ type StepDisplayProps = {
     handleDestinationRatingChange: (destinationId: string, rating: "like" | "dislike" | null) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handlePhotoAnalysisUpdate: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
-    handleSendMessage: (message: string) => void;
+    handleUserMessageSent: () => void;
+    handleThemeToggle: (theme: string) => void;
   };
   isCurrentStepValid: boolean;
   onNextStep: () => void;
@@ -46,8 +45,6 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   questionSteps,
   destinations,
   preferences,
-  messages,
-  isTyping,
   handlers,
   isCurrentStepValid,
   onNextStep,
@@ -60,10 +57,21 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   const renderStepContent = () => {
     switch (currentStep) {
       case 'travel-themes':
+        const themeValues = {
+          culture: preferences.culture,
+          adventure: preferences.adventure,
+          nature: preferences.nature,
+          beaches: preferences.beaches,
+          nightlife: preferences.nightlife,
+          cuisine: preferences.cuisine,
+          wellness: preferences.wellness,
+          urban: preferences.urban,
+          seclusion: preferences.seclusion,
+        };
         return (
           <TravelThemesStep
-            themeRatings={preferences.travelThemes}
-            onThemesChange={handlers.handleThemesChange}
+            themeValues={themeValues}
+            onThemeToggle={handlers.handleThemeToggle}
           />
         );
 
@@ -134,10 +142,10 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
       case 'refine-preferences':
         return (
           <RefinePreferencesStep
-            messages={messages}
-            isLoading={isTyping}
-            onSendMessage={handlers.handleSendMessage}
             preferences={preferences}
+            messages={[]}
+            isLoading={false}
+            onSendMessage={() => { console.log("Temp onSendMessage called"); }}
           />
         );
 

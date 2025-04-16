@@ -22,7 +22,3 @@ if (!apiBaseUrl) {
 }
 
 export const API_BASE_URL = apiBaseUrl;
-
-// Optional: Log the environment and URL being used for debugging
-console.log(`App Environment: ${APP_ENV}`);
-console.log(`API Base URL: ${API_BASE_URL}`); 

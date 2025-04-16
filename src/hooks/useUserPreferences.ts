@@ -1,65 +1,10 @@
 import { useState, useEffect } from 'react';
-import { UserPreferences, Message, Destination, Recommendation, QuestionStep } from '@/types';
+import { UserPreferences, Destination, Recommendation, QuestionStep } from '@/types';
+import { fetchRecommendations, ApiRecommendation } from '@/services/recommendationService';
 
-// Sample conversation starters
-const sampleConversationQuestions = [
-  "Tell me about your favorite vacation. What made it special?",
-  "What's one travel experience you've always wanted to try?",
-  "Describe your ideal evening during a vacation.",
-  "What aspects of a destination are most important to you?"
-];
 
-// Sample recommendations to use when generating recommendations
-const sampleRecommendations: Recommendation[] = [
-  {
-    id: 'santorini',
-    name: 'Santorini',
-    country: 'Greece',
-    description: 'Famous for its dramatic views, stunning sunsets, white-washed houses, and blue domes.',
-    image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1974&auto=format&fit=crop',
-    matchScore: 96,
-    features: ['Beach', 'Culture', 'Relaxation', 'Scenic Views'],
-    activities: [
-      'Watch the sunset in Oia',
-      'Visit black sand beaches',
-      'Explore ancient ruins',
-      'Enjoy local cuisine and wines'
-    ]
-  },
-  {
-    id: 'kyoto',
-    name: 'Kyoto',
-    country: 'Japan',
-    description: 'Ancient capital with over 1,600 Buddhist temples, imperial palaces, and traditional gardens.',
-    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop',
-    matchScore: 92,
-    features: ['Culture', 'History', 'Food', 'Temples'],
-    activities: [
-      'Visit Fushimi Inari Shrine',
-      'Experience a traditional tea ceremony',
-      'Explore bamboo forests',
-      'Try authentic Japanese cuisine'
-    ]
-  },
-  {
-    id: 'barcelona',
-    name: 'Barcelona',
-    country: 'Spain',
-    description: 'A vibrant city known for stunning architecture, Mediterranean beaches, and lively culture.',
-    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?q=80&w=2070&auto=format&fit=crop',
-    matchScore: 88,
-    features: ['City', 'Beach', 'Architecture', 'Nightlife'],
-    activities: [
-      'Explore Gaudí\'s masterpieces',
-      'Stroll down Las Ramblas',
-      'Relax on Barceloneta Beach',
-      'Enjoy tapas and sangria'
-    ]
-  }
-];
-
-// Define all possible theme IDs
-const allThemeIds = [
+// Define all possible theme IDs - Still useful for iteration
+const allThemeIds: (keyof Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>)[] = [
   'culture',
   'adventure',
   'nature',
@@ -71,17 +16,22 @@ const allThemeIds = [
   'seclusion',
 ];
 
-// Helper function to create the default theme ratings (all set to 1)
-const createDefaultThemeRatings = (): Record<string, number> => {
-  return allThemeIds.reduce((acc, themeId) => {
-    acc[themeId] = 1; // Default rating
-    return acc;
-  }, {} as Record<string, number>);
-};
+// Helper function to create the default theme ratings (all set to 1) - No longer needed for structure
+// const createDefaultThemeRatings = (): Record<string, number> => { ... };
 
 // Export the default preferences to be used elsewhere
 export const defaultPreferences: UserPreferences = {
-  travelThemes: createDefaultThemeRatings(), // Use helper for initial default
+  // Initialize individual themes
+  culture: 1,
+  adventure: 1,
+  nature: 1,
+  beaches: 1,
+  nightlife: 1,
+  cuisine: 1,
+  wellness: 1,
+  urban: 1,
+  seclusion: 1,
+  // travelThemes: createDefaultThemeRatings(), // Removed
   temperatureRange: [-5, 30],
   travelMonths: [],
   travelDuration: [],
@@ -99,110 +49,39 @@ export function useUserPreferences() {
     const storedPreferences = localStorage.getItem('travel_app_preferences');
     if (storedPreferences) {
       try {
-        let parsed = JSON.parse(storedPreferences);
+        const parsed = JSON.parse(storedPreferences);
 
-        // --- Theme Migration --- START
-        if (Array.isArray(parsed.travelThemes)) {
-          // Old format (string[]) found, migrate to Record<string, number>
-          const selectedThemes = parsed.travelThemes as string[];
-          const newThemeRatings: Record<string, number> = {};
-          allThemeIds.forEach(themeId => {
-            newThemeRatings[themeId] = selectedThemes.includes(themeId) ? 5 : 1;
-          });
-          parsed.travelThemes = newThemeRatings;
-        } else if (typeof parsed.travelThemes === 'object' && parsed.travelThemes !== null) {
-          // New format (Record<string, number>) found, ensure all keys exist
-          const currentRatings = parsed.travelThemes as Record<string, number>;
-          const completeRatings: Record<string, number> = {};
-          allThemeIds.forEach(themeId => {
-            completeRatings[themeId] = currentRatings[themeId] === 5 ? 5 : 1; // Keep 5s, default others to 1
-          });
-          parsed.travelThemes = completeRatings;
+        // Assume stored data is valid and merge with defaults
+        // This will overwrite defaults with stored values if they exist,
+        // and keep defaults for fields missing in stored data.
+        if (typeof parsed === 'object' && parsed !== null) {
+          return { ...defaultPreferences, ...parsed };
         } else {
-          // Invalid or missing, initialize with defaults
-          parsed.travelThemes = createDefaultThemeRatings();
-        }
-        // --- Theme Migration --- END
-
-        // --- Travel Duration Migration --- START
-        if (typeof parsed.travelDuration === 'string') {
-          // If it's a non-empty string, convert to array; otherwise, default empty array
-          parsed.travelDuration = parsed.travelDuration ? [parsed.travelDuration] : [];
-        } else if (!Array.isArray(parsed.travelDuration)) {
-          // If it's not a string and not an array (or null/undefined), default to empty array
-          parsed.travelDuration = [];
-        }
-        // --- Travel Duration Migration --- END
-
-        // --- Travel Budget Migration --- START
-        if (typeof parsed.travelBudget === 'string') {
-          // If it's a non-empty string, convert to array; otherwise, default empty array
-          parsed.travelBudget = parsed.travelBudget ? [parsed.travelBudget] : [];
-        } else if (!Array.isArray(parsed.travelBudget)) {
-          // If it's not a string and not an array (or null/undefined), default to empty array
-          parsed.travelBudget = [];
-        }
-        // --- Travel Budget Migration --- END
-
-        // Migration/Compatibility: Check for old fields and initialize new ones if necessary
-        if ('photos' in parsed || !('photoAnalysis' in parsed)) {
-          parsed.photoAnalysis = { photoCount: parsed.photos?.length || 0, adjustmentSuccessful: false }; // Default adjustment to false
-          delete parsed.photos; // Remove old field
-        }
-        if ('conversationInsights' in parsed || !('conversationSummary' in parsed)) {
-          parsed.conversationSummary = { userMessageCount: parsed.conversationInsights?.length || 0 };
-          delete parsed.conversationInsights; // Remove old field
-        }
-        // Remove weatherPreference if it exists in stored data (legacy handling)
-        if ('weatherPreference' in parsed) {
-          const { weatherPreference, ...rest } = parsed;
-          parsed = rest; // Update parsed object directly
+          // If parsed data isn't an object, log warning and use defaults
+          console.warn('Stored preferences are not a valid object, using defaults.');
         }
 
-        // Merge with defaults to ensure all fields are present
-        return { ...defaultPreferences, ...parsed };
       } catch (e) {
         console.warn('Failed to parse stored preferences:', e);
+        // Fall through to return default preferences on error
       }
     }
-    // Return a clean default state if nothing is stored or parsing failed
+    // Return a clean default state if nothing is stored or parsing/validation failed
     return { ...defaultPreferences };
   });
-
-  // Load messages from localStorage if available
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const storedMessages = localStorage.getItem('travel_app_messages');
-    if (storedMessages) {
-      try {
-        return JSON.parse(storedMessages);
-      } catch (e) {
-        console.warn('Failed to parse stored messages:', e);
-        return [
-          {
-            id: '1',
-            text: sampleConversationQuestions[0],
-            sender: 'ai'
-          }
-        ];
-      }
-    }
-    return [
-      {
-        id: '1',
-        text: sampleConversationQuestions[0],
-        sender: 'ai'
-      }
-    ];
-  });
-
-  const [isTyping, setIsTyping] = useState(false);
 
   // Load recommendations from localStorage if available
   const [recommendations, setRecommendations] = useState<Recommendation[]>(() => {
     const storedRecommendations = localStorage.getItem('travel_app_recommendations');
     if (storedRecommendations) {
       try {
-        return JSON.parse(storedRecommendations);
+        // Attempt to parse. If it fails or doesn't match Recommendation[], return []
+        const parsed = JSON.parse(storedRecommendations);
+        if (Array.isArray(parsed) && parsed.every(item => 'id' in item && 'name' in item)) { // Basic check
+          return parsed as Recommendation[];
+        }
+        console.warn('Stored recommendations have unexpected format.');
+        return [];
       } catch (e) {
         console.warn('Failed to parse stored recommendations:', e);
         return [];
@@ -210,30 +89,31 @@ export function useUserPreferences() {
     }
     return [];
   });
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false); // Loading state
+  const [recommendationError, setRecommendationError] = useState<string | null>(null); // Error state
 
   // Save preferences to localStorage when they change
   useEffect(() => {
     localStorage.setItem('travel_app_preferences', JSON.stringify(preferences));
   }, [preferences]);
 
-  // Save messages to localStorage when they change
+  // Save recommendations (Recommendation type) to localStorage when they change
   useEffect(() => {
-    localStorage.setItem('travel_app_messages', JSON.stringify(messages));
-  }, [messages]);
+    // Only save if there are recommendations and no error occurred during fetch
+    if (recommendations.length > 0 && !recommendationError) {
+      localStorage.setItem('travel_app_recommendations', JSON.stringify(recommendations));
+    } else if (recommendations.length === 0) {
+      // Optionally clear storage if recommendations are explicitly cleared
+      localStorage.removeItem('travel_app_recommendations');
+    }
+  }, [recommendations, recommendationError]);
 
-  // Save recommendations to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('travel_app_recommendations', JSON.stringify(recommendations));
-  }, [recommendations]);
-
-  // Updated handler: Accepts selected theme IDs (string[]) and updates the ratings Record
-  const handleThemesChange = (selectedThemeIds: string[]) => {
+  // New handler to toggle a specific theme between 1 (not selected) and 5 (selected)
+  const handleThemeToggle = (themeId: keyof Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>) => {
     setPreferences(prev => {
-      const newThemeRatings: Record<string, number> = {};
-      allThemeIds.forEach(themeId => {
-        newThemeRatings[themeId] = selectedThemeIds.includes(themeId) ? 5 : 1;
-      });
-      return { ...prev, travelThemes: newThemeRatings };
+      const currentRating = prev[themeId];
+      const newRating = currentRating === 5 ? 1 : 5; // Toggle between 5 and 1
+      return { ...prev, [themeId]: newRating };
     });
   };
 
@@ -327,71 +207,74 @@ export function useUserPreferences() {
     console.log('Weather preference changed:', preference);
   };
 
-  const handleSendMessage = (message: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: message,
-      sender: 'user'
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setIsTyping(true);
-
-    // Increment user message count in preferences
+  /**
+   * Call this function whenever a user message is successfully sent
+   * by the chat component to increment the counter.
+   */
+  const handleUserMessageSent = () => {
     setPreferences(prev => ({
       ...prev,
       conversationSummary: {
+        // Ensure userMessageCount exists and increment it, defaulting to 1 if it was 0 or undefined
         userMessageCount: (prev.conversationSummary?.userMessageCount || 0) + 1
       }
     }));
-
-    setTimeout(() => {
-      const randomQuestion = sampleConversationQuestions[
-        Math.floor(Math.random() * sampleConversationQuestions.length)
-      ];
-
-      const aiMessage: Message = {
-        id: Date.now().toString(),
-        text: randomQuestion,
-        sender: 'ai'
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-      setIsTyping(false);
-
-      // Removed direct update to conversationInsights
-      // Preferences are now updated above when the user message is sent
-    }, 1500);
+    console.log('User message count incremented.');
   };
 
-  const handleGetRecommendations = (onComplete?: (recommendations: Recommendation[]) => void) => {
+  const handleGetRecommendations = async (onComplete?: (recommendations: Recommendation[]) => void) => {
     console.log('Get Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
-    // Simulate potential async operation
-    setTimeout(() => {
-      const newRecommendations = sampleRecommendations; // In reality, fetch/generate here
-      setRecommendations(newRecommendations);
-      console.log('Recommendations set, calling onComplete callback');
-      onComplete?.(newRecommendations); // Call callback if provided
-    }, 50); // Short delay to simulate async
+    setIsLoadingRecommendations(true);
+    setRecommendationError(null); // Clear previous errors
+    setRecommendations([]); // Clear previous recommendations immediately
+
+    try {
+      // fetchRecommendations now returns ApiRecommendation[] directly
+      const apiRecommendations: ApiRecommendation[] = await fetchRecommendations(preferences);
+
+      // Map ApiRecommendation[] to Recommendation[] using direct field names matching the updated type
+      const uiRecommendations: Recommendation[] = apiRecommendations.map((apiRec: ApiRecommendation) => ({
+        id: apiRec.id,
+        city: apiRec.city,         // Use city directly
+        country: apiRec.country,
+        short_description: apiRec.reason ?? 'No description available.', // Map reason to short_description, provide default
+        image: apiRec.image_url ?? undefined, // Use image_url, map to optional image
+        confidence: apiRec.match_score ?? undefined, // Map match_score to optional confidence
+
+        // Keep other potential fields from Recommendation type as undefined or map if available in ApiRecommendation
+        // region: apiRec.region, // Example if region existed
+        // culture: apiRec.culture, // Example if theme scores existed
+        // ... other fields like avg_temp_monthly, ideal_durations, budget_level, latitude, longitude
+        // Make sure ApiRecommendation provides these if needed, otherwise they remain undefined
+      }));
+
+      setRecommendations(uiRecommendations);
+      console.log('Mapped recommendations set, calling onComplete callback');
+      onComplete?.(uiRecommendations); // Call callback with the mapped data
+
+    } catch (error) {
+      console.error('Error fetching or processing recommendations:', error);
+      setRecommendationError(error instanceof Error ? error.message : 'An unknown error occurred.');
+      setRecommendations([]); // Ensure recommendations are empty on error
+      onComplete?.([]); // Optionally call callback with empty array on error
+    } finally {
+      setIsLoadingRecommendations(false);
+    }
   };
 
   const handleRegenerateRecommendations = (onComplete?: (recommendations: Recommendation[]) => void) => {
     console.log('Regenerate Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
-    // Simulate potential async operation
-    setTimeout(() => {
-      // Modify sample data slightly for regeneration effect if desired
-      const regeneratedRecommendations = sampleRecommendations.map(r => ({ ...r, matchScore: r.matchScore - Math.floor(Math.random() * 5) }));
-      setRecommendations(regeneratedRecommendations);
-      console.log('Recommendations regenerated, calling onComplete callback');
-      onComplete?.(regeneratedRecommendations);
-    }, 50); // Short delay to simulate async
+    // Re-use the handleGetRecommendations logic for regeneration
+    // Pass the onComplete callback along
+    handleGetRecommendations(onComplete);
   };
 
   const isCurrentStepValid = (currentStep: QuestionStep) => {
     switch (currentStep) {
       case 'travel-themes':
         // Check if at least one theme has a rating of 5
-        return Object.values(preferences.travelThemes || {}).some(rating => rating === 5);
+        // Iterate over the theme keys defined in allThemeIds
+        return allThemeIds.some(themeId => preferences[themeId] === 5);
       case 'travel-months':
         return preferences.travelMonths.length > 0;
       case 'travel-duration':
@@ -409,39 +292,54 @@ export function useUserPreferences() {
 
   // Add a reset function to clear all user preferences
   const resetAllPreferences = () => {
-    // Reset preferences to default values using the spread operator for a clean copy
-    // Ensure defaultPreferences uses the updated createDefaultThemeRatings()
-    const freshDefaults = { ...defaultPreferences, travelThemes: createDefaultThemeRatings() };
+    // Reset preferences to default values
+    // Need to create a fresh default object inline or ensure defaultPreferences is correctly defined
+    const freshDefaults: UserPreferences = {
+      culture: 1,
+      adventure: 1,
+      nature: 1,
+      beaches: 1,
+      nightlife: 1,
+      cuisine: 1,
+      wellness: 1,
+      urban: 1,
+      seclusion: 1,
+      temperatureRange: [-5, 30],
+      travelMonths: [],
+      travelDuration: [],
+      preferredRegions: [],
+      originLocation: null,
+      travelBudget: [],
+      destinationRatings: {},
+      photoAnalysis: { photoCount: 0, adjustmentSuccessful: false },
+      conversationSummary: { userMessageCount: 0 },
+    };
     setPreferences(freshDefaults);
 
-    // Reset messages to initial state
-    setMessages([{
-      id: Date.now().toString(),
-      text: sampleConversationQuestions[0],
-      sender: 'ai'
-    }]);
-
-    // Clear recommendations
+    // Reset recommendations
     setRecommendations([]);
 
     // Clear specific localStorage items
     localStorage.removeItem('travel_app_preferences');
-    localStorage.removeItem('travel_app_messages');
     localStorage.removeItem('travel_app_recommendations');
     localStorage.removeItem('travel_app_chat_started');
     localStorage.removeItem('travel_app_step'); // Clear the persisted step
 
+    // Reset loading and error states
+    setIsLoadingRecommendations(false);
+    setRecommendationError(null);
+
     // Log the reset
-    console.log('All preferences and related storage reset to default values');
+    console.log('All preferences and related storage reset to default values (excluding messages).');
   };
 
   return {
     preferences,
-    messages,
-    isTyping,
     recommendations,
+    isLoadingRecommendations,
+    recommendationError,
     handlers: {
-      handleThemesChange,
+      handleThemeToggle,
       handleWeatherPreferenceChange,
       handleTemperatureRangeChange,
       handleMonthsChange,
@@ -450,9 +348,9 @@ export function useUserPreferences() {
       handleOriginLocationChange,
       handleBudgetSelect,
       handleDestinationRatingChange,
-      handlePhotoChange, // Kept for potential compatibility, but logs warning
-      handlePhotoAnalysisUpdate, // New handler for photo analysis
-      handleSendMessage,
+      handlePhotoChange,
+      handlePhotoAnalysisUpdate,
+      handleUserMessageSent,
       handleGetRecommendations,
       handleRegenerateRecommendations,
       resetAllPreferences

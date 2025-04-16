@@ -11,8 +11,16 @@ export type QuestionStep =
   | 'refine-preferences';
 
 export type UserPreferences = {
-  // Step 1: Travel Themes - Now a Record for ratings
-  travelThemes: Record<string, number>;
+  // Step 1: Travel Themes - Individual properties
+  culture: number;
+  adventure: number;
+  nature: number;
+  beaches: number;
+  nightlife: number;
+  cuisine: number;
+  wellness: number;
+  urban: number;
+  seclusion: number;
 
   // Step 2: Preferred Weather
   temperatureRange: number[];
@@ -50,30 +58,50 @@ export type MonthlyTemperature = {
 
 export type Destination = {
   id: string;
-  name: string;
+  city: string;
   country: string;
   description: string;
   image: string;
   type: string[];
-  categoryRatings: Record<string, number | null>;
+
+  // Replace categoryRatings with individual fields
+  culture: number | null;
+  adventure: number | null;
+  nature: number | null;
+  beaches: number | null;
+  nightlife: number | null;
+  cuisine: number | null;
+  wellness: number | null;
+  urban: number | null;
+  seclusion: number | null;
+
   monthlyTemperatures: Record<string, MonthlyTemperature> | null;
   idealDurations: string[] | null;
   budget: string | null;
 };
 
-export type Message = {
-  id: string;
-  text: string;
-  sender: 'user' | 'ai';
-};
-
 export type Recommendation = {
   id: string;
-  name: string;
+  city: string;
   country: string;
-  description: string;
-  image: string;
-  matchScore: number;
-  features: string[];
-  activities: string[];
+  region?: string;
+  short_description: string;
+  image?: string;
+
+  culture?: number;
+  adventure?: number;
+  nature?: number;
+  beaches?: number;
+  nightlife?: number;
+  cuisine?: number;
+  wellness?: number;
+  urban?: number;
+  seclusion?: number;
+
+  avg_temp_monthly?: Record<string, MonthlyTemperature>;
+  ideal_durations?: string[];
+  budget_level?: string;
+  latitude?: number;
+  longitude?: number;
+  confidence?: number;
 };
