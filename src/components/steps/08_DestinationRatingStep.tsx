@@ -119,14 +119,16 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
         <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
         <p className="text-gray-600 mb-6">Do you like or dislike these places?</p>
         <div className="space-y-6">
-          {allDestinations.map((destination) => (
-            <DestinationCard
-              key={destination.id}
-              destination={destination}
-              rating={ratings[destination.id]}
-              onRatingChange={onRatingChange}
-            />
-          ))}
+          {allDestinations.map((destination) => {
+            return (
+              <DestinationCard
+                key={destination.id}
+                destination={destination}
+                rating={ratings[destination.id]}
+                onRatingChange={onRatingChange}
+              />
+            );
+          })}
         </div>
       </div>
     );

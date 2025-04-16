@@ -16,12 +16,8 @@ const allThemeIds: (keyof Pick<UserPreferences, 'culture' | 'adventure' | 'natur
   'seclusion',
 ];
 
-// Helper function to create the default theme ratings (all set to 1) - No longer needed for structure
-// const createDefaultThemeRatings = (): Record<string, number> => { ... };
-
 // Export the default preferences to be used elsewhere
 export const defaultPreferences: UserPreferences = {
-  // Initialize individual themes
   culture: 1,
   adventure: 1,
   nature: 1,
@@ -31,7 +27,6 @@ export const defaultPreferences: UserPreferences = {
   wellness: 1,
   urban: 1,
   seclusion: 1,
-  // travelThemes: createDefaultThemeRatings(), // Removed
   temperatureRange: [-5, 30],
   travelMonths: [],
   travelDuration: [],
@@ -91,6 +86,7 @@ export function useUserPreferences() {
   });
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false); // Loading state
   const [recommendationError, setRecommendationError] = useState<string | null>(null); // Error state
+  const [recommendationRecordId, setRecommendationRecordId] = useState<string | null>(null); // Add state for the ID
 
   // Save preferences to localStorage when they change
   useEffect(() => {
@@ -108,7 +104,7 @@ export function useUserPreferences() {
     }
   }, [recommendations, recommendationError]);
 
-  // New handler to toggle a specific theme between 1 (not selected) and 5 (selected)
+  // Renamed back: Handler to toggle a specific theme between 1 (not selected) and 5 (selected)
   const handleThemeToggle = (themeId: keyof Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>) => {
     setPreferences(prev => {
       const currentRating = prev[themeId];
@@ -204,7 +200,6 @@ export function useUserPreferences() {
   };
 
   const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
-    console.log('Weather preference changed:', preference);
   };
 
   /**
@@ -222,47 +217,61 @@ export function useUserPreferences() {
     console.log('User message count incremented.');
   };
 
-  const handleGetRecommendations = async (onComplete?: (recommendations: Recommendation[]) => void) => {
+  const handleGetRecommendations = async (onComplete?: (recommendations: Recommendation[], recommendationRecordId: string | null) => void) => {
     console.log('Get Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
     setIsLoadingRecommendations(true);
     setRecommendationError(null); // Clear previous errors
     setRecommendations([]); // Clear previous recommendations immediately
+    setRecommendationRecordId(null); // Clear previous ID immediately
 
     try {
-      // fetchRecommendations now returns ApiRecommendation[] directly
-      const apiRecommendations: ApiRecommendation[] = await fetchRecommendations(preferences);
+      // fetchRecommendations now returns an object { recommendations, recommendationRecordId }
+      const result = await fetchRecommendations(preferences);
 
-      // Map ApiRecommendation[] to Recommendation[] using direct field names matching the updated type
+      // Destructure the result
+      const apiRecommendations = result.recommendations;
+      const recordId = result.recommendationRecordId;
+
+      // Map ApiRecommendation[] to Recommendation[] using the updated types
       const uiRecommendations: Recommendation[] = apiRecommendations.map((apiRec: ApiRecommendation) => ({
         id: apiRec.id,
-        city: apiRec.city,         // Use city directly
+        city: apiRec.city,
         country: apiRec.country,
-        short_description: apiRec.reason ?? 'No description available.', // Map reason to short_description, provide default
-        image: apiRec.image_url ?? undefined, // Use image_url, map to optional image
-        confidence: apiRec.match_score ?? undefined, // Map match_score to optional confidence
+        region: apiRec.region ?? undefined,
+        short_description: apiRec.short_description ?? 'No description available.', // Use short_description
+        image_url: apiRec.image_url ?? undefined,
 
-        // Keep other potential fields from Recommendation type as undefined or map if available in ApiRecommendation
-        // region: apiRec.region, // Example if region existed
-        // culture: apiRec.culture, // Example if theme scores existed
-        // ... other fields like avg_temp_monthly, ideal_durations, budget_level, latitude, longitude
-        // Make sure ApiRecommendation provides these if needed, otherwise they remain undefined
+        culture: apiRec.culture ?? undefined,
+        adventure: apiRec.adventure ?? undefined,
+        nature: apiRec.nature ?? undefined,
+        beaches: apiRec.beaches ?? undefined,
+        nightlife: apiRec.nightlife ?? undefined,
+        cuisine: apiRec.cuisine ?? undefined,
+        wellness: apiRec.wellness ?? undefined,
+        urban: apiRec.urban ?? undefined,
+        seclusion: apiRec.seclusion ?? undefined,
+
+        avg_temp_monthly: apiRec.avg_temp_monthly ?? undefined,
+        ideal_durations: apiRec.ideal_durations ?? undefined,
+        budget_level: apiRec.budget_level ?? undefined,
+        confidence: apiRec.confidence, // Use confidence score directly
       }));
 
       setRecommendations(uiRecommendations);
-      console.log('Mapped recommendations set, calling onComplete callback');
-      onComplete?.(uiRecommendations); // Call callback with the mapped data
+      setRecommendationRecordId(recordId); // Store the received ID
+      onComplete?.(uiRecommendations, recordId); // Call callback with the mapped data and the record ID
 
     } catch (error) {
       console.error('Error fetching or processing recommendations:', error);
       setRecommendationError(error instanceof Error ? error.message : 'An unknown error occurred.');
       setRecommendations([]); // Ensure recommendations are empty on error
-      onComplete?.([]); // Optionally call callback with empty array on error
+      onComplete?.([], null); // Optionally call callback with empty array and null ID on error
     } finally {
       setIsLoadingRecommendations(false);
     }
   };
 
-  const handleRegenerateRecommendations = (onComplete?: (recommendations: Recommendation[]) => void) => {
+  const handleRegenerateRecommendations = (onComplete?: (recommendations: Recommendation[], recommendationRecordId: string | null) => void) => {
     console.log('Regenerate Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
     // Re-use the handleGetRecommendations logic for regeneration
     // Pass the onComplete callback along
@@ -336,6 +345,7 @@ export function useUserPreferences() {
   return {
     preferences,
     recommendations,
+    recommendationRecordId,
     isLoadingRecommendations,
     recommendationError,
     handlers: {

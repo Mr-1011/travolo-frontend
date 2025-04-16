@@ -19,14 +19,13 @@ type StepDisplayProps = {
   destinations: Destination[];
   preferences: UserPreferences;
   handlers: {
-    handleThemesChange: (themes: string[]) => void;
     handleWeatherPreferenceChange: (preference: 'warm' | 'cool' | 'specific-range') => void;
     handleTemperatureRangeChange: (range: number[]) => void;
     handleMonthsChange: (months: string[]) => void;
     handleDurationSelect: (duration: string) => void;
     handleRegionChange: (regions: string[]) => void;
     handleOriginLocationChange: (location: { name: string; lat: number; lon: number } | null) => void;
-    handleBudgetSelect: (budget: string) => void;
+    handleBudgetSelect: (budget_level: string) => void;
     handleDestinationRatingChange: (destinationId: string, rating: "like" | "dislike" | null) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handlePhotoAnalysisUpdate: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;

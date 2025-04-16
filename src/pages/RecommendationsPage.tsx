@@ -10,9 +10,10 @@ const RecommendationsPage = () => {
   const navigate = useNavigate();
   const { handlers } = useUserPreferences(); // Get handlers from the hook
   const recommendations = location.state?.recommendations as Recommendation[] | undefined;
+  const recommendationRecordId = location.state?.recommendationRecordId as string | undefined; // Retrieve the ID
 
-  // Handle case where recommendations are not passed (e.g., direct navigation)
-  if (!recommendations) {
+  // Handle case where recommendations or ID are not passed (e.g., direct navigation)
+  if (!recommendations || !recommendationRecordId) { // Check for ID as well
     // Redirect back to preferences or show an error message
     // For now, let's redirect back to the start
     React.useEffect(() => {
@@ -20,19 +21,6 @@ const RecommendationsPage = () => {
     }, [navigate]);
     return null; // Render nothing while redirecting
   }
-
-  const handleRegenerateRecommendations = () => {
-    // Call the regenerate handler from the hook, providing a navigation callback
-    console.log("Regenerate recommendations clicked");
-    handlers.handleRegenerateRecommendations((newRecommendations) => {
-      // Re-navigate to the same page but with new state
-      navigate('/results', { state: { recommendations: newRecommendations }, replace: true });
-    });
-  };
-
-  const handleBackToForm = () => {
-    navigate('/preferences'); // Navigate back to the preferences page
-  };
 
   const handleRestartProcess = () => {
     console.log("Restart process clicked");
@@ -44,8 +32,7 @@ const RecommendationsPage = () => {
     <PageLayout>
       <RecommendationsView
         recommendations={recommendations}
-        onRegenerateRecommendations={handleRegenerateRecommendations}
-        onBackToForm={handleBackToForm}
+        recommendationRecordId={recommendationRecordId} // Pass the ID
         onRestartProcess={handleRestartProcess}
       />
     </PageLayout>

@@ -1,36 +1,100 @@
 import React, { useState } from 'react';
-import RecommendationCard from './RecommendationCard';
-import { Recommendation } from '@/types';
+import DestinationCard from './DestinationCard';
+import { Recommendation, Destination } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw, ArrowLeft, Home } from 'lucide-react';
+import { submitRecommendationFeedback } from '@/services/recommendationService'; // Import the feedback service
 
 type RecommendationsViewProps = {
   recommendations: Recommendation[];
-  onRegenerateRecommendations: () => void;
-  onBackToForm: () => void;
+  recommendationRecordId: string; // Add prop for the record ID
   onRestartProcess: () => void;
 };
 
 const RecommendationsView: React.FC<RecommendationsViewProps> = ({
   recommendations,
-  onBackToForm,
-  onRestartProcess
+  recommendationRecordId, // Receive the record ID
+  onRestartProcess,
 }) => {
-  // Log the received recommendations data
-  console.log('Recommendations received in RecommendationsView:', JSON.stringify(recommendations, null, 2));
 
-  // State to manage ratings for all recommendations
+  // State to manage ratings for UI feedback (button state)
   const [ratings, setRatings] = useState<Record<string, 'like' | 'dislike' | null>>({});
 
-  // Handler to update ratings state
-  const handleRatingChange = (id: string, newRating: 'like' | 'dislike') => {
+  // Handler to update local UI state AND submit feedback to backend
+  const handleRatingChange = async (destinationId: string, newRating: 'like' | 'dislike') => {
+    const currentRating = ratings[destinationId];
+    const finalRating = currentRating === newRating ? null : newRating; // Allows toggling off
+
+    // Update local UI state immediately for responsiveness
     setRatings(prev => ({
       ...prev,
-      // Toggle rating: if clicking the same rating again, set to null
-      [id]: prev[id] === newRating ? null : newRating
+      [destinationId]: finalRating
     }));
-    // TODO: Add logic here to send rating updates back to the backend if needed
-    console.log(`Rating changed for ${id}: ${newRating}`);
+
+    // If the rating is being set (not cleared), submit it to the backend
+    if (finalRating) {
+      if (!recommendationRecordId) {
+        console.error('Cannot submit feedback: recommendationRecordId is missing.');
+        // Optionally, revert the UI state change immediately
+        setRatings(prev => ({
+          ...prev,
+          [destinationId]: currentRating // Revert to the previous rating
+        }));
+        return; // Stop execution if ID is missing
+      }
+
+      try {
+        console.log(`Calling submitRecommendationFeedback with ID: ${recommendationRecordId}, Dest: ${destinationId}, Rating: ${finalRating}`);
+        await submitRecommendationFeedback(recommendationRecordId, destinationId, finalRating);
+        console.log(`Feedback submitted for ${destinationId}: ${finalRating}`);
+      } catch (error) {
+        console.error(`Failed to submit feedback for ${destinationId}:`, error);
+        // Optional: Revert UI state or show error message to user
+        // Revert UI state on failure:
+        setRatings(prev => ({
+          ...prev,
+          [destinationId]: currentRating // Revert to the previous rating
+        }));
+        // Optionally, show an error notification to the user here
+      }
+    } else {
+      // Optional: If clearing a rating needs an API call (e.g., update feedback to null),
+      // you would add that logic here.
+      // For now, we just log the clearing action based on the current API design.
+      console.log(`Rating cleared for ${destinationId}. No feedback sent.`);
+      // If the backend *requires* an update even for clearing, you might call:
+      // await submitRecommendationFeedback(recommendationRecordId, destinationId, 'neutral'); // Or whatever the backend expects
+    }
+  };
+
+  // Helper function to map Recommendation to DestinationCard props
+  const mapRecommendationToDestinationProps = (rec: Recommendation): Destination => {
+    const mappedDestination: Destination = {
+      id: rec.id,
+      city: rec.city,
+      region: rec.region,
+      country: rec.country,
+      short_description: rec.short_description ?? 'No description available.',
+      image_url: rec.image_url ?? '', // Provide default empty string if image is undefined
+
+      // Map category scores (provide null if undefined)
+      culture: rec.culture ?? null,
+      adventure: rec.adventure ?? null,
+      nature: rec.nature ?? null,
+      beaches: rec.beaches ?? null,
+      nightlife: rec.nightlife ?? null,
+      cuisine: rec.cuisine ?? null,
+      wellness: rec.wellness ?? null,
+      urban: rec.urban ?? null,
+      seclusion: rec.seclusion ?? null,
+
+      // Map other potentially missing fields required by Destination
+      avg_temp_monthly: rec.avg_temp_monthly ?? null,
+      ideal_durations: rec.ideal_durations ?? null,
+      budget_level: rec.budget_level ?? null,
+    };
+
+    return mappedDestination;
   };
 
   return (
@@ -42,29 +106,20 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8 flex-grow">
         {recommendations.map((recommendation) => (
-          <RecommendationCard
+          <DestinationCard
             key={recommendation.id}
-            recommendation={recommendation}
+            destination={mapRecommendationToDestinationProps(recommendation)}
             rating={ratings[recommendation.id] || null}
-            onRatingChange={handleRatingChange}
+            onRatingChange={handleRatingChange} // Use the updated handler
+            confidence={recommendation.confidence} // Pass confidence score
           />
         ))}
       </div>
 
       <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
         <Button
-          onClick={onBackToForm}
-          variant="outline"
-          className="border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-2 px-6 py-3 rounded-full text-base"
-          size="lg"
-        >
-          <ArrowLeft size={18} />
-          Edit Preferences
-        </Button>
-
-        <Button
           onClick={onRestartProcess}
-          variant="ghost"
+          variant="outline"
           className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center gap-2 px-6 py-3 rounded-full text-base"
           size="lg"
         >

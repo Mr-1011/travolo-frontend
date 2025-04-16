@@ -149,9 +149,9 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               </div>
             )}
             {/* Image Display */}
-            {destination.image && !imageError ? (
+            {destination.image_url && !imageError ? (
               <img
-                src={destination.image}
+                src={destination.image_url}
                 alt={destination.city}
                 className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
@@ -164,7 +164,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               </div>
             )}
             {/* Zoom Button - Only show if image exists and loaded */}
-            {!imageLoading && destination.image && !imageError && (
+            {!imageLoading && destination.image_url && !imageError && (
               <button
                 onClick={toggleImageZoom}
                 className="absolute top-2 right-2 z-10 p-1.5 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
@@ -178,7 +178,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           {/* Description Section */}
           <div>
             <h3 className="text-lg font-semibold mb-2">Description</h3>
-            <p className="text-gray-700">{destination.description}</p>
+            <p className="text-gray-700">{destination.short_description}</p>
           </div>
 
           {/* Category Ratings Section */}
@@ -231,11 +231,11 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
 
           {/* Budget and Duration Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {destination.budget && (
+            {destination.budget_level && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Typical Budget</h3>
                 {(() => {
-                  const budgetKey = destination.budget.toLowerCase().replace(' ', '-'); // Handle potential variations like "Mid range"
+                  const budgetKey = destination.budget_level.toLowerCase().replace(' ', '-'); // Handle potential variations like "Mid range"
                   const style = budgetStyles[budgetKey];
                   if (style) {
                     return (
@@ -251,18 +251,18 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
                     // Fallback to simple display if budget key doesn't match
                     return (
                       <p className="text-gray-700 capitalize bg-blue-100 p-3 rounded text-center font-medium text-blue-800">
-                        {destination.budget}
+                        {destination.budget_level}
                       </p>
                     );
                   }
                 })()}
               </div>
             )}
-            {destination.idealDurations && destination.idealDurations.length > 0 && (
+            {destination.ideal_durations && destination.ideal_durations.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Ideal Trip Durations</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {destination.idealDurations.map((duration) => {
+                  {destination.ideal_durations.map((duration) => {
                     const style = durationStyles[duration.toLowerCase()];
                     const displayName = style?.name || duration; // Fallback to original name if no style found
                     const displayIcon = style?.icon || '✈️'; // Default icon
@@ -287,7 +287,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           {/* Temperature Section - Keep inside scrollable area */}
           <div>
             <h3 className="text-lg font-semibold mb-2">Average Monthly Temperatures (°C)</h3>
-            <TemperatureChart data={destination.monthlyTemperatures} />
+            <TemperatureChart data={destination.avg_temp_monthly} />
           </div>
 
           {/* Feedback Section - Moved inside scrollable area */}

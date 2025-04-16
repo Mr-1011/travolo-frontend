@@ -11,7 +11,7 @@ import { usePersistedStep } from '@/hooks/usePersistedState';
 import { fetchDestinations } from '@/utils/recommendationUtils';
 
 // Types
-import { QuestionStep, UserPreferences, Message, Destination, Recommendation } from '@/types';
+import { QuestionStep, Destination } from '@/types';
 
 const questionSteps = [
   { id: 'travel-themes' as QuestionStep, label: 'Travel Themes' },
@@ -55,9 +55,6 @@ const PreferencesPage = () => {
 
   const {
     preferences,
-    messages,
-    isTyping,
-    recommendations,
     handlers,
     isCurrentStepValid
   } = useUserPreferences();
@@ -69,8 +66,8 @@ const PreferencesPage = () => {
     } else {
       // Last step: Call handler with navigation callback
       console.log("Last step reached, calling handleGetRecommendations with navigation callback");
-      handlers.handleGetRecommendations((newRecommendations) => {
-        navigate('/results', { state: { recommendations: newRecommendations } });
+      handlers.handleGetRecommendations((newRecommendations, fetchedRecordId) => {
+        navigate('/results', { state: { recommendations: newRecommendations, recommendationRecordId: fetchedRecordId } });
       });
     }
   };
@@ -85,8 +82,8 @@ const PreferencesPage = () => {
   // Modified to call handler with navigation callback
   const handleGetRecommendations = () => {
     console.log("handleGetRecommendations called with navigation callback");
-    handlers.handleGetRecommendations((newRecommendations) => {
-      navigate('/results', { state: { recommendations: newRecommendations } });
+    handlers.handleGetRecommendations((newRecommendations, fetchedRecordId) => {
+      navigate('/results', { state: { recommendations: newRecommendations, recommendationRecordId: fetchedRecordId } });
     });
   };
 
@@ -103,8 +100,6 @@ const PreferencesPage = () => {
         questionSteps={questionSteps}
         destinations={ratingDestinations}
         preferences={preferences}
-        messages={messages}
-        isTyping={isTyping}
         handlers={handlers}
         isCurrentStepValid={isCurrentStepValid(currentStep)}
         onNextStep={handleNextStep}

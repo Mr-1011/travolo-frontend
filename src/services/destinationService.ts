@@ -77,10 +77,10 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     id: apiDestination.id,
     city: apiDestination.city,
     country: apiDestination.country,
-    description: apiDestination.short_description ||
+    region: apiDestination.region,
+    short_description: apiDestination.short_description ||
       `Explore the wonders of ${apiDestination.city}, ${apiDestination.country}.`,
-    image: apiDestination.image_url || '',
-    type: type,
+    image_url: apiDestination.image_url || '',
 
     // Map individual category ratings directly
     culture: getRating('culture'),
@@ -93,9 +93,9 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     urban: getRating('urban'),
     seclusion: getRating('seclusion'),
 
-    monthlyTemperatures: apiDestination.avg_temp_monthly ?? null,
-    idealDurations: apiDestination.ideal_durations ?? null,
-    budget: apiDestination.budget_level ?? null,
+    avg_temp_monthly: apiDestination.avg_temp_monthly ?? null,
+    ideal_durations: apiDestination.ideal_durations ?? null,
+    budget_level: apiDestination.budget_level ?? null,
   };
 };
 

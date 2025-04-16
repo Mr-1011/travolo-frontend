@@ -60,9 +60,9 @@ export type Destination = {
   id: string;
   city: string;
   country: string;
-  description: string;
-  image: string;
-  type: string[];
+  region: string;
+  short_description: string;
+  image_url: string;
 
   // Replace categoryRatings with individual fields
   culture: number | null;
@@ -75,9 +75,9 @@ export type Destination = {
   urban: number | null;
   seclusion: number | null;
 
-  monthlyTemperatures: Record<string, MonthlyTemperature> | null;
-  idealDurations: string[] | null;
-  budget: string | null;
+  avg_temp_monthly: Record<string, MonthlyTemperature> | null;
+  ideal_durations: string[] | null;
+  budget_level: string | null;
 };
 
 export type Recommendation = {
@@ -86,7 +86,7 @@ export type Recommendation = {
   country: string;
   region?: string;
   short_description: string;
-  image?: string;
+  image_url?: string;
 
   culture?: number;
   adventure?: number;
@@ -101,7 +101,5 @@ export type Recommendation = {
   avg_temp_monthly?: Record<string, MonthlyTemperature>;
   ideal_durations?: string[];
   budget_level?: string;
-  latitude?: number;
-  longitude?: number;
   confidence?: number;
 };

@@ -5,7 +5,7 @@ type TravelTheme = {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image_url: string;
 };
 
 // Define the props required for the theme values
@@ -29,55 +29,55 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
       id: 'culture',
       name: 'Culture',
       description: 'Experience the rich history and traditions of a destination.',
-      image: '/images/culture.jpg'
+      image_url: '/images/culture.jpg'
     },
     {
       id: 'adventure',
       name: 'Adventure',
       description: 'Explore new places and push your limits.',
-      image: '/images/adventure.jpg'
+      image_url: '/images/adventure.jpg'
     },
     {
       id: 'nature',
       name: 'Nature',
       description: 'Connect with nature and immerse yourself in the beauty of the world.',
-      image: '/images/nature.jpg'
+      image_url: '/images/nature.jpg'
     },
     {
       id: 'beaches',
       name: 'Beaches',
       description: 'Relax on the beach and enjoy the sun and sand.',
-      image: '/images/beach.jpg'
+      image_url: '/images/beach.jpg'
     },
     {
       id: 'nightlife',
       name: 'Nightlife',
       description: 'Experience the vibrant nightlife of a destination.',
-      image: '/images/nightlife.jpg'
+      image_url: '/images/nightlife.jpg'
     },
     {
       id: 'cuisine',
       name: 'Cuisine',
       description: 'Explore the local cuisine and culinary scene.',
-      image: '/images/cuisine.jpg'
+      image_url: '/images/cuisine.jpg'
     },
     {
       id: 'wellness',
       name: 'Wellness',
       description: 'Focus on health and wellness during your travels.',
-      image: '/images/wellness.jpg'
+      image_url: '/images/wellness.jpg'
     },
     {
       id: 'urban',
       name: 'Urban',
       description: 'Experience the bustling energy of a city.',
-      image: '/images/urban.jpg'
+      image_url: '/images/urban.jpg'
     },
     {
       id: 'seclusion',
       name: 'Seclusion',
       description: 'Find peace and tranquility in a secluded destination.',
-      image: '/images/seclusion.jpg'
+      image_url: '/images/seclusion.jpg'
     },
   ];
 
@@ -104,7 +104,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
           >
             <div className="relative h-48 w-full">
               <img
-                src={theme.image}
+                src={theme.image_url}
                 alt={theme.name}
                 loading="lazy"
                 className="w-full h-full object-cover transition-opacity duration-500"
