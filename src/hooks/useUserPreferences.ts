@@ -87,7 +87,7 @@ export const defaultPreferences: UserPreferences = {
   travelDuration: [],
   preferredRegions: [],
   originLocation: null,
-  travelBudget: '',
+  travelBudget: [],
   destinationRatings: {},
   photoAnalysis: { photoCount: 0, adjustmentSuccessful: false },
   conversationSummary: { userMessageCount: 0 },
@@ -133,6 +133,16 @@ export function useUserPreferences() {
           parsed.travelDuration = [];
         }
         // --- Travel Duration Migration --- END
+
+        // --- Travel Budget Migration --- START
+        if (typeof parsed.travelBudget === 'string') {
+          // If it's a non-empty string, convert to array; otherwise, default empty array
+          parsed.travelBudget = parsed.travelBudget ? [parsed.travelBudget] : [];
+        } else if (!Array.isArray(parsed.travelBudget)) {
+          // If it's not a string and not an array (or null/undefined), default to empty array
+          parsed.travelBudget = [];
+        }
+        // --- Travel Budget Migration --- END
 
         // Migration/Compatibility: Check for old fields and initialize new ones if necessary
         if ('photos' in parsed || !('photoAnalysis' in parsed)) {
@@ -260,8 +270,18 @@ export function useUserPreferences() {
     setPreferences(prev => ({ ...prev, originLocation: location }));
   };
 
-  const handleBudgetSelect = (budget: string) => {
-    setPreferences(prev => ({ ...prev, travelBudget: budget }));
+  const handleBudgetSelect = (budgetId: string) => {
+    setPreferences(prev => {
+      const currentBudgets = Array.isArray(prev.travelBudget) ? prev.travelBudget : [];
+      const isSelected = currentBudgets.includes(budgetId);
+      let newBudgets;
+      if (isSelected) {
+        newBudgets = currentBudgets.filter(b => b !== budgetId);
+      } else {
+        newBudgets = [...currentBudgets, budgetId];
+      }
+      return { ...prev, travelBudget: newBudgets };
+    });
   };
 
   const handleDestinationRatingChange = (destinationId: string, rating: 'like' | 'dislike' | null) => {
@@ -381,7 +401,7 @@ export function useUserPreferences() {
       case 'origin-location':
         return !!preferences.originLocation;
       case 'travel-budget':
-        return !!preferences.travelBudget;
+        return preferences.travelBudget.length > 0;
       default:
         return true;
     }

@@ -30,7 +30,7 @@ export type UserPreferences = {
   originLocation: { name: string; lat: number; lon: number } | null;
 
   // Step 6 becomes Step 7: Travel Budget
-  travelBudget: string;
+  travelBudget: string[];
 
   // Step 8: Destination Ratings - Changed to store 'like', 'dislike', or null
   destinationRatings: Record<string, 'like' | 'dislike' | null>;
