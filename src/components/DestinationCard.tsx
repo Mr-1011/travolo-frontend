@@ -42,7 +42,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
     <>
       <Card key={destination.id} className="overflow-hidden rounded-xl transition-all duration-300 destination-card">
         <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/3 relative overflow-hidden bg-gray-200" style={{ aspectRatio: '4/5' }}>
+          <div className="w-full md:w-1/3 relative overflow-hidden bg-gray-200 aspect-video md:aspect-[4/5]">
             {imageLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -62,32 +62,51 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
                 {imageError ? 'Image Not Available' : 'No Image'}
               </div>
             )}
-
-            <div className="absolute bottom-0 left-0 p-4 md:hidden">
-              <h4 className="text-lg font-semibold text-white">{destination.city}</h4>
-              <p className="text-sm text-gray-200">{destination.country}</p>
-            </div>
           </div>
 
           <div className="p-6 w-full md:w-2/3 flex flex-col relative">
-            <div className="absolute top-4 right-4 hidden md:block">
-              <div className="flex items-center gap-2">
+            <div className="flex justify-between items-center mb-3 md:hidden">
+              <div className="flex flex-col">
+                <h4 className="text-lg font-semibold truncate mr-2">{destination.city}</h4>
+                <p className="text-sm text-gray-500">{destination.country}</p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
                 {confidence !== undefined && (
                   <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
                     {Math.round(confidence * 100)}% match
                   </div>
                 )}
                 <Button
-                  variant="outline"
+                  variant="outline" // Use ghost or outline for less emphasis on mobile
                   size="icon"
                   onClick={openDetailModal}
                   aria-label="Show destination details"
+                  className="h-10 w-10" // Slightly smaller icon button for mobile
                 >
                   <Info className="h-5 w-5" />
                 </Button>
               </div>
             </div>
 
+            {/* Desktop Header: City, Country, Match %, Info Button */}
+            <div className="absolute top-4 right-4 hidden md:flex items-center gap-2">
+              {/* Combined existing desktop Match % and Info button container */}
+              {confidence !== undefined && (
+                <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
+                  {Math.round(confidence * 100)}% match
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={openDetailModal}
+                aria-label="Show destination details"
+              >
+                <Info className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Desktop Title - keep hidden on mobile */}
             <div className="hidden md:block pr-20">
               <h4 className="text-xl font-semibold">{destination.city}, {destination.country}</h4>
             </div>

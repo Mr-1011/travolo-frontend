@@ -186,7 +186,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           {(destination.culture !== null || destination.adventure !== null || destination.nature !== null || destination.beaches !== null || destination.nightlife !== null || destination.cuisine !== null || destination.wellness !== null || destination.urban !== null || destination.seclusion !== null) && (
             <div>
               <h3 className="text-lg font-semibold mb-3">Category Ratings</h3>
-              <ul className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
+              <ul className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
                 {[ // Define categories and their corresponding property accessors
                   { key: 'culture', name: 'Culture', value: destination.culture },
                   { key: 'adventure', name: 'Adventure', value: destination.adventure },
