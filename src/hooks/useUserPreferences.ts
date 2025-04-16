@@ -84,7 +84,7 @@ export const defaultPreferences: UserPreferences = {
   travelThemes: createDefaultThemeRatings(), // Use helper for initial default
   temperatureRange: [-5, 30],
   travelMonths: [],
-  travelDuration: '',
+  travelDuration: [],
   preferredRegions: [],
   originLocation: null,
   travelBudget: '',
@@ -123,6 +123,16 @@ export function useUserPreferences() {
           parsed.travelThemes = createDefaultThemeRatings();
         }
         // --- Theme Migration --- END
+
+        // --- Travel Duration Migration --- START
+        if (typeof parsed.travelDuration === 'string') {
+          // If it's a non-empty string, convert to array; otherwise, default empty array
+          parsed.travelDuration = parsed.travelDuration ? [parsed.travelDuration] : [];
+        } else if (!Array.isArray(parsed.travelDuration)) {
+          // If it's not a string and not an array (or null/undefined), default to empty array
+          parsed.travelDuration = [];
+        }
+        // --- Travel Duration Migration --- END
 
         // Migration/Compatibility: Check for old fields and initialize new ones if necessary
         if ('photos' in parsed || !('photoAnalysis' in parsed)) {
@@ -225,8 +235,21 @@ export function useUserPreferences() {
     setPreferences(prev => ({ ...prev, travelMonths: months }));
   };
 
-  const handleDurationSelect = (duration: string) => {
-    setPreferences(prev => ({ ...prev, travelDuration: duration }));
+  const handleDurationSelect = (durationId: string) => {
+    setPreferences(prev => {
+      // More robust check: ensure prev.travelDuration is an array
+      const currentDurations = Array.isArray(prev.travelDuration) ? prev.travelDuration : [];
+      const isSelected = currentDurations.includes(durationId);
+      let newDurations;
+      if (isSelected) {
+        // Remove the duration if already selected
+        newDurations = currentDurations.filter(d => d !== durationId);
+      } else {
+        // Add the duration if not selected
+        newDurations = [...currentDurations, durationId];
+      }
+      return { ...prev, travelDuration: newDurations };
+    });
   };
 
   const handleRegionChange = (regions: string[]) => {
@@ -352,7 +375,7 @@ export function useUserPreferences() {
       case 'travel-months':
         return preferences.travelMonths.length > 0;
       case 'travel-duration':
-        return !!preferences.travelDuration;
+        return preferences.travelDuration.length > 0;
       case 'preferred-region':
         return preferences.preferredRegions.length > 0;
       case 'origin-location':

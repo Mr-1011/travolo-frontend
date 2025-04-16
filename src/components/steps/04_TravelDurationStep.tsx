@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 type Duration = {
@@ -9,13 +8,13 @@ type Duration = {
 };
 
 type TravelDurationStepProps = {
-  selectedDuration: string;
+  selectedDuration: string[];
   onDurationSelect: (durationId: string) => void;
 };
 
-const TravelDurationStep: React.FC<TravelDurationStepProps> = ({ 
-  selectedDuration, 
-  onDurationSelect 
+const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
+  selectedDuration,
+  onDurationSelect
 }) => {
   const durations: Duration[] = [
     { id: 'day-trip', name: 'Day trip', days: '1 day', icon: '🚌' },
@@ -29,23 +28,30 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-2">Ideal Travel Duration</h2>
       <p className="text-gray-600 mb-6">How long do you want your trip to be?</p>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {durations.map((duration) => (
           <div
             key={duration.id}
             className={`
-              flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all
-              ${selectedDuration === duration.id
-                ? 'bg-[#3c83f6] text-white shadow-md'
-                : 'bg-white border border-gray-200 hover:bg-gray-50'
+              relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer
+              ${selectedDuration.includes(duration.id)
+                ? 'border-[#3c83f6] bg-blue-50 shadow-sm'
+                : 'border-gray-200 bg-gray-50 hover:border-gray-300'
               }
             `}
             onClick={() => onDurationSelect(duration.id)}
           >
             <span className="text-3xl mb-2">{duration.icon}</span>
-            <span className="font-medium">{duration.name}</span>
-            <span className="text-sm mt-1">{duration.days}</span>
+            <span className={`font-medium ${selectedDuration.includes(duration.id) ? 'text-[#3c83f6]' : 'text-gray-700'}`}>{duration.name}</span>
+            <span className="text-sm mt-1 text-gray-600">{duration.days}</span>
+            {selectedDuration.includes(duration.id) && (
+              <div className="absolute top-2 right-2 w-5 h-5 bg-[#3c83f6] rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            )}
           </div>
         ))}
       </div>

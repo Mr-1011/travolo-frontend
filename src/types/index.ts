@@ -21,7 +21,7 @@ export type UserPreferences = {
   travelMonths: string[];
 
   // Step 4: Travel Duration
-  travelDuration: string;
+  travelDuration: string[];
 
   // Step 5: Preferred Region
   preferredRegions: string[];
