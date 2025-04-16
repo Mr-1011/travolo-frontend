@@ -9,6 +9,9 @@ import {
 import { Destination } from '@/types';
 import TemperatureChart from './TemperatureChart';
 import { Maximize2, Minimize2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { submitDestinationFeedback } from '@/services/destinationService';
 
 // Duration styles mapping
 const durationStyles: { [key: string]: { name: string; days?: string; icon: string } } = {
@@ -59,6 +62,11 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const [isImageZoomed, setIsImageZoomed] = useState(false);
+  // Feedback State
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   const handleImageLoad = () => setImageLoading(false);
   const handleImageError = () => {
@@ -75,7 +83,52 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     }
   }, [isOpen, destination?.id]);
 
+  // Reset feedback state when modal closes or destination changes
+  React.useEffect(() => {
+    if (!isOpen) {
+      setIsFeedbackOpen(false);
+      setFeedbackText('');
+      setFeedbackStatus('idle');
+      setFeedbackError(null);
+    }
+  }, [isOpen]);
+
+  React.useEffect(() => {
+    // Reset if destination changes while open
+    if (isOpen) {
+      setIsFeedbackOpen(false);
+      setFeedbackText('');
+      setFeedbackStatus('idle');
+      setFeedbackError(null);
+    }
+  }, [destination?.id, isOpen]);
+
   const toggleImageZoom = () => setIsImageZoomed(!isImageZoomed);
+
+  // Renamed function: Only opens feedback
+  const handleOpenFeedback = () => setIsFeedbackOpen(true);
+
+  const handleSubmitFeedback = async () => {
+    if (!feedbackText.trim() || !destination) return;
+
+    setFeedbackStatus('submitting');
+    setFeedbackError(null);
+    try {
+      await submitDestinationFeedback(destination.id, feedbackText);
+      setFeedbackStatus('success');
+      setFeedbackText(''); // Clear text on success
+      // Optional: close feedback section after a delay
+      setTimeout(() => {
+        setIsFeedbackOpen(false);
+        // Reset status after closing animation (if any)
+        setTimeout(() => setFeedbackStatus('idle'), 300);
+      }, 1500);
+    } catch (error: any) {
+      console.error("Feedback submission failed:", error);
+      setFeedbackStatus('error');
+      setFeedbackError(error.message || 'Failed to submit feedback. Please try again.');
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -90,7 +143,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           <div className={`
             w-full relative overflow-hidden rounded-lg bg-gray-200
             transition-all duration-300 ease-in-out
-            ${isImageZoomed ? 'h-[70vh]' : 'h-64 md:h-80'}
+            ${isImageZoomed ? 'h-[90vh]' : 'h-64 md:h-80'}
           `}>
             {/* Image Loading Placeholder */}
             {imageLoading && (
@@ -224,6 +277,53 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           <div>
             <h3 className="text-lg font-semibold mb-2">Average Monthly Temperatures (°C)</h3>
             <TemperatureChart data={destination.monthlyTemperatures} />
+          </div>
+
+          {/* Feedback Section - Moved inside scrollable area */}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            {/* Conditionally render the button */}
+            {!isFeedbackOpen && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleOpenFeedback}
+                className="w-full mb-4" // Add margin-bottom if feedback open
+              >
+                Destination Feedback
+              </Button>
+            )}
+
+            {/* Conditionally Rendered Feedback Form */}
+            {isFeedbackOpen && (
+              <div className="mt-0 space-y-3 p-4 border rounded-md bg-gray-50">
+                <p className="text-sm text-gray-600">
+                  We are constantly improving the destination data. Please let us know if you think
+                  this destination's details or image doesn't represent it well.
+                </p>
+                <Textarea
+                  placeholder="Enter your feedback here..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  disabled={feedbackStatus === 'submitting' || feedbackStatus === 'success'}
+                  rows={3}
+                  maxLength={500}
+                />
+                <Button
+                  onClick={handleSubmitFeedback}
+                  disabled={!feedbackText.trim() || feedbackStatus === 'submitting' || feedbackStatus === 'success'}
+                  size="sm"
+                  className="w-full"
+                >
+                  {feedbackStatus === 'submitting' ? 'Submitting...' : 'Submit Feedback'}
+                </Button>
+                {feedbackStatus === 'success' && (
+                  <p className="text-sm text-green-600 text-center">Thank you for your feedback!</p>
+                )}
+                {feedbackStatus === 'error' && (
+                  <p className="text-sm text-red-600 text-center">Error: {feedbackError}</p>
+                )}
+              </div>
+            )}
           </div>
 
         </div>

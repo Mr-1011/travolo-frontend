@@ -89,4 +89,44 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     idealDurations: apiDestination.ideal_durations ?? null,
     budget: apiDestination.budget_level ?? null,
   };
+};
+
+/**
+ * Submits feedback for a specific destination.
+ * @param destinationId - The ID of the destination.
+ * @param feedback - The feedback text.
+ */
+export const submitDestinationFeedback = async (
+  destinationId: string,
+  feedback: string
+): Promise<void> => {
+  try {
+    const url = `${API_BASE_URL}/api/destinations/${destinationId}/feedback`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ feedback }), // Send feedback in the body
+    });
+
+    if (!response.ok) {
+      // Try to get error details from response body
+      let errorBody = 'Unknown error';
+      try {
+        errorBody = await response.text(); // Or response.json() if backend sends JSON error
+      } catch (_) {
+        // Ignore if body parsing fails
+      }
+      throw new Error(`API error: ${response.status} - ${errorBody}`);
+    }
+
+    // No content expected on success, just return
+    return;
+
+  } catch (error) {
+    console.error(`Error submitting feedback for destination ${destinationId}:`, error);
+    // Re-throw the error so the component can handle it
+    throw error;
+  }
 }; 
