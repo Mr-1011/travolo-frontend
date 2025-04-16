@@ -59,16 +59,7 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     'nightlife', 'cuisine', 'wellness', 'urban', 'seclusion'
   ];
 
-  // Create a record of all category ratings
-  const categoryRatings: Record<string, number | null> = {};
-  categories.forEach(category => {
-    // category here is guaranteed to be one of the rating keys
-    const rating = apiDestination[category];
-    // Ensure it's a number before assigning, otherwise null
-    categoryRatings[category] = typeof rating === 'number' ? rating : null;
-  });
-
-  // Determine 'type' based on ratings >= 4 (existing logic)
+  // Determine 'type' based on ratings >= 4
   const type = categories
     .filter(category => {
       const rating = apiDestination[category];
@@ -76,18 +67,35 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     })
     .map(category => category.charAt(0).toUpperCase() + category.slice(1));
 
+  // Helper function to safely get number or null
+  const getRating = (key: keyof ApiDestination): number | null => {
+    const rating = apiDestination[key];
+    return typeof rating === 'number' ? rating : null;
+  };
+
   return {
     id: apiDestination.id,
-    name: apiDestination.city,
+    city: apiDestination.city,
     country: apiDestination.country,
-    description: apiDestination.short_description ||
+    region: apiDestination.region,
+    short_description: apiDestination.short_description ||
       `Explore the wonders of ${apiDestination.city}, ${apiDestination.country}.`,
-    image: apiDestination.image_url || '',
-    type: type,
-    categoryRatings: categoryRatings,
-    monthlyTemperatures: apiDestination.avg_temp_monthly ?? null,
-    idealDurations: apiDestination.ideal_durations ?? null,
-    budget: apiDestination.budget_level ?? null,
+    image_url: apiDestination.image_url || '',
+
+    // Map individual category ratings directly
+    culture: getRating('culture'),
+    adventure: getRating('adventure'),
+    nature: getRating('nature'),
+    beaches: getRating('beaches'),
+    nightlife: getRating('nightlife'),
+    cuisine: getRating('cuisine'),
+    wellness: getRating('wellness'),
+    urban: getRating('urban'),
+    seclusion: getRating('seclusion'),
+
+    avg_temp_monthly: apiDestination.avg_temp_monthly ?? null,
+    ideal_durations: apiDestination.ideal_durations ?? null,
+    budget_level: apiDestination.budget_level ?? null,
   };
 };
 

@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
+import { UserPreferences } from '@/types'; // Import UserPreferences
 
 type TravelTheme = {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image_url: string;
 };
+
+// Define the props required for the theme values
+type ThemeValuesProps = Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>;
 
 type TravelThemesStepProps = {
-  themeRatings: Record<string, number>;
-  onThemesChange: (selectedThemeIds: string[]) => void;
+  // Accept individual theme values
+  themeValues: ThemeValuesProps;
+  // Change handler prop name and signature
+  onThemeToggle: (themeId: keyof ThemeValuesProps) => void;
+  // themeRatings: Record<string, number>; // Removed
+  // onThemesChange: (selectedThemeIds: string[]) => void; // Removed
 };
 
-const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
-  themeRatings = {},
-  onThemesChange
-}) => {
+const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThemeToggle }) => {
   // Track hover state for each theme card
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null);
 
@@ -24,77 +29,57 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
       id: 'culture',
       name: 'Culture',
       description: 'Experience the rich history and traditions of a destination.',
-      image: '/images/culture.jpg'
+      image_url: '/images/culture.jpg'
     },
     {
       id: 'adventure',
       name: 'Adventure',
       description: 'Explore new places and push your limits.',
-      image: '/images/adventure.jpg'
+      image_url: '/images/adventure.jpg'
     },
     {
       id: 'nature',
       name: 'Nature',
       description: 'Connect with nature and immerse yourself in the beauty of the world.',
-      image: '/images/nature.jpg'
+      image_url: '/images/nature.jpg'
     },
     {
       id: 'beaches',
       name: 'Beaches',
       description: 'Relax on the beach and enjoy the sun and sand.',
-      image: '/images/beach.jpg'
+      image_url: '/images/beach.jpg'
     },
     {
       id: 'nightlife',
       name: 'Nightlife',
       description: 'Experience the vibrant nightlife of a destination.',
-      image: '/images/nightlife.jpg'
+      image_url: '/images/nightlife.jpg'
     },
     {
       id: 'cuisine',
       name: 'Cuisine',
       description: 'Explore the local cuisine and culinary scene.',
-      image: '/images/cuisine.jpg'
+      image_url: '/images/cuisine.jpg'
     },
     {
       id: 'wellness',
       name: 'Wellness',
       description: 'Focus on health and wellness during your travels.',
-      image: '/images/wellness.jpg'
+      image_url: '/images/wellness.jpg'
     },
     {
       id: 'urban',
       name: 'Urban',
       description: 'Experience the bustling energy of a city.',
-      image: '/images/urban.jpg'
+      image_url: '/images/urban.jpg'
     },
     {
       id: 'seclusion',
       name: 'Seclusion',
       description: 'Find peace and tranquility in a secluded destination.',
-      image: '/images/seclusion.jpg'
+      image_url: '/images/seclusion.jpg'
     },
   ];
-
-  const handleThemeToggle = (themeId: string) => {
-    // Ensure themeRatings is treated as an object even if initially undefined/empty
-    const currentRatings = themeRatings || {};
-    // Determine the current list of selected themes (rating === 5)
-    const currentlySelectedIds = Object.entries(currentRatings)
-      .filter(([, rating]) => rating === 5)
-      .map(([id]) => id);
-
-    let newSelectedIds: string[];
-    if (currentlySelectedIds.includes(themeId)) {
-      // If currently selected, remove it
-      newSelectedIds = currentlySelectedIds.filter(id => id !== themeId);
-    } else {
-      // If not selected, add it
-      newSelectedIds = [...currentlySelectedIds, themeId];
-    }
-    // Call the callback with the updated list of selected theme IDs
-    onThemesChange(newSelectedIds);
-  };
 
   return (
     <div className="w-full">
@@ -105,13 +90,13 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
         {themes.map((theme) => (
           <div
             key={theme.id}
-            onClick={() => handleThemeToggle(theme.id)}
+            onClick={() => onThemeToggle(theme.id as keyof ThemeValuesProps)}
             onMouseEnter={() => setHoveredTheme(theme.id)}
             onMouseLeave={() => setHoveredTheme(null)}
             className={`
               relative rounded-lg cursor-pointer transition-all 
               border-2 shadow-sm card-hover-effect overflow-hidden
-              ${(themeRatings || {})[theme.id] === 5
+              ${themeValues[theme.id as keyof ThemeValuesProps] === 5
                 ? 'border-[#3c83f6] ring-2 ring-[#3c83f6]'
                 : 'border-gray-200 hover:border-gray-300'
               }
@@ -119,7 +104,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
           >
             <div className="relative h-48 w-full">
               <img
-                src={theme.image}
+                src={theme.image_url}
                 alt={theme.name}
                 loading="lazy"
                 className="w-full h-full object-cover transition-opacity duration-500"
@@ -129,7 +114,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 className={`
                   absolute inset-0 bg-gradient-to-b to-black/80
                   transition-all duration-200 ease-in-out
-                  ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5
+                  ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5
                     ? 'from-transparent from-30%' // Hovered or Selected state: start gradient at 30%
                     : 'from-transparent from-60%' // Default state: start gradient at 60%
                   }
@@ -140,7 +125,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                   className={`
                     font-medium text-2xl tracking-wide text-shadow-lg
                     transition-transform duration-200 ease-in-out
-                    ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5 ? 'transform -translate-y-1' : ''}
+                    ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5 ? 'transform -translate-y-1' : ''}
                   `}
                 >
                   {theme.name}
@@ -149,7 +134,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                   className={`
                     text-sm text-gray-300 
                     transition-all duration-200 ease-in-out
-                    ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5
+                    ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5
                       ? 'opacity-100 max-h-16 transform translate-y-0'
                       : 'opacity-0 max-h-0 transform translate-y-4 overflow-hidden'
                     }
@@ -159,7 +144,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 </p>
               </div>
 
-              {(themeRatings || {})[theme.id] === 5 && (
+              {themeValues[theme.id as keyof ThemeValuesProps] === 5 && (
                 <div className="absolute top-2 right-2">
                   <div className="w-6 h-6 bg-[#3c83f6] rounded-full flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">

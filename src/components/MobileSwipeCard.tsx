@@ -36,10 +36,10 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
           </div>
         )}
 
-        {destination.image && !imageError ? (
+        {destination.image_url && !imageError ? (
           <img
-            src={destination.image}
-            alt={destination.name}
+            src={destination.image_url}
+            alt={destination.city}
             className={`w-full h-full object-cover destination-image ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
             onLoad={handleImageLoad}
             onError={handleImageError}
@@ -52,7 +52,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
 
 
         <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
-          <h4 className="text-2xl font-semibold text-white">{destination.name}</h4>
+          <h4 className="text-2xl font-semibold text-white">{destination.city}</h4>
           <p className="text-lg text-gray-200">{destination.country}</p>
         </div>
 
@@ -60,18 +60,28 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
 
       {/* Content Area - Takes remaining height */}
       <div className="p-4 flex flex-col flex-grow"> {/* Use flex-grow */}
-        <div className="flex flex-wrap gap-1 mb-2">
-          {destination.type.map((type, index) => (
-            <span key={index} className="px-2 py-0.5 bg-gray-100 rounded-full text-xs font-medium text-gray-700">
-              {type}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-2 my-3">
+          {[ // Define categories and their corresponding property accessors
+            { key: 'culture', name: 'Culture', value: destination.culture },
+            { key: 'adventure', name: 'Adventure', value: destination.adventure },
+            { key: 'nature', name: 'Nature', value: destination.nature },
+            { key: 'beaches', name: 'Beaches', value: destination.beaches },
+            { key: 'nightlife', name: 'Nightlife', value: destination.nightlife },
+            { key: 'cuisine', name: 'Cuisine', value: destination.cuisine },
+            { key: 'wellness', name: 'Wellness', value: destination.wellness },
+            { key: 'urban', name: 'Urban', value: destination.urban },
+            { key: 'seclusion', name: 'Seclusion', value: destination.seclusion },
+          ]
+            .filter(category => typeof category.value === 'number' && category.value >= 4) // Filter for ratings >= 4
+            .sort((a, b) => b.value! - a.value!) // Sort by rating descending (optional)
+            .slice(0, 4) // Limit to top 4 tags (optional)
+            .map((category) => (
+              <span key={category.key} className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-700 capitalize">
+                {category.name}
+              </span>
+            ))}
         </div>
-
-        {/* Description - Allow scrolling if needed */}
-        <p className="text-gray-600 text-sm flex-grow overflow-y-auto">{destination.description}</p>
-
-        {/* NO BUTTONS HERE */}
+        <p className="text-gray-600 text-sm flex-grow overflow-y-auto">{destination.short_description}</p>
       </div>
     </Card>
   );
