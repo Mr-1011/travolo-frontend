@@ -122,7 +122,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 src={theme.image}
                 alt={theme.name}
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-opacity duration-500"
               />
               {/* Dynamically set gradient based on hover state */}
               <div

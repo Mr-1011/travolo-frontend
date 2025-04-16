@@ -51,7 +51,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               <img
                 src={destination.image}
                 alt={destination.name}
-                className={`w-full h-full object-cover destination-image ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover destination-image transition-opacity duration-500 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />

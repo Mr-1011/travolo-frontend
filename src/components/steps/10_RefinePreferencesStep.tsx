@@ -51,7 +51,7 @@ const RefinePreferencesStep: React.FC<RefinePreferencesStepProps> = ({
 
     // Send initial system message with preferences
     const systemPrompt = `I've analyzed your preferences: 
-    Themes: ${preferences.travelThemes?.join(', ') || 'None selected'}
+    Themes: ${Array.isArray(preferences.travelThemes) ? preferences.travelThemes.join(', ') : 'None selected'}
     Temperature: ${preferences.temperatureRange?.[0] || '-5'}°C to ${preferences.temperatureRange?.[1] || '30'}°C
     When: ${preferences.travelMonths?.join(', ') || 'Any time'}
     Duration: ${preferences.travelDuration || 'Not specified'}
@@ -112,7 +112,7 @@ const RefinePreferencesStep: React.FC<RefinePreferencesStepProps> = ({
 
         {/* Chat interface with filter when inactive */}
         <div className={`bg-gray-50 rounded-lg border border-gray-200 p-3 ${!chatStarted ? 'opacity-40 pointer-events-none' : ''}`}>
-          <div className="h-[300px] overflow-y-auto mb-4 px-2">
+          <div className="h-[50vh] overflow-y-auto mb-4 px-2">
             {messages.map(msg => (
               <div
                 key={msg.id}
