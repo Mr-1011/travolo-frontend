@@ -124,7 +124,17 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({
                 loading="lazy"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-black/70"></div>
+              {/* Dynamically set gradient based on hover state */}
+              <div
+                className={`
+                  absolute inset-0 bg-gradient-to-b to-black/80
+                  transition-all duration-200 ease-in-out
+                  ${hoveredTheme === theme.id || (themeRatings || {})[theme.id] === 5
+                    ? 'from-transparent from-30%' // Hovered or Selected state: start gradient at 30%
+                    : 'from-transparent from-60%' // Default state: start gradient at 60%
+                  }
+                `}
+              ></div>
               <div className="absolute bottom-0 w-full p-3 text-white">
                 <p
                   className={`

@@ -349,6 +349,8 @@ export function useUserPreferences() {
       case 'travel-themes':
         // Check if at least one theme has a rating of 5
         return Object.values(preferences.travelThemes || {}).some(rating => rating === 5);
+      case 'travel-months':
+        return preferences.travelMonths.length > 0;
       case 'travel-duration':
         return !!preferences.travelDuration;
       case 'preferred-region':
