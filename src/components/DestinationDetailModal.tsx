@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { X } from 'lucide-react';
 import { Destination } from '@/types';
+import TemperatureChart from './TemperatureChart';
+import { Maximize2, Minimize2 } from 'lucide-react';
+
+// Add a mapping for duration styles
+const durationStyles: { [key: string]: { name: string; days?: string; icon: string } } = {
+  'day trip': { name: 'Day trip', days: '1 day', icon: '🚌' },
+  'weekend': { name: 'Weekend', days: '2–3 days', icon: '📅' },
+  'short trip': { name: 'Short trip', days: '4–6 days', icon: '🧳' },
+  'one week': { name: 'One week', days: '7–9 days', icon: '🧭' },
+  'long trip': { name: 'Long trip', days: '10+ days', icon: '🌍' },
+};
 
 type DestinationDetailModalProps = {
   destination: Destination | null;
@@ -26,8 +34,9 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     return null;
   }
 
-  const [imageLoading, setImageLoading] = React.useState(true);
-  const [imageError, setImageError] = React.useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   const handleImageLoad = () => setImageLoading(false);
   const handleImageError = () => {
@@ -40,50 +49,57 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     if (isOpen) {
       setImageLoading(true);
       setImageError(false);
+      setIsImageZoomed(false);
     }
   }, [isOpen, destination?.id]);
 
+  const toggleImageZoom = () => setIsImageZoomed(!isImageZoomed);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] max-h-[90vh] flex flex-col">
-        <DialogClose asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-3 right-3 z-10 rounded-full"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </DialogClose>
-
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{destination.name}, {destination.country}</DialogTitle>
         </DialogHeader>
 
+        {/* Scrollable Content Area */}
         <div className="flex-grow overflow-y-auto pr-2 pl-1 space-y-6 py-4">
-          {/* Image Section */}
-          <div className="w-full h-64 md:h-80 relative overflow-hidden rounded-lg bg-gray-200">
+          {/* Image Section - Add transition and conditional height */}
+          <div className={`
+            w-full relative overflow-hidden rounded-lg bg-gray-200
+            transition-all duration-300 ease-in-out
+            ${isImageZoomed ? 'h-[70vh]' : 'h-64 md:h-80'}
+          `}>
+            {/* Image Loading Placeholder */}
             {imageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-0">
                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
+            {/* Image Display */}
             {destination.image && !imageError ? (
               <img
                 src={destination.image}
                 alt={destination.name}
-                className={`w-full h-full object-cover ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
-                loading="lazy" // Lazy load image
+                loading="lazy"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-500">
                 {imageError ? 'Image Not Available' : 'No Image Provided'}
               </div>
+            )}
+            {/* Zoom Button - Only show if image exists and loaded */}
+            {!imageLoading && destination.image && !imageError && (
+              <button
+                onClick={toggleImageZoom}
+                className="absolute top-2 right-2 z-10 p-1.5 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                aria-label={isImageZoomed ? 'Minimize image' : 'Maximize image'}
+              >
+                {isImageZoomed ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+              </button>
             )}
           </div>
 
@@ -132,40 +148,43 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
             {destination.budget && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Typical Budget</h3>
-                <p className="text-gray-700 capitalize bg-blue-50 p-3 rounded text-center font-medium">{destination.budget}</p>
+                <p className="text-gray-700 capitalize bg-blue-100 p-3 rounded text-center font-medium text-blue-800">{destination.budget}</p>
               </div>
             )}
             {destination.idealDurations && destination.idealDurations.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Ideal Trip Durations</h3>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {destination.idealDurations.map((duration) => (
-                    <span key={duration} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                      {duration}
-                    </span>
-                  ))}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {destination.idealDurations.map((duration) => {
+                    const style = durationStyles[duration.toLowerCase()];
+                    const displayName = style?.name || duration; // Fallback to original name if no style found
+                    const displayIcon = style?.icon || '✈️'; // Default icon
+                    const displayDays = style?.days;
+
+                    return (
+                      <div
+                        key={duration}
+                        className="flex flex-col items-center justify-center p-3 rounded-lg border border-gray-200 bg-gray-50 text-center"
+                      >
+                        <span className="text-2xl mb-1">{displayIcon}</span>
+                        <span className="font-medium text-sm text-gray-700">{displayName}</span>
+                        {displayDays && <span className="text-xs mt-0.5 text-gray-500">{displayDays}</span>}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Temperature Section (Placeholder) */}
+          {/* Temperature Section - Keep inside scrollable area */}
           <div>
             <h3 className="text-lg font-semibold mb-2">Average Monthly Temperatures (°C)</h3>
-            {destination.monthlyTemperatures ? (
-              <div className="bg-gray-50 p-4 rounded-md text-gray-700 text-sm">
-                {/* Basic text representation for now */}
-                <pre className="whitespace-pre-wrap break-words">
-                  {JSON.stringify(destination.monthlyTemperatures, null, 2)}
-                </pre>
-                <p className="mt-2 text-xs text-gray-500">Temperature chart coming soon!</p>
-              </div>
-            ) : (
-              <p className="text-gray-500 text-sm">Temperature data not available.</p>
-            )}
+            <TemperatureChart data={destination.monthlyTemperatures} />
           </div>
 
         </div>
+
       </DialogContent>
     </Dialog>
   );

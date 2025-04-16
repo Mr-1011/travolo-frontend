@@ -20,7 +20,7 @@ export type ApiDestination = {
   urban: number | null;
   seclusion: number | null;
   image_url: string | null;
-  monthly_temperatures: Record<string, MonthlyTemperature> | null;
+  avg_temp_monthly: Record<string, MonthlyTemperature> | null;
   ideal_durations: string[] | null;
   budget: string | null;
 };
@@ -86,7 +86,7 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     type: type, // Derived top types
     // --- Map New Detailed Fields ---
     categoryRatings: categoryRatings, // All ratings
-    monthlyTemperatures: apiDestination.monthly_temperatures ?? null,
+    monthlyTemperatures: apiDestination.avg_temp_monthly ?? null,
     idealDurations: apiDestination.ideal_durations ?? null,
     budget: apiDestination.budget ?? null,
   };
