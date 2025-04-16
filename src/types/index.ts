@@ -42,6 +42,12 @@ export type UserPreferences = {
   conversationSummary: { userMessageCount: number };
 };
 
+export type MonthlyTemperature = {
+  avg: number;
+  max: number;
+  min: number;
+};
+
 export type Destination = {
   id: string;
   name: string;
@@ -49,6 +55,10 @@ export type Destination = {
   description: string;
   image: string;
   type: string[];
+  categoryRatings: Record<string, number | null>;
+  monthlyTemperatures: Record<string, MonthlyTemperature> | null;
+  idealDurations: string[] | null;
+  budget: string | null;
 };
 
 export type Message = {

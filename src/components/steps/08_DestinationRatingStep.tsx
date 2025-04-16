@@ -3,8 +3,6 @@ import TinderCard from 'react-tinder-card';
 import DestinationCard from '@/components/DestinationCard';
 import MobileSwipeCard from '@/components/MobileSwipeCard';
 import { Destination } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import { fetchRandomDestinations, mapApiToDestination } from '@/services/destinationService';
 
 const RENDER_WINDOW_SIZE = 3; // How many cards to render at once

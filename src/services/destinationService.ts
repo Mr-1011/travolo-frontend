@@ -1,4 +1,4 @@
-import { Destination } from '@/types';
+import { Destination, MonthlyTemperature } from '@/types';
 import { API_BASE_URL } from '@/config/apiConfig';
 
 /**
@@ -20,6 +20,9 @@ export type ApiDestination = {
   urban: number | null;
   seclusion: number | null;
   image_url: string | null;
+  monthly_temperatures: Record<string, MonthlyTemperature> | null;
+  ideal_durations: string[] | null;
+  budget: string | null;
 };
 
 /**
@@ -51,18 +54,26 @@ export const fetchRandomDestinations = async (excludeIds?: string[]): Promise<Ap
  * Converts API destination format to the application Destination format
  */
 export const mapApiToDestination = (apiDestination: ApiDestination): Destination => {
-  // Extract types based on category fields with a rating of 4 or higher
   const categories: (keyof ApiDestination)[] = [
     'culture', 'adventure', 'nature', 'beaches',
     'nightlife', 'cuisine', 'wellness', 'urban', 'seclusion'
   ];
 
+  // Create a record of all category ratings
+  const categoryRatings: Record<string, number | null> = {};
+  categories.forEach(category => {
+    // category here is guaranteed to be one of the rating keys
+    const rating = apiDestination[category];
+    // Ensure it's a number before assigning, otherwise null
+    categoryRatings[category] = typeof rating === 'number' ? rating : null;
+  });
+
+  // Determine 'type' based on ratings >= 4 (existing logic)
   const type = categories
     .filter(category => {
       const rating = apiDestination[category];
       return typeof rating === 'number' && rating >= 4;
     })
-    // Capitalize the first letter for display
     .map(category => category.charAt(0).toUpperCase() + category.slice(1));
 
   return {
@@ -70,10 +81,13 @@ export const mapApiToDestination = (apiDestination: ApiDestination): Destination
     name: apiDestination.city,
     country: apiDestination.country,
     description: apiDestination.short_description ||
-      `Explore the wonders of ${apiDestination.city}, ${apiDestination.country}`,
-    // Use image_url from API. If null/undefined, use an empty string.
+      `Explore the wonders of ${apiDestination.city}, ${apiDestination.country}.`,
     image: apiDestination.image_url || '',
-    // Use the filtered and capitalized types
-    type: type
+    type: type, // Derived top types
+    // --- Map New Detailed Fields ---
+    categoryRatings: categoryRatings, // All ratings
+    monthlyTemperatures: apiDestination.monthly_temperatures ?? null,
+    idealDurations: apiDestination.ideal_durations ?? null,
+    budget: apiDestination.budget ?? null,
   };
 }; 
