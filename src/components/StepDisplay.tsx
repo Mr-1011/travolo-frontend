@@ -29,6 +29,7 @@ type StepDisplayProps = {
     handleDestinationRatingChange: (destinationId: string, rating: "like" | "dislike" | null) => void;
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handlePhotoAnalysisUpdate: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
+    handlePhotoUploaded: () => void;
     handleUserMessageSent: () => void;
     handleThemeToggle: (theme: string) => void;
   };
@@ -135,6 +136,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
         return (
           <PhotoUploadStep
             onAnalysisComplete={handlers.handlePhotoAnalysisUpdate}
+            onPhotoAdded={handlers.handlePhotoUploaded}
           />
         );
 

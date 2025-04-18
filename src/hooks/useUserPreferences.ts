@@ -180,10 +180,26 @@ export function useUserPreferences() {
     setPreferences(prev => ({
       ...prev,
       photoAnalysis: {
-        photoCount: analysis.photoCount,
+        // Only update the adjustment status. Count is handled by handlePhotoUploaded.
+        ...prev.photoAnalysis, // Keep existing count
         adjustmentSuccessful: analysis.adjustmentSuccessful
       }
     }));
+  };
+
+  /**
+   * New handler to increment photo count when a photo is uploaded.
+   * Call this from your upload component after a successful upload.
+   */
+  const handlePhotoUploaded = () => {
+    setPreferences(prev => ({
+      ...prev,
+      photoAnalysis: {
+        ...prev.photoAnalysis,
+        photoCount: (prev.photoAnalysis?.photoCount || 0) + 1
+      }
+    }));
+    console.log('Photo count incremented.');
   };
 
   // Kept for compatibility or potential future use, logs a warning
@@ -359,6 +375,7 @@ export function useUserPreferences() {
       handleBudgetSelect,
       handleDestinationRatingChange,
       handlePhotoChange,
+      handlePhotoUploaded,
       handlePhotoAnalysisUpdate,
       handleUserMessageSent,
       handleGetRecommendations,

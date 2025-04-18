@@ -17,9 +17,10 @@ type Photo = {
 
 type PhotoUploadStepProps = {
   onAnalysisComplete: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
+  onPhotoAdded: () => void;
 };
 
-const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete }) => {
+const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, onPhotoAdded }) => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -76,6 +77,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete })
             file: file,
             url: e.target.result as string,
           });
+          onPhotoAdded();
           processedCount++;
           if (processedCount === newPhotosToProcess) {
             setPhotos(prevPhotos => [...prevPhotos, ...currentNewPhotos]);
