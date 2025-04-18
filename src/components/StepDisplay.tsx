@@ -133,10 +133,22 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
         );
 
       case 'upload-photo':
+        const themePreferences = {
+          culture: preferences.culture,
+          adventure: preferences.adventure,
+          nature: preferences.nature,
+          beaches: preferences.beaches,
+          nightlife: preferences.nightlife,
+          cuisine: preferences.cuisine,
+          wellness: preferences.wellness,
+          urban: preferences.urban,
+          seclusion: preferences.seclusion,
+        };
         return (
           <PhotoUploadStep
             onAnalysisComplete={handlers.handlePhotoAnalysisUpdate}
             onPhotoAdded={handlers.handlePhotoUploaded}
+            currentThemePreferences={themePreferences}
           />
         );
 

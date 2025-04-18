@@ -1,12 +1,16 @@
 import { API_BASE_URL } from '@/config/apiConfig'; // Import the base URL
 
 /**
- * Sends images to the backend for preference analysis.
+ * Sends images and current theme preferences to the backend for analysis.
  * @param {File[]} imageFiles - An array of image files (max 3).
+ * @param {Record<string, number>} themePreferences - The current theme preference scores (e.g., { culture: 5, adventure: 1 }).
  * @returns {Promise<object>} - The analysis result from the backend.
  * @throws {Error} - Throws an error if the API call fails.
  */
-export const analyzeImagePreferences = async (imageFiles: File[]): Promise<object> => {
+export const analyzeImagePreferences = async (
+  imageFiles: File[],
+  themePreferences: Record<string, number> // Add themePreferences parameter
+): Promise<object> => {
   if (!imageFiles || imageFiles.length === 0) {
     throw new Error('No image files provided.');
   }
@@ -19,6 +23,9 @@ export const analyzeImagePreferences = async (imageFiles: File[]): Promise<objec
     // The backend expects files under the 'images' field name
     formData.append('images', file);
   });
+
+  // Append the theme preferences as a JSON string
+  formData.append('preferences', JSON.stringify(themePreferences));
 
   try {
     // Construct the URL using the base URL

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Upload, X } from 'lucide-react';
 import { analyzeImagePreferences } from '@/services/preferenceService';
+import { Loader2 } from 'lucide-react';
 
 // Expected return type from the analysis service
 type AnalysisResult = {
@@ -18,9 +19,10 @@ type Photo = {
 type PhotoUploadStepProps = {
   onAnalysisComplete: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
   onPhotoAdded: () => void;
+  currentThemePreferences: Record<string, number>;
 };
 
-const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, onPhotoAdded }) => {
+const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, onPhotoAdded, currentThemePreferences }) => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -115,8 +117,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
 
     try {
       const filesToUpload = photos.map(p => p.file);
-      // Call the service function - don't assume a strict type here
-      const result: unknown = await analyzeImagePreferences(filesToUpload);
+      // Call the service function, passing the theme preferences
+      const result: unknown = await analyzeImagePreferences(
+        filesToUpload,
+        currentThemePreferences
+      );
       console.log('Backend Analysis Result:', result);
 
       // Safely determine success status
@@ -181,6 +186,13 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
           onChange={handleFileInput}
           disabled={isUploading || photos.length >= 3}
         />
+
+        {/* Loading Overlay */}
+        {isUploading && (
+          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 rounded-lg">
+            <Loader2 className="h-12 w-12 animate-spin text-[#3c83f6]" />
+          </div>
+        )}
 
         {photos.length === 0 ? (
           // Initial State: Empty Dropzone
