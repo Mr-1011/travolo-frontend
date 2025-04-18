@@ -34,8 +34,22 @@ export const defaultPreferences: UserPreferences = {
   originLocation: null,
   travelBudget: [],
   destinationRatings: {},
-  photoAnalysis: { photoCount: 0, adjustmentSuccessful: false },
+  photoAnalysis: { imageCount: 0, imageSummary: '', imageAnalysis: null, adjustmentSuccessful: false },
   conversationSummary: { userMessageCount: 0 },
+};
+
+// Type definitions for the props of the hook handlers
+type ThemeId = keyof Pick<UserPreferences, 'culture' | 'adventure' | 'nature' | 'beaches' | 'nightlife' | 'cuisine' | 'wellness' | 'urban' | 'seclusion'>;
+
+type BackendAnalysisResult = {
+  imageAnalysis: Record<string, number>;
+  imageSummary: string;
+};
+
+type AnalysisCompletePayload = {
+  imageCount: number; // Count is handled separately by handlePhotoUploaded
+  analysisResult: BackendAnalysisResult | null;
+  adjustmentSuccessful: boolean;
 };
 
 export function useUserPreferences() {
@@ -175,16 +189,51 @@ export function useUserPreferences() {
     });
   };
 
-  // Updated to handle photo analysis summary
-  const handlePhotoAnalysisUpdate = (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => {
-    setPreferences(prev => ({
-      ...prev,
-      photoAnalysis: {
-        // Only update the adjustment status. Count is handled by handlePhotoUploaded.
-        ...prev.photoAnalysis, // Keep existing count
-        adjustmentSuccessful: analysis.adjustmentSuccessful
+  // Helper function to clamp values between 1 and 5
+  const clamp = (value: number, min: number, max: number): number => {
+    return Math.max(min, Math.min(max, value));
+  };
+
+  // Updated to handle the full analysis payload from PhotoUploadStep
+  const handlePhotoAnalysisUpdate = (payload: AnalysisCompletePayload) => {
+    setPreferences(prev => {
+      const newPreferences = { ...prev };
+      let analysisObject: Record<string, number> | null = null; // Store as object or null
+      let summary = '';
+      let adjustmentSuccessful = payload.adjustmentSuccessful;
+
+      if (payload.analysisResult) {
+        const { imageAnalysis, imageSummary } = payload.analysisResult;
+        summary = imageSummary;
+        analysisObject = imageAnalysis; // Store the analysis object directly
+
+        // Apply deltas to theme preferences
+        allThemeIds.forEach(themeId => {
+          const delta = imageAnalysis[themeId] ?? 0; // Get delta, default to 0 if missing
+          const currentScore = newPreferences[themeId];
+          // Clamp the new score between 1 and 5
+          newPreferences[themeId] = clamp(currentScore + delta, 1, 5);
+        });
+
+        // If we processed an analysisResult, consider the adjustment successful
+        adjustmentSuccessful = true;
+        console.log('Applied photo analysis deltas:', imageAnalysis);
+      } else {
+        // If analysisResult is null (e.g., API error), ensure adjustment is marked as false
+        adjustmentSuccessful = false;
+        console.warn('Photo analysis update called with null analysisResult.');
       }
-    }));
+
+      return {
+        ...newPreferences,
+        photoAnalysis: {
+          ...prev.photoAnalysis, // Keep existing imageCount
+          imageSummary: summary, // Store the summary text
+          imageAnalysis: analysisObject, // Store the analysis object (or null)
+          adjustmentSuccessful: adjustmentSuccessful, // Update success status
+        },
+      };
+    });
   };
 
   /**
@@ -196,7 +245,7 @@ export function useUserPreferences() {
       ...prev,
       photoAnalysis: {
         ...prev.photoAnalysis,
-        photoCount: (prev.photoAnalysis?.photoCount || 0) + 1
+        imageCount: (prev.photoAnalysis?.imageCount || 0) + 1
       }
     }));
     console.log('Photo count incremented.');
@@ -210,7 +259,7 @@ export function useUserPreferences() {
       ...prev,
       photoAnalysis: {
         ...prev.photoAnalysis, // Keep existing adjustment status
-        photoCount: photos.length,
+        imageCount: photos.length,
       }
     }));
   };
@@ -317,8 +366,6 @@ export function useUserPreferences() {
 
   // Add a reset function to clear all user preferences
   const resetAllPreferences = () => {
-    // Reset preferences to default values
-    // Need to create a fresh default object inline or ensure defaultPreferences is correctly defined
     const freshDefaults: UserPreferences = {
       culture: 1,
       adventure: 1,
@@ -336,7 +383,7 @@ export function useUserPreferences() {
       originLocation: null,
       travelBudget: [],
       destinationRatings: {},
-      photoAnalysis: { photoCount: 0, adjustmentSuccessful: false },
+      photoAnalysis: { imageCount: 0, imageSummary: '', imageAnalysis: null, adjustmentSuccessful: false },
       conversationSummary: { userMessageCount: 0 },
     };
     setPreferences(freshDefaults);

@@ -44,7 +44,7 @@ export type UserPreferences = {
   destinationRatings: Record<string, 'like' | 'dislike' | null>;
 
   // Step 9: Photo Analysis Summary
-  photoAnalysis: { photoCount: number; adjustmentSuccessful: boolean };
+  photoAnalysis: { imageCount: number; imageSummary: string; imageAnalysis: Record<string, number> | null; adjustmentSuccessful: boolean };
 
   // Step 10: Conversation Summary
   conversationSummary: { userMessageCount: number };

@@ -6,7 +6,15 @@ import { analyzeImagePreferences } from '@/services/preferenceService';
 import { Loader2 } from 'lucide-react';
 
 // Expected return type from the analysis service
-type AnalysisResult = {
+type BackendAnalysisResult = {
+  imageAnalysis: Record<string, number>;
+  imageSummary: string;
+};
+
+// Type for the data passed to the onAnalysisComplete callback
+type AnalysisCompletePayload = {
+  imageCount: number;
+  analysisResult: BackendAnalysisResult | null; // Pass the whole analysis object or null on error
   adjustmentSuccessful: boolean;
 };
 
@@ -17,7 +25,7 @@ type Photo = {
 };
 
 type PhotoUploadStepProps = {
-  onAnalysisComplete: (analysis: { photoCount: number; adjustmentSuccessful: boolean }) => void;
+  onAnalysisComplete: (payload: AnalysisCompletePayload) => void;
   onPhotoAdded: () => void;
   currentThemePreferences: Record<string, number>;
 };
@@ -118,41 +126,30 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
     try {
       const filesToUpload = photos.map(p => p.file);
       // Call the service function, passing the theme preferences
-      const result: unknown = await analyzeImagePreferences(
+      const analysisResult: BackendAnalysisResult = await analyzeImagePreferences(
         filesToUpload,
         currentThemePreferences
       );
-      console.log('Backend Analysis Result:', result);
+      console.log('Backend Analysis Result:', analysisResult);
 
-      // Safely determine success status
-      let success = false;
-      if (
-        typeof result === 'object' &&
-        result !== null &&
-        'adjustmentSuccessful' in result &&
-        typeof result.adjustmentSuccessful === 'boolean'
-      ) {
-        success = result.adjustmentSuccessful;
-      }
-
-      // Call the callback prop with the analysis summary
+      // Call the callback prop with the analysis summary and result object
       onAnalysisComplete({
-        photoCount: photos.length,
-        adjustmentSuccessful: success // Use the safely determined value
+        imageCount: photos.length,
+        analysisResult: analysisResult, // Pass the received analysis
+        adjustmentSuccessful: true // Assume success if API call succeeded
       });
 
-      // Update UI based on success
-      if (success) {
-        setUploadStatus('Analysis complete! Your preferences have been updated based on the photos.');
-      } else {
-        setUploadStatus('Analysis complete, but preferences could not be automatically updated.');
-      }
+      setUploadStatus('Analysis complete! Your preferences are being updated based on the photos.');
 
     } catch (error) {
       console.error('Upload or analysis failed:', error);
-      setUploadStatus(`Error: ${error instanceof Error ? error.message : 'Upload failed'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Upload or analysis failed';
+      setUploadStatus(`Error: ${errorMessage}`);
+
+      // Call the callback with null analysis result and adjustment unsuccessful
       onAnalysisComplete({
-        photoCount: photos.length,
+        imageCount: photos.length,
+        analysisResult: null,
         adjustmentSuccessful: false
       });
     } finally {
@@ -254,7 +251,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
       </div>
 
       {uploadStatus && (
-        <p className={`mt-4 text-sm ${uploadStatus.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
+        <p className={`mt-4 text-sm ${(uploadStatus.startsWith('Error') || uploadStatus.includes('failed')) ? 'text-red-600' : 'text-green-600'}`}>
           {uploadStatus}
         </p>
       )}
