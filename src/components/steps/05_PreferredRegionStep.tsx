@@ -26,7 +26,7 @@ const PreferredRegionStep: React.FC<PreferredRegionStepProps> = ({
     { id: 'south_america', name: 'South America' },
     { id: 'africa', name: 'Africa' },
     { id: 'middle_east', name: 'Middle East' },
-    { id: 'anywhere', name: 'Anywhere' },
+    { id: 'oceania', name: 'Oceania' },
   ];
 
   return (

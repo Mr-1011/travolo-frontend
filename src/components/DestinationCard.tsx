@@ -73,7 +73,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               <div className="flex items-center gap-2 flex-shrink-0">
                 {confidence !== undefined && (
                   <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
-                    {Math.round(confidence * 100)}% match
+                    {confidence}% match
                   </div>
                 )}
                 <Button
@@ -93,7 +93,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               {/* Combined existing desktop Match % and Info button container */}
               {confidence !== undefined && (
                 <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
-                  {Math.round(confidence * 100)}% match
+                  {confidence}% match
                 </div>
               )}
               <Button
