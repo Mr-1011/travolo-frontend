@@ -110,38 +110,42 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
                 className="w-full h-full object-cover transition-opacity duration-500"
               />
               {/* Dynamically set gradient based on hover state */}
-              <div
-                className={`
-                  absolute inset-0 bg-gradient-to-b to-black/80
-                  transition-all duration-200 ease-in-out
-                  ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5
-                    ? 'from-transparent from-30%' // Hovered or Selected state: start gradient at 30%
-                    : 'from-transparent from-60%' // Default state: start gradient at 60%
-                  }
-                `}
-              ></div>
-              <div className="absolute bottom-0 w-full p-3 text-white">
-                <p
+              <div className={`absolute bottom-0 w-full p-2
+               ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5 ? 'pb-2' : 'pb-0'}
+              `}>
+                <div className={`
+                  bg-white/80 backdrop-blur-sm px-2 py-1 inline-block mb-0 
+                  ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5 ? 'rounded-t pb-0' : 'rounded'}
+                `}>
+                  <p
+                    className={`
+                      font-medium text-2xl tracking-wide text-black text-shadow-sm
+                      transition-transform duration-200 ease-in-out
+                      ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5 ? 'transform -translate-y-0' : ''}
+                    `}
+                  >
+                    {theme.name}
+                  </p>
+                </div>
+                <div
                   className={`
-                    font-medium text-2xl tracking-wide text-shadow-lg
-                    transition-transform duration-200 ease-in-out
-                    ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5 ? 'transform -translate-y-1' : ''}
-                  `}
-                >
-                  {theme.name}
-                </p>
-                <p
-                  className={`
-                    text-sm text-gray-300 
+                    bg-white/80 backdrop-blur-sm px-2 py-1
                     transition-all duration-200 ease-in-out
+                    rounded-b rounded-tr
                     ${hoveredTheme === theme.id || themeValues[theme.id as keyof ThemeValuesProps] === 5
-                      ? 'opacity-100 max-h-16 transform translate-y-0'
-                      : 'opacity-0 max-h-0 transform translate-y-4 overflow-hidden'
+                      ? 'opacity-100 max-h-16 transform translate-y-0 '
+                      : 'opacity-0 max-h-0 transform'
                     }
                   `}
                 >
-                  {theme.description}
-                </p>
+                  <p
+                    className={`
+                      text-sm text-black text-shadow-sm
+                    `}
+                  >
+                    {theme.description}
+                  </p>
+                </div>
               </div>
 
               {themeValues[theme.id as keyof ThemeValuesProps] === 5 && (
