@@ -51,9 +51,11 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
         )}
 
 
-        <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
-          <h4 className="text-2xl font-semibold text-white">{destination.city}</h4>
-          <p className="text-lg text-gray-200">{destination.country}</p>
+        <div className="absolute bottom-0 left-0 px-4 py-2"> {/* Adjusted padding */}
+          {/* Apply styling similar to TravelThemesStep */}
+          <div className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded inline-block">
+            <h4 className="text-xl font-semibold text-black">{destination.city}, {destination.country}</h4> {/* Adjusted text size and color */}
+          </div>
         </div>
 
       </div>

@@ -161,9 +161,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-2">Upload a Photo from a Past Trip</h2>
       <p className="text-gray-600 mb-6">
-        Help us understand your style by sharing a vacation photo you love.
-        <br />
-        <span className="text-sm">(Optional)</span>
+        We will analyze your photos with a model to understand what you like. The image will not be stored.
       </p>
 
       <div
@@ -176,7 +174,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
         {/* Hidden File Input */}
         <input
           type="file"
-          accept="image/jpeg, image/png, image/webp"
+          accept="image/jpeg, image/png"
           multiple
           id="photo-upload"
           className="hidden"
@@ -197,12 +195,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
             <Upload size={40} className="text-gray-400 mb-2" />
             <p className="text-lg font-medium mb-1">Drag and drop your photos here</p>
             <p className="text-sm text-gray-500 mb-4">or click to browse files</p>
-            <Button asChild>
+            <Button asChild className="bg-[#3c83f6] text-white w-full sm:w-auto">
               <label htmlFor="photo-upload" className="cursor-pointer">
                 Browse Files
               </label>
             </Button>
-            <p className="text-xs text-gray-400 mt-2">Max 3 photos (JPG, PNG, WEBP)</p>
           </div>
         ) : (
           // State with Uploaded Photos
@@ -210,7 +207,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
             <div className="flex justify-between items-center mb-4">
               <h4 className="font-medium text-left">Uploaded Photos ({photos.length}/3):</h4>
               {photos.length < 3 && (
-                <Button asChild variant="outline" size="sm" className="absolute top-4 right-4">
+                <Button asChild variant="outline" className="absolute top-4 right-4 ">
                   <label htmlFor="photo-upload" className="cursor-pointer">
                     Add more
                   </label>
@@ -260,8 +257,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
             <Button
               onClick={handleUpload}
               disabled={isUploading || photos.length === 0}
+              className="bg-[#3c83f6] text-white w-full sm:w-auto"
             >
-              {isUploading ? 'Analyzing...' : 'Analyze Photos'}
+              {isUploading ? 'Analyzing...' : 'Analyze my Photos'}
             </Button>
           </div>
         )}
