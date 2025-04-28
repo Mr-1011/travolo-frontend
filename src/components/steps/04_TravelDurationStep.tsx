@@ -4,7 +4,8 @@ type Duration = {
   id: string;
   name: string;
   days: string;
-  icon: string;
+  icon?: string;
+  imageSrc?: string;
 };
 
 type TravelDurationStepProps = {
@@ -17,7 +18,7 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
   onDurationSelect
 }) => {
   const durations: Duration[] = [
-    { id: 'day-trip', name: 'Day trip', days: '1 day', icon: '🚌' },
+    { id: 'day-trip', name: 'Day trip', days: '1 day', imageSrc: '/images/bus.png' },
     { id: 'weekend', name: 'Weekend', days: '2–3 days', icon: '📅' },
     { id: 'short', name: 'Short trip', days: '4–6 days', icon: '🧳' },
     { id: 'week', name: 'One week', days: '7–9 days', icon: '🧭' },
@@ -42,7 +43,11 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
             `}
             onClick={() => onDurationSelect(duration.id)}
           >
-            <span className="text-3xl mb-2">{duration.icon}</span>
+            {duration.imageSrc ? (
+              <img src={duration.imageSrc} alt={duration.name} className="w-16 h-16 mb-2" />
+            ) : (
+              <span className="text-3xl mb-2">{duration.icon}</span>
+            )}
             <span className={`font-medium ${selectedDuration.includes(duration.id) ? 'text-[#3c83f6]' : 'text-gray-700'}`}>{duration.name}</span>
             <span className="text-sm mt-1 text-gray-600">{duration.days}</span>
             {selectedDuration.includes(duration.id) && (

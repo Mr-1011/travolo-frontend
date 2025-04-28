@@ -78,15 +78,11 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({ data }) => {
             <Tooltip
               contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', fontSize: '12px' }}
               labelStyle={{ fontWeight: 'bold', marginBottom: '4px' }}
-              formatter={(value: number, name: string, props) => {
-                const monthData = chartData.find(d => d.month === props.payload?.month);
-                if (!monthData) return [`${value.toFixed(1)} °C`, name];
-
-                return [
-                  `Avg: ${monthData.avg?.toFixed(1)} °C`,
-                  `Max: ${monthData.max?.toFixed(1)} °C`,
-                  `Min: ${monthData.min?.toFixed(1)} °C`
-                ];
+              formatter={(value: number | string, name: string) => {
+                // value might be string if data is missing/null - handle appropriately if needed
+                const formattedValue = typeof value === 'number' ? `${value.toFixed(1)} °C` : `${value}`;
+                // Return the formatted value and the original name from the Line component
+                return [formattedValue, name];
               }}
             />
             <Legend verticalAlign="top" height={36} />
