@@ -18,11 +18,11 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
   onDurationSelect
 }) => {
   const durations: Duration[] = [
-    { id: 'day-trip', name: 'Day trip', days: '1 day', imageSrc: '/images/bus.png' },
-    { id: 'weekend', name: 'Weekend', days: '2–3 days', icon: '📅' },
-    { id: 'short', name: 'Short trip', days: '4–6 days', icon: '🧳' },
-    { id: 'week', name: 'One week', days: '7–9 days', icon: '🧭' },
-    { id: 'long', name: 'Long trip', days: '10+ days', icon: '🌍' },
+    { id: 'day-trip', name: 'Day trip', days: '1 day', imageSrc: '/icons/day-trip.png' },
+    { id: 'weekend', name: 'Weekend', days: '2–3 days', imageSrc: '/icons/weekend.png' },
+    { id: 'short', name: 'Short trip', days: '4–6 days', imageSrc: '/icons/short-trip.png' },
+    { id: 'week', name: 'One week', days: '7–9 days', imageSrc: '/icons/one-week.png' },
+    { id: 'long', name: 'Long trip', days: '10+ days', imageSrc: '/icons/long-trip.png' },
   ];
 
   return (
@@ -44,7 +44,7 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
             onClick={() => onDurationSelect(duration.id)}
           >
             {duration.imageSrc ? (
-              <img src={duration.imageSrc} alt={duration.name} className="w-16 h-16 mb-2" />
+              <img src={duration.imageSrc} alt={duration.name} className="w-14 h-14 mb-2" />
             ) : (
               <span className="text-3xl mb-2">{duration.icon}</span>
             )}
