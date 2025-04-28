@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import PreferencesPage from "./pages/PreferencesPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
+import Info from "./pages/Info";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/preferences" element={<PreferencesPage />} />
           <Route path="/results" element={<RecommendationsPage />} />
+          <Route path="/info" element={<Info />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

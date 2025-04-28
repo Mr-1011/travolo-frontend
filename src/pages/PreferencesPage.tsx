@@ -64,7 +64,6 @@ const PreferencesPage = () => {
     if (currentIndex < questionSteps.length - 1) {
       setCurrentStep(questionSteps[currentIndex + 1].id);
     } else {
-      // Last step: Call handler with navigation callback
       console.log("Last step reached, calling handleGetRecommendations with navigation callback");
       handlers.handleGetRecommendations((newRecommendations, fetchedRecordId) => {
         navigate('/results', { state: { recommendations: newRecommendations, recommendationRecordId: fetchedRecordId } });

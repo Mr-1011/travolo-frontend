@@ -167,7 +167,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
       </p>
 
       <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
+        className={`relative border-2 border-dashed rounded-lg p-4 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
           }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -248,24 +248,24 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
             </div>
           </div>
         )}
+
+        {uploadStatus && (
+          <p className={`mt-4 text-sm ${(uploadStatus.startsWith('Error') || uploadStatus.includes('failed')) ? 'text-red-600' : 'text-green-600'}`}>
+            {uploadStatus}
+          </p>
+        )}
+
+        {photos.length > 0 && (
+          <div className="mt-6 text-center">
+            <Button
+              onClick={handleUpload}
+              disabled={isUploading || photos.length === 0}
+            >
+              {isUploading ? 'Analyzing...' : 'Analyze Photos'}
+            </Button>
+          </div>
+        )}
       </div>
-
-      {uploadStatus && (
-        <p className={`mt-4 text-sm ${(uploadStatus.startsWith('Error') || uploadStatus.includes('failed')) ? 'text-red-600' : 'text-green-600'}`}>
-          {uploadStatus}
-        </p>
-      )}
-
-      {photos.length > 0 && (
-        <div className="mt-6 text-center">
-          <Button
-            onClick={handleUpload}
-            disabled={isUploading || photos.length === 0}
-          >
-            {isUploading ? 'Analyzing...' : 'Analyze Photos'}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
