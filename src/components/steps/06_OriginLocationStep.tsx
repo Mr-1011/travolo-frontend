@@ -95,9 +95,9 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-2">Origin Location</h2>
+      <h2 className="text-2xl font-bold mb-1">Set Your Origin Location</h2>
       <p className="text-gray-600 mb-6">
-        Where are you travelling from? Enter a city or country to help us refine recommendations.
+        Lets us know where you're travelling from to help us refine recommendations.
       </p>
 
       {/* Modified flex container for responsiveness */}
@@ -105,7 +105,7 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
         <div className="flex-grow relative">
           <Input
             type="text"
-            placeholder="E.g., London, UK or Paris"
+            placeholder="Can be a city, country, or airport."
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}

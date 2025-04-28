@@ -252,7 +252,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
                         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-gray-200 bg-gray-50 text-center">
                           {/* Display image or fallback icon */}
                           {style.imageSrc ? (
-                            <img src={style.imageSrc} alt={style.name} className="w-10 h-10 mb-1" />
+                            <img src={style.imageSrc} alt={style.name} className="w-10 h-10 mb-1" draggable="false" />
                           ) : (
                             <span className="text-2xl mb-1">{style.icon || '💰'}</span> // Provide a generic fallback icon
                           )}
@@ -290,7 +290,7 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
                       >
                         {/* Display image if available, otherwise fallback icon */}
                         {displayImageSrc ? (
-                          <img src={displayImageSrc} alt={displayName} className="w-10 h-10 mb-1" />
+                          <img src={displayImageSrc} alt={displayName} className="w-10 h-10 mb-1" draggable="false" />
                         ) : (
                           <span className="text-2xl mb-1">{displayIcon}</span>
                         )}

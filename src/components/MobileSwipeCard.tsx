@@ -41,6 +41,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
             src={destination.image_url}
             alt={destination.city}
             className={`w-full h-full object-cover destination-image ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+            draggable="false"
             onLoad={handleImageLoad}
             onError={handleImageError}
           />

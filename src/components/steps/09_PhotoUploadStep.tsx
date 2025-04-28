@@ -35,6 +35,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -121,7 +122,6 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
     }
 
     setIsUploading(true);
-    setUploadStatus('Uploading and analyzing...');
 
     try {
       const filesToUpload = photos.map(p => p.file);
@@ -139,7 +139,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
         adjustmentSuccessful: true // Assume success if API call succeeded
       });
 
-      setUploadStatus('Analysis complete! Your preferences are being updated based on the photos.');
+      setIsAnalysisComplete(true);
 
     } catch (error) {
       console.error('Upload or analysis failed:', error);
@@ -159,11 +159,12 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-2">Upload a Photo from a Past Trip</h2>
+      <h2 className="text-2xl font-bold mb-1">Upload Photos from a Past Trip</h2>
       <p className="text-gray-600 mb-6">
-        We will analyze your photos with a model to understand what you like. The image will not be stored.
+        We will analyze your photos with a image analysis model to understand what you like.
+        <br />
+        <span className="text-sm text-gray-500">(The image are not stored)</span>
       </p>
-
       <div
         className={`relative border-2 border-dashed rounded-lg p-4 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
           }`}
@@ -191,7 +192,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
 
         {photos.length === 0 ? (
           // Initial State: Empty Dropzone
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center py-4">
             <Upload size={40} className="text-gray-400 mb-2" />
             <p className="text-lg font-medium mb-1">Drag and drop your photos here</p>
             <p className="text-sm text-gray-500 mb-4">or click to browse files</p>
@@ -221,6 +222,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
                     src={photo.url}
                     alt={`Uploaded ${index + 1}`}
                     className="w-full h-full object-cover"
+                    draggable="false"
                   />
                   <button
                     className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5 hover:bg-black/70 disabled:opacity-50"
@@ -256,10 +258,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
           <div className="mt-6 text-center">
             <Button
               onClick={handleUpload}
-              disabled={isUploading || photos.length === 0}
+              disabled={isUploading || photos.length === 0 || isAnalysisComplete}
               className="bg-[#3c83f6] text-white w-full sm:w-auto"
             >
-              {isUploading ? 'Analyzing...' : 'Analyze my Photos'}
+              {isAnalysisComplete ? 'Analysis complete' : isUploading ? 'Analyzing...' : 'Analyze my Photos'}
             </Button>
           </div>
         )}

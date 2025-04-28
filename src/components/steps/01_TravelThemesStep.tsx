@@ -28,65 +28,64 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
     {
       id: 'culture',
       name: 'Culture',
-      description: 'Experience the rich history and traditions of a destination.',
+      description: 'You want to experience the rich history, traditions, and cultural heritage of a destination.',
       image_url: '/images/culture.jpg'
     },
     {
       id: 'adventure',
       name: 'Adventure',
-      description: 'Explore new places and push your limits.',
+      description: 'You are looking for adrenaline-fueled activities and exploring new places.',
       image_url: '/images/adventure.jpg'
     },
     {
       id: 'nature',
       name: 'Nature',
-      description: 'Connect with nature and immerse yourself in the beauty of the world.',
+      description: 'You seek to connect with nature and immerse yourself in the beauty of the world.',
       image_url: '/images/nature.jpg'
     },
     {
       id: 'beaches',
       name: 'Beaches',
-      description: 'Relax on the beach and enjoy the sun and sand.',
+      description: 'Relaxing on the beach, enjoying the sun with a cool drink and a good book.',
       image_url: '/images/beach.jpg'
     },
     {
       id: 'nightlife',
       name: 'Nightlife',
-      description: 'Experience the vibrant nightlife of a destination.',
+      description: 'Bars, clubs, and nightlife experiences are a must for you, and you want to experience the best of them.',
       image_url: '/images/nightlife.jpg'
     },
     {
       id: 'cuisine',
       name: 'Cuisine',
-      description: 'Explore the local cuisine and culinary scene.',
+      description: 'Phat thai, pho, authentic street food, or michelin star dining, you want to experience the best of it.',
       image_url: '/images/cuisine.jpg'
     },
     {
       id: 'wellness',
       name: 'Wellness',
-      description: 'Focus on health and wellness during your travels.',
+      description: 'You want to focus on health and wellness, whether it be yoga retreats, spa treatments, or healthy eating.',
       image_url: '/images/wellness.jpg'
     },
     {
       id: 'urban',
       name: 'Urban',
-      description: 'Experience the bustling energy of a city.',
+      description: 'You need the bustling energy of a city, whether it be the neon lights, the skyscrapers, or the busy streets.',
       image_url: '/images/urban.jpg'
     },
     {
       id: 'seclusion',
       name: 'Seclusion',
-      description: 'Find peace and tranquility in a secluded destination.',
+      description: 'You want to find peace and tranquility in a secluded destination away from the crowds and noise.',
       image_url: '/images/seclusion.jpg'
     },
   ];
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-2">Select Your Preferred Travel Themes</h2>
-      <p className="text-gray-600 mb-6">What kind of experiences are you looking for?</p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <h2 className="text-2xl font-bold mb-1">Select Your Preferred Travel Themes</h2>
+      <p className="text-gray-600 mb-6">What kind of experiences are you looking for? Select all that apply.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {themes.map((theme) => (
           <div
             key={theme.id}
@@ -102,11 +101,12 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
               }
             `}
           >
-            <div className="relative h-48 w-full">
+            <div className="relative sm:h-64 h-64 w-full">
               <img
                 src={theme.image_url}
                 alt={theme.name}
                 loading="lazy"
+                draggable="false"
                 className="w-full h-full object-cover transition-opacity duration-500"
               />
               {/* Dynamically set gradient based on hover state */}

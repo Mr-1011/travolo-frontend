@@ -40,9 +40,8 @@ const TravelBudgetStep: React.FC<TravelBudgetStepProps> = ({
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-2">Travel Budget</h2>
+      <h2 className="text-2xl font-bold mb-1">Set Your Travel Budget</h2>
       <p className="text-gray-600 mb-6">What kind of budget are you planning for this trip?</p>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {budgetOptions.map((option) => (
           <div
@@ -62,6 +61,7 @@ const TravelBudgetStep: React.FC<TravelBudgetStepProps> = ({
                 alt={option.name}
                 className="w-16 h-16 mb-3"
                 style={{ filter: 'drop-shadow(0 2px 3px rgba(0, 21, 255, 0.10))' }}
+                draggable="false"
               />
             ) : (
               <span className="text-4xl mb-3">{option.icon}</span>

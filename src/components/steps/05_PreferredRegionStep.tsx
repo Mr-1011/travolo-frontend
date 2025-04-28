@@ -31,9 +31,8 @@ const PreferredRegionStep: React.FC<PreferredRegionStepProps> = ({
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-2">Preferred Region</h2>
+      <h2 className="text-2xl font-bold mb-1">Set Your Preferred Regions</h2>
       <p className="text-gray-600 mb-6">Which areas of the world are you open to?</p>
-
       <WorldMap
         selectedRegions={selectedRegions}
         onRegionChange={onRegionChange}
