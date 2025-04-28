@@ -56,6 +56,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
                 className={`w-full h-full object-cover destination-image transition-opacity duration-500 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
+                draggable="false"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-500">
