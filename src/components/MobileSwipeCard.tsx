@@ -59,7 +59,7 @@ const MobileSwipeCard: React.FC<MobileSwipeCardProps> = ({
       </div>
 
       {/* Content Area - Takes remaining height */}
-      <div className="p-4 flex flex-col flex-grow"> {/* Use flex-grow */}
+      <div className="p-4 pt-1 flex flex-col flex-grow"> {/* Use flex-grow */}
         <div className="flex flex-wrap gap-2 my-3">
           {[ // Define categories and their corresponding property accessors
             { key: 'culture', name: 'Culture', value: destination.culture },

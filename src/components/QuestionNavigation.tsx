@@ -25,7 +25,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   isCurrentStepValid
 }) => {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-10 bg-white rounded-b-xl border-t border-gray-200 max-w-4xl mx-auto px-6 py-4">
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-white rounded-b-xl border-t border-gray-200 max-w-4xl mx-auto px-6 py-4">
       <div className="flex sm:hidden justify-between items-center w-full">
         <Button
           variant="outline"

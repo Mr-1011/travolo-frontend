@@ -24,6 +24,8 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
 
   const [errorLoading, setErrorLoading] = useState<string | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [showSwipeHints, setShowSwipeHints] = useState(true); // State for temporary swipe hints
+  const [shouldRenderHints, setShouldRenderHints] = useState(true); // State to control DOM presence for transition
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -64,6 +66,25 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    let hintTimer: NodeJS.Timeout | null = null;
+    let renderTimer: NodeJS.Timeout | null = null;
+
+    if (isMobile) {
+      hintTimer = setTimeout(() => {
+        setShowSwipeHints(false);
+        renderTimer = setTimeout(() => {
+          setShouldRenderHints(false);
+        }, 500);
+      }, 5000);
+    }
+
+    return () => {
+      if (hintTimer) clearTimeout(hintTimer);
+      if (renderTimer) clearTimeout(renderTimer);
+    };
+  }, [isMobile]);
+
   // Use useCallback to stabilize the function reference for TinderCard props
   const handleCardLeftScreen = useCallback((removedDestinationId: string) => {
     setRenderableDestinations((prevRenderable) => {
@@ -90,7 +111,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   if (initialLoading) {
     return (
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
         <p className="text-gray-600 mb-6">Finding some destinations for you...</p>
 
         <div className="flex flex-col items-center justify-center py-12">
@@ -116,8 +137,8 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   if (!isMobile) {
     return (
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
-        <p className="text-gray-600 mb-6">Do you like or dislike these places?</p>
+        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
+        <p className="text-gray-600 mb-6">This will help us understand what you like and dislike.</p>
         <div className="space-y-6">
           {allDestinations.map((destination) => {
             return (
@@ -135,42 +156,64 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full max-w-4xl px-4">
-        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
-        <p className="text-gray-600 mb-6">Do you like or dislike these places?</p>
+    <div className="w-full">
+      <div className="w-full">
+        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
+        <p className="text-gray-600 mb-6">This will help us understand what you like and dislike.</p>
       </div>
-
-      <div className="relative w-full max-w-sm h-[600px] flex items-center justify-center mb-4">
-        {renderableDestinations.map((destination, index) => (
-          // Wrap TinderCard in a div to apply style/z-index
-          <div
-            key={`${destination.id}-wrapper`} // Use a related but different key for the wrapper
-            className="absolute inset-0" // Wrapper takes up the same space
-            style={{ zIndex: RENDER_WINDOW_SIZE - index }} // Apply zIndex here
-          >
-            <TinderCard
-              key={destination.id}
-              onCardLeftScreen={() => handleCardLeftScreen(destination.id)}
-              onSwipe={(dir) => swiped(dir, destination.id)}
-              preventSwipe={['up', 'down']}
-              // Let TinderCard manage its own class for positioning within the wrapper
-              className="w-full h-full" // Make TinderCard fill the wrapper 
-              swipeRequirementType="position"
-              swipeThreshold={100}
-            >
-              <div className="w-[85vw] max-w-sm">
-                <MobileSwipeCard destination={destination} />
+      <div className="flex flex-col items-center justify-center ml-2">
+        <div className="relative w-full max-w-sm h-[600px]">
+          {/* Swipe Hints - Show only on mobile and for the first 5 seconds */}
+          {isMobile && shouldRenderHints && (
+            <>
+              {/* Dislike Hint (Left) */}
+              <div
+                className={`absolute top-1/3 left-4 transform -translate-y-1/2 z-30 p-2 w-20 rounded-md shadow-md flex flex-col items-center bg-white border border-gray-200 transition-opacity duration-500 ease-out ${showSwipeHints ? 'opacity-100' : 'opacity-0'}`}
+              >
+                <span className="text-2xl">←</span>
+                <span className="text-sm font-semibold">Dislike</span>
               </div>
-            </TinderCard>
-          </div>
-        ))}
-        {allCardsRated && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-0">
-            <p className="text-gray-600">You've rated all destinations!</p>
-            {errorLoading && <p className="text-red-500 mt-2">{errorLoading}</p>}
-          </div>
-        )}
+              {/* Like Hint (Right) */}
+              <div
+                className={`absolute top-1/3 right-4 transform -translate-y-1/2 z-30 p-2 w-20 rounded-md shadow-md flex flex-col items-center bg-white border border-gray-200 transition-opacity duration-500 ease-out ${showSwipeHints ? 'opacity-100' : 'opacity-0'}`}
+              >
+                <span className="text-2xl">→</span>
+                <span className="text-sm font-semibold">Like</span>
+              </div>
+            </>
+          )}
+
+          {/* Renderable Destination Cards */}
+          {renderableDestinations.map((destination, index) => (
+            <div
+              key={`${destination.id}-wrapper`} // Use a related but different key for the wrapper
+              className="absolute inset-0" // Wrapper takes up the same space
+              style={{ zIndex: RENDER_WINDOW_SIZE - index }} // Apply zIndex here
+            >
+              <TinderCard
+                key={destination.id}
+                onCardLeftScreen={() => handleCardLeftScreen(destination.id)}
+                onSwipe={(dir) => swiped(dir, destination.id)}
+                preventSwipe={['up', 'down']}
+                // Let TinderCard manage its own class for positioning within the wrapper
+                className="w-full h-full" // Make TinderCard fill the wrapper 
+                swipeRequirementType="position"
+                swipeThreshold={100}
+              >
+                <div className="w-[85vw] max-w-sm">
+                  <MobileSwipeCard destination={destination} />
+                </div>
+              </TinderCard>
+            </div>
+          ))}
+          {/* Message when all cards are rated */}
+          {allCardsRated && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-0">
+              <p className="text-gray-600">You've rated all available destinations!</p>
+              {errorLoading && <p className="text-red-500 mt-2">{errorLoading}</p>}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
