@@ -22,22 +22,22 @@ const durationStyles: { [key: string]: { name: string; days?: string; icon?: str
   'long trip': { name: 'Long trip', days: '10+ days', imageSrc: '/icons/long-trip.png' },
 };
 
-// Add Budget styles mapping
-const budgetStyles: { [key: string]: { name: string; description: string; icon: string } } = {
+// Add Budget styles mapping - Updated with imageSrc
+const budgetStyles: { [key: string]: { name: string; description: string; icon?: string; imageSrc?: string } } = {
   'budget': {
     name: 'Budget',
     description: 'Hostels, public transport, low-cost meals',
-    icon: '💸'
+    imageSrc: '/icons/budget.png'
   },
   'mid-range': {
     name: 'Mid-range',
     description: '3-star hotels, restaurants, taxis',
-    icon: '💵'
+    imageSrc: '/icons/mid-range.png'
   },
   'luxury': {
     name: 'Luxury',
     description: 'High-end stays, fine dining, private tours',
-    icon: '💎'
+    imageSrc: '/icons/luxury.png'
   },
 };
 
@@ -45,12 +45,14 @@ type DestinationDetailModalProps = {
   destination: Destination | null;
   isOpen: boolean;
   onClose: () => void;
+  confidence?: number;
 };
 
 const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   destination,
   isOpen,
   onClose,
+  confidence,
 }) => {
   if (!isOpen || !destination) {
     return null;
@@ -131,7 +133,14 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{destination.city}, {destination.country}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            {destination.city}, {destination.country}
+            {confidence !== undefined && (
+              <span className="ml-5 bg-[#3c83f6] text-white rounded-full px-3 py-1 text-base font-medium align-middle">
+                {confidence}% match
+              </span>
+            )}
+          </DialogTitle>
         </DialogHeader>
 
         {/* Scrollable Content Area */}
@@ -235,13 +244,18 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               <div>
                 <h3 className="text-lg font-semibold mb-2">Typical Budget</h3>
                 {(() => {
-                  const budgetKey = destination.budget_level.toLowerCase().replace(' ', '-'); // Handle potential variations like "Mid range"
+                  const budgetKey = destination.budget_level.toLowerCase().replace(' ', '-'); // Handle potential variations
                   const style = budgetStyles[budgetKey];
                   if (style) {
                     return (
                       <div className="grid grid-cols-2 sm:grid-cols-1 gap-3">
                         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-gray-200 bg-gray-50 text-center">
-                          <span className="text-2xl mb-1">{style.icon}</span>
+                          {/* Display image or fallback icon */}
+                          {style.imageSrc ? (
+                            <img src={style.imageSrc} alt={style.name} className="w-10 h-10 mb-1" />
+                          ) : (
+                            <span className="text-2xl mb-1">{style.icon || '💰'}</span> // Provide a generic fallback icon
+                          )}
                           <span className="font-medium text-sm text-gray-700">{style.name}</span>
                           <span className="text-xs mt-0.5 text-gray-500">{style.description}</span>
                         </div>

@@ -72,7 +72,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {confidence !== undefined && (
-                  <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
+                  <div className="bg-[#3c83f6] text-white rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
                     {confidence}% match
                   </div>
                 )}
@@ -92,7 +92,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             <div className="absolute top-4 right-4 hidden md:flex items-center gap-2">
               {/* Combined existing desktop Match % and Info button container */}
               {confidence !== undefined && (
-                <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium flex items-center whitespace-nowrap">
+                <div className="bg-[#3c83f6] text-white rounded-full px-3 py-1 text-sm font-medium flex items-center whitespace-nowrap">
                   {confidence}% match
                 </div>
               )}
@@ -162,6 +162,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
         destination={destination}
         isOpen={isDetailModalOpen}
         onClose={closeDetailModal}
+        confidence={confidence}
       />
     </>
   );

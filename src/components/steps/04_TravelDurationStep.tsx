@@ -44,7 +44,7 @@ const TravelDurationStep: React.FC<TravelDurationStepProps> = ({
             onClick={() => onDurationSelect(duration.id)}
           >
             {duration.imageSrc ? (
-              <img src={duration.imageSrc} alt={duration.name} className="w-14 h-14 mb-2" />
+              <img src={duration.imageSrc} alt={duration.name} className="w-14 h-14 mb-2" style={{ filter: 'drop-shadow(0 2px 3px rgba(0, 21, 255, 0.10))' }} />
             ) : (
               <span className="text-3xl mb-2">{duration.icon}</span>
             )}

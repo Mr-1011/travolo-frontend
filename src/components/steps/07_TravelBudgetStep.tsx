@@ -4,7 +4,8 @@ type BudgetOption = {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  icon?: string;
+  imageSrc?: string;
 };
 
 type TravelBudgetStepProps = {
@@ -21,19 +22,19 @@ const TravelBudgetStep: React.FC<TravelBudgetStepProps> = ({
       id: 'budget',
       name: 'Budget',
       description: 'Hostels, public transport, low-cost meals',
-      icon: '💸'
+      imageSrc: '/icons/budget.png'
     },
     {
       id: 'mid-range',
       name: 'Mid-range',
       description: '3-star hotels, restaurants, taxis',
-      icon: '💵'
+      imageSrc: '/icons/mid-range.png'
     },
     {
       id: 'luxury',
       name: 'Luxury',
       description: 'High-end stays, fine dining, private tours',
-      icon: '💎'
+      imageSrc: '/icons/luxury.png'
     },
   ];
 
@@ -55,7 +56,16 @@ const TravelBudgetStep: React.FC<TravelBudgetStepProps> = ({
             `}
             onClick={() => onBudgetSelect(option.id)}
           >
-            <span className="text-4xl mb-3">{option.icon}</span>
+            {option.imageSrc ? (
+              <img
+                src={option.imageSrc}
+                alt={option.name}
+                className="w-16 h-16 mb-3"
+                style={{ filter: 'drop-shadow(0 2px 3px rgba(0, 21, 255, 0.10))' }}
+              />
+            ) : (
+              <span className="text-4xl mb-3">{option.icon}</span>
+            )}
             <div className="text-center">
               <h3 className={`text-lg font-medium mb-1 ${selectedBudget.includes(option.id) ? 'text-[#3c83f6]' : 'text-gray-700'}`}>{option.name}</h3>
               <p className={`text-sm ${selectedBudget.includes(option.id) ? 'text-gray-700' : 'text-gray-500'}`}>
