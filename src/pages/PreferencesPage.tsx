@@ -23,7 +23,6 @@ const questionSteps = [
   { id: 'travel-budget' as QuestionStep, label: 'Budget' },
   { id: 'rate-destinations' as QuestionStep, label: 'Rate Destinations' },
   { id: 'upload-photo' as QuestionStep, label: 'Upload Photo' },
-  { id: 'refine-preferences' as QuestionStep, label: 'Refine Preferences' },
 ];
 
 const PreferencesPage = () => {

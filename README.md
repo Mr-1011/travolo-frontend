@@ -15,8 +15,6 @@ This application guides users through a step-by-step questionnaire to gather tra
 7. **Budget**: Indicate spending capacity by selecting from options like Budget, Mid-range, or Luxury.
 8. **Destination Ratings**: Rate up to 10 random destinations (like/dislike) using a card-swiping interface to refine recommendations.
 9. **Photo Upload**: Optionally upload up to 3 photos from past trips for visual preference analysis.
-10. **Refine Preferences**: Parse the current information to a LLM and chat for final adjustments.
-
 
 **Recommendations View**: Display of personalized travel suggestions
 

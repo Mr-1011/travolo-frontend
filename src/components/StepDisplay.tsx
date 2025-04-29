@@ -10,7 +10,6 @@ import PreferredRegionStep from '@/components/steps/05_PreferredRegionStep';
 import TravelBudgetStep from '@/components/steps/07_TravelBudgetStep';
 import DestinationRatingStep from '@/components/steps/08_DestinationRatingStep';
 import PhotoUploadStep from '@/components/steps/09_PhotoUploadStep';
-import RefinePreferencesStep from '@/components/steps/10_RefinePreferencesStep';
 import OriginLocationStep from '@/components/steps/06_OriginLocationStep';
 
 type StepDisplayProps = {
@@ -149,16 +148,6 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
             onAnalysisComplete={handlers.handlePhotoAnalysisUpdate}
             onPhotoAdded={handlers.handlePhotoUploaded}
             currentThemePreferences={themePreferences}
-          />
-        );
-
-      case 'refine-preferences':
-        return (
-          <RefinePreferencesStep
-            preferences={preferences}
-            messages={[]}
-            isLoading={false}
-            onSendMessage={() => { console.log("Temp onSendMessage called"); }}
           />
         );
 

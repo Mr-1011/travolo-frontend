@@ -7,8 +7,7 @@ export type QuestionStep =
   | 'origin-location'
   | 'travel-budget'
   | 'rate-destinations'
-  | 'upload-photo'
-  | 'refine-preferences';
+  | 'upload-photo';
 
 export type UserPreferences = {
   // Step 1: Travel Themes - Individual properties
@@ -45,9 +44,6 @@ export type UserPreferences = {
 
   // Step 9: Photo Analysis Summary
   photoAnalysis: { imageCount: number; imageSummary: string; imageAnalysis: Record<string, number> | null; adjustmentSuccessful: boolean };
-
-  // Step 10: Conversation Summary
-  conversationSummary: { userMessageCount: number };
 };
 
 export type MonthlyTemperature = {

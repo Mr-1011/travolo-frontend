@@ -26,7 +26,7 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 5000); // 5 seconds delay
+    }, 1000); // 5 seconds delay
 
     // Cleanup timer on component unmount
     return () => clearTimeout(timer);

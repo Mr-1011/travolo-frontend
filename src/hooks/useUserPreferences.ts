@@ -35,7 +35,6 @@ export const defaultPreferences: UserPreferences = {
   travelBudget: [],
   destinationRatings: {},
   photoAnalysis: { imageCount: 0, imageSummary: '', imageAnalysis: null, adjustmentSuccessful: false },
-  conversationSummary: { userMessageCount: 0 },
 };
 
 // Type definitions for the props of the hook handlers
@@ -267,21 +266,6 @@ export function useUserPreferences() {
   const handleWeatherPreferenceChange = (preference: 'warm' | 'cool' | 'specific-range') => {
   };
 
-  /**
-   * Call this function whenever a user message is successfully sent
-   * by the chat component to increment the counter.
-   */
-  const handleUserMessageSent = () => {
-    setPreferences(prev => ({
-      ...prev,
-      conversationSummary: {
-        // Ensure userMessageCount exists and increment it, defaulting to 1 if it was 0 or undefined
-        userMessageCount: (prev.conversationSummary?.userMessageCount || 0) + 1
-      }
-    }));
-    console.log('User message count incremented.');
-  };
-
   const handleGetRecommendations = async (onComplete?: (recommendations: Recommendation[], recommendationRecordId: string | null) => void) => {
     console.log('Get Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
     setIsLoadingRecommendations(true);
@@ -384,7 +368,6 @@ export function useUserPreferences() {
       travelBudget: [],
       destinationRatings: {},
       photoAnalysis: { imageCount: 0, imageSummary: '', imageAnalysis: null, adjustmentSuccessful: false },
-      conversationSummary: { userMessageCount: 0 },
     };
     setPreferences(freshDefaults);
 
@@ -424,7 +407,6 @@ export function useUserPreferences() {
       handlePhotoChange,
       handlePhotoUploaded,
       handlePhotoAnalysisUpdate,
-      handleUserMessageSent,
       handleGetRecommendations,
       handleRegenerateRecommendations,
       resetAllPreferences

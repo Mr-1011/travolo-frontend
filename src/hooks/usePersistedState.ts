@@ -13,7 +13,6 @@ const stepNameToIndex: Record<QuestionStep, number> = {
   'travel-budget': 7,
   'rate-destinations': 8,
   'upload-photo': 9,
-  'refine-preferences': 10
 };
 
 // Reverse mapping
@@ -27,7 +26,6 @@ const stepIndexToName: Record<number, QuestionStep> = {
   7: 'travel-budget',
   8: 'rate-destinations',
   9: 'upload-photo',
-  10: 'refine-preferences'
 };
 
 // Hook for state that persists in both localStorage and URL
