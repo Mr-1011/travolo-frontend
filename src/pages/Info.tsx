@@ -13,8 +13,8 @@ const Info = () => {
 
   return (
     <PageLayout>
-      <div className="bg-white rounded-xl shadow-md p-6 md:p-10">
-        <div className="relative mb-6">
+      <div className="bg-white rounded-xl shadow-md p-6 md:p-10 space-y-4">
+        <div className="relative mb-8">
           <Button
             variant="outline"
             size="icon"
@@ -28,102 +28,117 @@ const Info = () => {
 
         <div className="flex flex-col gap-4">
           <div>
-            <h2 id="introduction">Introduction</h2>
+            <h2 className="text-2xl font-bold mb-2" id="introduction">1. Introduction to Travolo and Research Motivation</h2>
             <p>
-              Travolo implements a hybrid travel recommender system architecture. It integrates multiple recommendation strategies, primarily leveraging collaborative filtering principles through explicit user feedback and content-based filtering derived from user-specified preferences and optional multimodal inputs (e.g., images). The core objective is to generate personalized travel destination suggestions by constructing a comprehensive user profile through a multi-stage preference elicitation process.
+              Travolo is a user-friendly, browser-based travel recommender system designed to balance personalization and privacy. Instead of demanding all your data upfront, it guides you through a step-by-step input flow where you choose how much to share. At any point, Travolo can generate personalized travel suggestions based on the information you've given so far. It never forces you to provide data you're uncomfortable with. The app is part of an academic research project studying the trade-off between recommendation accuracy and user data disclosure. The goal is to show that high-quality travel recommendations are possible without compromising user privacy.
             </p>
           </div>
 
           <div>
-            <h2 id="preference-elicitation">Preference Elicitation Methodology</h2>
+            <h2 className="text-2xl font-bold mb-2" id="introduction">2. How You Build Your Profile</h2>
             <p>
-              The system employs a structured, step-by-step approach to gather diverse user preferences, constraints, and stylistic inclinations. Each step targets a specific dimension of travel preference:
+              Travolo guides you through an optional nine-step onboarding journey to build your travel preference profile. Each step gathers a specific type of input about your likes and needs. You can stop at any point – every step is optional – and Travolo will still generate recommendations using whatever information you've given so far. The more steps you complete, the more fine-tuned your trip suggestions can become. Here's how it works, step by step:            </p>
+          </div>
+
+          <div>
+            <h3 id="themes">2.1 Travel Themes</h3>
+            <p>
+              Travolo begins by asking what kinds of travel experiences you enjoy. You select from nine fixed themes like Culture, Adventure, Nature, Beaches, and more. Each theme you pick gets a high score in your preference profile. Travolo then favors destinations that match these themes. This creates a strong foundation for personalized recommendations right from the start.
             </p>
           </div>
 
           <div>
-            <h3 id="themes">1. Travel Themes</h3>
+            <h3 id="weather">2.2 Weather Preferences</h3>
             <p>
-              Users select preferred travel themes (e.g., Culture, Adventure, Nature). This step captures high-level categorical interests. These selections serve as initial features for content-based filtering, mapping user interests to destination characteristics, and can inform collaborative filtering by identifying users with similar thematic preferences.
+              You set your ideal temperature range using a simple slider. Travolo uses this to filter out destinations with incompatible weather during your travel months. It prioritizes locations whose historical climate falls within your preferred range. Warm-weather lovers get sunny picks, snow-lovers get alpine ones. This step ensures climate compatibility for your trip.
             </p>
           </div>
 
           <div>
-            <h3 id="weather">2. Weather Preferences</h3>
+            <h3 id="months">2.3 Travel Months</h3>
             <p>
-              Users specify their preferred temperature range (°C) using an interactive slider. This constitutes an explicit constraint, enabling the system to filter potential destinations based on climate data corresponding to the user's desired travel period.
+              You select the months when you plan to travel. Travolo uses this info to avoid destinations that are off-season, closed, or have poor weather during those months. Destinations that align well with your selected months are prioritized. This ensures seasonal suitability. Your trip timing and destination match perfectly.
             </p>
           </div>
 
           <div>
-            <h3 id="months">3. Travel Months</h3>
+            <h3 id="duration">2.4 Travel Duration</h3>
             <p>
-              Users select potential months for travel. Similar to weather preferences, this acts as a temporal constraint, allowing the system to filter destinations based on seasonality, events, and optimal travel times.
+              You choose your expected trip length (e.g., Weekend, Short Trip, One Week). Travolo uses this to check which destinations are realistic for the time available. Short trips prioritize nearby destinations, long trips allow for distant or experience-rich ones. The algorithm penalizes distant places if your time is limited. This makes recommendations practical as well as inspiring.
             </p>
           </div>
 
           <div>
-            <h3 id="duration">4. Travel Duration</h3>
+            <h3 id="regions">2.5 Preferred Regions</h3>
             <p>
-              Users indicate their intended trip duration (e.g., Weekend, One week, Long trip). This preference helps tailor recommendations by considering the feasibility of travel based on distance and the typical time required to experience a destination.
+              You select one or more world regions you're interested in (e.g., Europe, Asia). Travolo focuses only on destinations from those regions when building your shortlist. This sharply narrows down the search space. Your regional preferences are always respected. It ensures geographic relevance in the recommendations.
             </p>
           </div>
 
           <div>
-            <h3 id="regions">5. Preferred Regions</h3>
+            <h3 id="origin">2.6 Origin Location</h3>
             <p>
-              Users select desired global regions using an interactive map. This provides explicit geographical constraints, significantly narrowing the search space for recommendations and aligning suggestions with the user's willingness to travel to specific parts of the world.
+              You enter your starting city or country. Travolo geocodes this and uses it to estimate distance to each destination. Distant places are penalized if your trip is short. This improves feasibility and avoids suggesting exhausting itineraries. Your location also helps with personalization and potential cost estimation.
             </p>
           </div>
 
           <div>
-            <h3 id="origin">6. Origin Location</h3>
+            <h3 id="budget">2.7 Travel Budget</h3>
             <p>
-              Users provide their origin location (city or country). This information is geocoded to obtain coordinates (latitude, longitude). While primarily used in this implementation to potentially refine relevance based on proximity or calculate travel factors (e.g., estimated flight times, although not currently implemented), it's a standard input for personalization.
+              You select one or more tiers: Budget, Mid-range, Luxury. Travolo filters out destinations that don't fit your selected price levels. Affordable destinations are prioritized if you selected budget travel. High-end picks appear only if luxury is allowed. This ensures suggestions align with what you can realistically afford.
             </p>
           </div>
 
           <div>
-            <h3 id="budget">7. Travel Budget</h3>
+            <h3 id="rating">2.8 Destination Likes/Dislikes</h3>
             <p>
-              Users select a budget category (e.g., Budget, Mid-range, Luxury). This preference directly influences the recommendation of destinations, accommodations, and activities, ensuring suggestions align with the user's financial expectations.
+              You give instant feedback by liking or disliking shown destinations. Travolo uses this to find hidden patterns in your taste via collaborative filtering. Destinations similar to those you liked get a boost; similar to disliked ones get penalized. This step makes recommendations more accurate and personalized. The more ratings you give, the smarter the system becomes.
             </p>
           </div>
 
           <div>
-            <h3 id="rating">8. Destination Rating</h3>
+            <h3 id="photos">2.9 Photo Upload</h3>
             <p>
-              Users rate a set of presented destinations as 'like' or 'dislike'. This explicit feedback is a cornerstone of collaborative filtering, allowing the system to learn user tastes directly and identify correlations between users and items (destinations). The swipe interface (on mobile) facilitates rapid implicit feedback collection.
-            </p>
+              You can upload a personal travel photo that inspires you. Travolo analyzes the image using AI to extract visual cues (e.g., mountains, beaches). These cues adjust your theme profile subtly for better alignment. It helps capture aesthetic preferences that may not be obvious from text inputs. The photo is analyzed and discarded never stored or used for identification.            </p>
+          </div>
+        </div>
+
+
+        <div className="flex flex-col gap-4">
+          <div>
+            <h2 className="text-2xl font-bold mb-2" id="introduction">3. How Travolo Works</h2>
+            <p>
+              Travolo uses a hybrid two-stage recommendation system that combines the strengths of content-based filtering with collaborative filtering. This architecture allows Travolo to deliver personalized travel destination suggestions to each user, regardless of how much data they choose to share. The algorithm is designed to be flexible: it provides meaningful recommendations from minimal input and improves accuracy as more preferences are revealed.            </p>
           </div>
 
           <div>
-            <h3 id="photos">9. Photo Upload (Optional)</h3>
+            <h3 id="themes">3.1 Content-Based Filtering</h3>
             <p>
-              Optionally, users can upload photos from past trips they enjoyed. These images are processed using a backend vision analysis service (e.g., Google Cloud Vision AI or similar) to extract visual features and infer underlying aesthetic or thematic preferences (e.g., preference for beaches, mountains, urban landscapes). This serves as a content-based modality to enrich the user profile beyond explicit selections. The extracted features can adjust the weights of the initially selected themes.
-            </p>
+              Travolo begins by evaluating each destination against the user's profile using a multi-factor scoring model applied to approximately 480 manually curated destinations, each enriched with detailed metadata. The algorithm computes a content score for each destination based on several dimensions: Theme Match (35%) is calculated using cosine similarity between the user's 9-dimensional theme vector (e.g., Culture, Adventure, Beaches) and the corresponding vector for each destination. Climate Compatibility is assessed with a Gaussian scoring function, comparing the user's preferred temperature range to each destination's historical monthly averages, with hard exclusions for out-of-range results. Travel Month Fit filters out destinations incompatible with the selected travel months, based on seasonal data this acts as a strict constraint. Budget Match compares the destination's price tier (budget, mid-range, luxury) to the user's selection and applies a penalty if there is a mismatch, scaled by distance between tiers. Region Preference boosts destinations within selected world regions and downranks others. Travel Duration Feasibility ensures that the destination's typical trip length aligns with the user's intended travel duration, applying penalties or exclusions otherwise. If the user specifies an origin, Proximity is considered by penalizing faraway destinations when the trip duration is short. Finally, in the optional Photo Analysis step, computer vision techniques extract semantic tags from uploaded images (e.g., beaches, mountains), which are then used to subtly adjust the theme vector and refine the recommendation further.            </p>
           </div>
 
           <div>
-            <h3 id="refinement">10. Refinement Chat (Optional)</h3>
+            <h3 id="themes">3.2 Collaborative Filtering</h3>
             <p>
-              An optional conversational interface allows users to refine their preferences using natural language. The system summarizes the currently understood preferences and prompts the user for further input. This step utilizes Natural Language Processing (NLP) on the backend to interpret free-form text, capturing nuances, specific requests, or constraints not easily expressed through structured inputs.
-            </p>
+              Travolo's collaborative filtering module activates when the user provides at least one like or dislike for a destination. It uses a precomputed item-to-item similarity matrix stored in the database, where each destination is linked to its nearest neighbors based on historical co-preference patterns. The algorithm then computes a collaborative score for each unrated destination by averaging its similarity to destinations the user has liked, using a Resnik-style weighted mean. Disliked or unrated items are excluded from the calculation, and destinations already rated by the user are never recommended again. Only positive similarity values contribute to the final score, and safeguards are in place to prevent division-by-zero or propagation of missing data. If no collaborative evidence is available (e.g., for a cold-start user), this layer returns an empty score map. Internally, similarity data is cached in memory to reduce database load, and it is periodically refreshed to incorporate new user ratings and ensure that similarity values remain up to date.            </p>
           </div>
 
           <div>
-            <h2 id="recommendation-generation">Recommendation Generation</h2>
+            <h3 id="themes">3.3 Hybrid Combination</h3>
             <p>
-              The aggregated preference data from these steps forms a comprehensive user profile. This profile is processed by the backend recommendation engine, which employs a hybrid algorithm combining the collected constraints, explicit ratings, thematic interests, and inferred preferences to generate a ranked list of personalized travel destination recommendations. The specific hybridization technique (e.g., weighted, switching, cascaded) is implemented server-side.
-            </p>
+              After computing scores from both the content-based and collaborative filtering modules, Travolo blends them using a weighted fusion model. If the user has not rated any destinations, the system relies entirely on the content-based score. If ratings are available, the final score for each destination is computed as a weighted sum: 70% content-based and 30% collaborative by default. This balance ensures that explicit user preferences remain the primary driver of recommendations, while collaborative insights fine-tune the results. The top three destinations, ranked by this hybrid score, are returned as recommendations and stored in the database. The fusion process is adaptive: as users provide more ratings, the influence of the collaborative layer can increase dynamically, enhancing personalization without overriding the user's core input.            </p>
           </div>
 
+        </div>
+
+        <div className="flex flex-col gap-4">
+
           <div>
-            <h2 id="conclusion">Conclusion</h2>
+            <h2 className="text-2xl font-bold mb-2" id="introduction">4. What This Research Explores</h2>
             <p>
-              Travolo aims to provide effective and personalized travel recommendations by employing a detailed, multi-faceted preference elicitation process. By combining explicit user inputs, constraints, ratings, and optional multimodal data, the system constructs a rich user model suitable for a hybrid recommendation strategy, addressing the complexities of travel preference modeling.
-            </p>
+              Travolo is not only a travel app but also a research tool for studying how recommendation quality changes as users progressively share more personal data. Users can exit the onboarding at any of the nine steps, allowing the system to track how input depth affects outcomes like accuracy, diversity, and satisfaction. By analyzing anonymized usage data, the study examines whether certain types of input like destination ratings or photo uploads contribute more to personalization than others, and whether adding more data eventually yields diminishing returns. The goal is to identify an optimal balance between personalization and privacy, informing the design of future recommender systems that don't rely on collecting everything up front. Travolo shows that even partial user profiles can produce meaningful recommendations, supporting a privacy-aware approach to personalization. </p>
           </div>
+
         </div>
       </div>
     </PageLayout>

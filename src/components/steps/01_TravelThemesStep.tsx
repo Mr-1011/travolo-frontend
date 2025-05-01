@@ -83,6 +83,7 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
 
   return (
     <div className="w-full">
+
       <h2 className="text-2xl font-bold mb-1">Select Your Preferred Travel Themes</h2>
       <p className="text-gray-600 mb-6">What kind of experiences are you looking for? Select all that apply.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
