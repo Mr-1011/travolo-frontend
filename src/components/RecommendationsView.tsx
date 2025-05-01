@@ -21,15 +21,22 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   // State to manage ratings for UI feedback (button state)
   const [ratings, setRatings] = useState<Record<string, 'like' | 'dislike' | null>>({});
+  // State to control the visibility of the initial nudge message
+  const [showNudge, setShowNudge] = useState(false);
 
-  // Simulate loading for 5 seconds on mount
+  // Simulate loading and show nudge after loading is complete
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const loadingTimer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // 5 seconds delay
+      setShowNudge(true);
+      const nudgeTimer = setTimeout(() => {
+        setShowNudge(false);
+      }, 15000);
+      return () => clearTimeout(nudgeTimer);
+    }, 200);
 
-    // Cleanup timer on component unmount
-    return () => clearTimeout(timer);
+    // Cleanup loading timer on component unmount
+    return () => clearTimeout(loadingTimer);
   }, []); // Empty dependency array ensures this runs only once on mount
 
   // Handler to update local UI state AND submit feedback to backend
@@ -113,9 +120,9 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
     <div className="flex flex-col h-full min-h-screen bg-white rounded-xl shadow-md p-6">
       <div className="mb-8 text-center">
 
-        {!isLoading && ( // Only show this subtitle when not loading
+        {!isLoading && (
           <>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Your Travel Recommendations</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-2 text-gray-800">Your Travel Recommendations</h2>
             <p className="text-lg text-gray-600">Here are some destinations tailored to your preferences.</p>
           </>
         )}
@@ -131,13 +138,14 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
         <>
 
           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8 flex-grow">
-            {recommendations.map((recommendation) => (
+            {recommendations.map((recommendation, index) => (
               <DestinationCard
                 key={recommendation.id}
                 destination={mapRecommendationToDestinationProps(recommendation)}
                 rating={ratings[recommendation.id] || null}
                 onRatingChange={handleRatingChange} // Use the updated handler
                 confidence={recommendation.confidence} // Pass confidence score
+                showInitialNudge={index === 0 && showNudge}
               />
             ))}
           </div>

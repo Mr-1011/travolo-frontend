@@ -26,6 +26,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   const [initialLoading, setInitialLoading] = useState(true);
   const [showSwipeHints, setShowSwipeHints] = useState(true); // State for temporary swipe hints
   const [shouldRenderHints, setShouldRenderHints] = useState(true); // State to control DOM presence for transition
+  const [showDesktopNudge, setShowDesktopNudge] = useState(false); // State for desktop nudge
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -85,6 +86,27 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
     };
   }, [isMobile]);
 
+  // Effect for the desktop nudge timer
+  useEffect(() => {
+    let nudgeTimer: NodeJS.Timeout | null = null;
+    // Show nudge only on desktop, after initial load, and for 5 seconds
+    if (!isMobile && !initialLoading) {
+      setShowDesktopNudge(true);
+      nudgeTimer = setTimeout(() => {
+        setShowDesktopNudge(false);
+      }, 5000); // 5 seconds
+    }
+
+    // Clear nudge state if switching to mobile or while loading
+    if (isMobile || initialLoading) {
+      setShowDesktopNudge(false);
+    }
+
+    return () => {
+      if (nudgeTimer) clearTimeout(nudgeTimer);
+    };
+  }, [isMobile, initialLoading]); // Depend on mobile status and loading status
+
   // Use useCallback to stabilize the function reference for TinderCard props
   const handleCardLeftScreen = useCallback((removedDestinationId: string) => {
     setRenderableDestinations((prevRenderable) => {
@@ -140,13 +162,14 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
         <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
         <p className="text-gray-600 mb-6">This will help us understand what you like and dislike.</p>
         <div className="space-y-6">
-          {allDestinations.map((destination) => {
+          {allDestinations.map((destination, index) => {
             return (
               <DestinationCard
                 key={destination.id}
                 destination={destination}
                 rating={ratings[destination.id]}
                 onRatingChange={onRatingChange}
+                showInitialNudge={index === 0 && showDesktopNudge}
               />
             );
           })}

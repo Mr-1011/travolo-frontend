@@ -23,6 +23,12 @@ type TravelThemesStepProps = {
 const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThemeToggle }) => {
   // Track hover state for each theme card
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null);
+  // Track loaded images
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+
+  const handleImageLoad = (imageUrl: string) => {
+    setLoadedImages((prev) => new Set(prev).add(imageUrl));
+  };
 
   const themes: TravelTheme[] = [
     {
@@ -103,12 +109,16 @@ const TravelThemesStep: React.FC<TravelThemesStepProps> = ({ themeValues, onThem
             `}
           >
             <div className="relative sm:h-64 h-64 w-full">
+              {!loadedImages.has(theme.image_url) && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse"></div> // Skeleton Loader
+              )}
               <img
                 src={theme.image_url}
                 alt={theme.name}
                 loading="lazy"
                 draggable="false"
-                className="w-full h-full object-cover transition-opacity duration-500"
+                className={`w-full h-full object-cover transition-opacity duration-500 ${loadedImages.has(theme.image_url) ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => handleImageLoad(theme.image_url)}
               />
               {/* Dynamically set gradient based on hover state */}
               <div className={`absolute bottom-0 w-full p-2

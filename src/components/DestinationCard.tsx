@@ -10,13 +10,15 @@ type DestinationCardProps = {
   rating: 'like' | 'dislike' | null;
   onRatingChange: (destinationId: string, rating: 'like' | 'dislike') => void; // Removed null option as buttons only set like/dislike
   confidence?: number; // Add optional confidence prop
+  showInitialNudge?: boolean; // Add optional prop for showing the nudge
 };
 
 const DestinationCard: React.FC<DestinationCardProps> = ({
   destination,
   rating,
   onRatingChange,
-  confidence
+  confidence,
+  showInitialNudge
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -42,7 +44,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
     <>
       <Card key={destination.id} className="overflow-hidden rounded-xl transition-all duration-300 destination-card">
         <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/3 relative overflow-hidden bg-gray-200 aspect-video md:aspect-[4/5]">
+          <div className="w-full min-h-[300px] relative overflow-hidden bg-gray-200 aspect-video md:w-1/3 md:aspect-[4/5]">
             {imageLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -137,23 +139,32 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
 
             <p className="text-gray-600 mb-4 flex-grow">{destination.short_description}</p>
 
-            <div className="flex flex-row gap-2 mt-auto pt-4">
-              <Button
-                variant={getButtonVariant('dislike')}
-                onClick={() => onRatingChange(destination.id, 'dislike')}
-                aria-label={`Dislike ${destination.city}`}
-                className="flex-1 flex items-center justify-center gap-2"
-              >
-                <ThumbsDown className="h-5 w-5" /> Dislike
-              </Button>
-              <Button
-                variant={getButtonVariant('like')}
-                onClick={() => onRatingChange(destination.id, 'like')}
-                aria-label={`Like ${destination.city}`}
-                className="flex-1 flex items-center justify-center gap-2"
-              >
-                <ThumbsUp className="h-5 w-5" /> Like
-              </Button>
+            {/* Nudge container */}
+            <div className="relative">
+              {showInitialNudge && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-2 bg-[#3c83f6] text-white text-sm font-medium rounded-sm shadow-lg z-10 whitespace-nowrap">
+                  Please rate this destination!
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[4px] border-t-[#3c83f6]"></div>
+                </div>
+              )}
+              <div className="flex flex-row gap-2 mt-auto pt-4">
+                <Button
+                  variant={getButtonVariant('dislike')}
+                  onClick={() => onRatingChange(destination.id, 'dislike')}
+                  aria-label={`Dislike ${destination.city}`}
+                  className="flex-1 flex items-center justify-center gap-2"
+                >
+                  <ThumbsDown className="h-5 w-5" /> Dislike
+                </Button>
+                <Button
+                  variant={getButtonVariant('like')}
+                  onClick={() => onRatingChange(destination.id, 'like')}
+                  aria-label={`Like ${destination.city}`}
+                  className="flex-1 flex items-center justify-center gap-2"
+                >
+                  <ThumbsUp className="h-5 w-5" /> Like
+                </Button>
+              </div>
             </div>
           </div>
         </div>
