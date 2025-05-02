@@ -4,8 +4,9 @@ import DestinationCard from '@/components/DestinationCard';
 import MobileSwipeCard from '@/components/MobileSwipeCard';
 import { Destination } from '@/types';
 import { fetchRandomDestinations, mapApiToDestination } from '@/services/destinationService';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
-const RENDER_WINDOW_SIZE = 3; // How many cards to render at once
+const RENDER_WINDOW_SIZE = 3;
 
 type DestinationRatingStepProps = {
   destinations?: Destination[];
@@ -24,9 +25,10 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
 
   const [errorLoading, setErrorLoading] = useState<string | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [showSwipeHints, setShowSwipeHints] = useState(true); // State for temporary swipe hints
-  const [shouldRenderHints, setShouldRenderHints] = useState(true); // State to control DOM presence for transition
-  const [showDesktopNudge, setShowDesktopNudge] = useState(false); // State for desktop nudge
+  const [showSwipeHints, setShowSwipeHints] = useState(true);
+  const [shouldRenderHints, setShouldRenderHints] = useState(true);
+  const [showDesktopNudge, setShowDesktopNudge] = useState(false);
+  const [lastSwipeFeedback, setLastSwipeFeedback] = useState<'like' | 'dislike' | null>(null);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -107,6 +109,19 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
     };
   }, [isMobile, initialLoading]); // Depend on mobile status and loading status
 
+  // Effect to clear swipe feedback after a delay
+  useEffect(() => {
+    let feedbackTimer: NodeJS.Timeout | null = null;
+    if (lastSwipeFeedback) {
+      feedbackTimer = setTimeout(() => {
+        setLastSwipeFeedback(null);
+      }, 1500); // Show feedback for 1.5 seconds
+    }
+    return () => {
+      if (feedbackTimer) clearTimeout(feedbackTimer);
+    };
+  }, [lastSwipeFeedback]);
+
   // Use useCallback to stabilize the function reference for TinderCard props
   const handleCardLeftScreen = useCallback((removedDestinationId: string) => {
     setRenderableDestinations((prevRenderable) => {
@@ -128,6 +143,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   const swiped = (direction: string, destinationId: string) => {
     const rating = direction === 'right' ? 'like' : 'dislike';
     onRatingChange(destinationId, rating);
+    setLastSwipeFeedback(rating); // Set feedback state
   };
 
   if (initialLoading) {
@@ -204,6 +220,25 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
                 <span className="text-sm font-semibold">Like</span>
               </div>
             </>
+          )}
+
+          {/* Swipe Feedback Visual */}
+          {lastSwipeFeedback && (
+            <div className={`absolute inset-0 z-40 flex items-center pointer-events-none transition-opacity duration-300 ease-in-out ${lastSwipeFeedback === 'like' ? 'justify-end pr-2' : 'justify-start pl-0'}`}>
+              <div
+                className={`px-4 py-3 rounded-sm text-gray-800 font-bold text-base shadow-lg flex items-center justify-center gap-2 bg-white opacity-90`}
+              >
+                {lastSwipeFeedback === 'like' ? (
+                  <>
+                    <ThumbsUp className="h-6 w-6" /> Liked
+                  </>
+                ) : (
+                  <>
+                    <ThumbsDown className="h-6 w-6  " /> Disliked
+                  </>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Renderable Destination Cards */}

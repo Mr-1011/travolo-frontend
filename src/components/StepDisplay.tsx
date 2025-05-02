@@ -29,7 +29,6 @@ type StepDisplayProps = {
     handlePhotoChange: (photos: { url: string; caption: string }[]) => void;
     handlePhotoAnalysisUpdate: (analysis: { imageCount: number; adjustmentSuccessful: boolean }) => void;
     handlePhotoUploaded: () => void;
-    handleUserMessageSent: () => void;
     handleThemeToggle: (theme: string) => void;
   };
   isCurrentStepValid: boolean;
