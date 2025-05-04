@@ -33,7 +33,7 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
         setShowNudge(false);
       }, 15000);
       return () => clearTimeout(nudgeTimer);
-    }, 200);
+    }, 2000);
 
     // Cleanup loading timer on component unmount
     return () => clearTimeout(loadingTimer);
