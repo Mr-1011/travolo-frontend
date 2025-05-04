@@ -149,7 +149,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   if (initialLoading) {
     return (
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
+        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
         <p className="text-gray-600 mb-6">Finding some destinations for you...</p>
 
         <div className="flex flex-col items-center justify-center py-12">
@@ -175,8 +175,8 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   if (!isMobile) {
     return (
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
-        <p className="text-gray-600 mb-6">This will help us understand what you like and dislike.</p>
+        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <p className="text-gray-600 mb-6">This will help us understand what you like.</p>
         <div className="space-y-6">
           {allDestinations.map((destination, index) => {
             return (
@@ -197,8 +197,8 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   return (
     <div className="w-full">
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Random Destinations</h2>
-        <p className="text-gray-600 mb-6">This will help us understand what you like and dislike.</p>
+        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <p className="text-gray-600 mb-6">This will help us understand what you like.</p>
       </div>
       <div className="flex flex-col items-center justify-center ml-2">
         <div className="relative w-full max-w-sm h-[600px]">

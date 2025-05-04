@@ -27,7 +27,7 @@ const TravelMonthsStep: React.FC<TravelMonthsStepProps> = ({
     <div className="w-full h-full flex flex-col">
 
       <div>
-        <h2 className="text-2xl font-bold mb-1">Select Your Preferred Travel Months</h2>
+        <h2 className="text-2xl font-bold mb-1">Select Your Travel Months</h2>
         <p className="text-gray-600 mb-6">When would you like to travel? Select all months that work for you.</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {months.map((month) => {
