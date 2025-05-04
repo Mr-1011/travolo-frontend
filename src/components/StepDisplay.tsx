@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { QuestionStep, UserPreferences, Destination } from '@/types';
 import { ProgressIndicator } from '@/components/ProgressIndicator';
 import QuestionNavigation from '@/components/QuestionNavigation';
@@ -51,6 +51,11 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
   onNavigateToStep,
 }) => {
   const currentIndex = questionSteps.findIndex(step => step.id === currentStep);
+
+  // Scroll to top when currentStep changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStep]);
 
   const renderStepContent = () => {
     switch (currentStep) {
