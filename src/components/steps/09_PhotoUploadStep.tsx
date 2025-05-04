@@ -168,9 +168,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
       <div
         className={`relative border-2 border-dashed rounded-lg p-4 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'
           }`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
+        onDragOver={!isAnalysisComplete ? handleDragOver : undefined}
+        onDragLeave={!isAnalysisComplete ? handleDragLeave : undefined}
+        onDrop={!isAnalysisComplete ? handleDrop : undefined}
       >
         {/* Hidden File Input */}
         <input
@@ -180,7 +180,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
           id="photo-upload"
           className="hidden"
           onChange={handleFileInput}
-          disabled={isUploading || photos.length >= 3}
+          disabled={isUploading || photos.length >= 3 || isAnalysisComplete}
         />
 
         {/* Loading Overlay */}
@@ -205,10 +205,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
         ) : (
           // State with Uploaded Photos
           <div>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-8">
               <h4 className="font-medium text-left">Uploaded Photos ({photos.length}/3):</h4>
-              {photos.length < 3 && (
-                <Button asChild variant="outline" className="absolute top-4 right-4 ">
+              {photos.length < 3 && !isAnalysisComplete && (
+                <Button asChild variant="outline" className="absolute top-4 right-4">
                   <label htmlFor="photo-upload" className="cursor-pointer">
                     Add more
                   </label>
@@ -234,16 +234,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
                   </button>
                 </div>
               ))}
-              {/* Optional: Placeholder for adding more via drag/drop directly */}
-              {photos.length < 3 && (
-                <label
-                  htmlFor="photo-upload"
-                  className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg aspect-square text-gray-400 hover:border-gray-400 hover:text-gray-500 cursor-pointer"
-                >
-                  <Upload size={24} />
-                  <span className="text-xs mt-1 text-center">Add more</span>
-                </label>
-              )}
+
             </div>
           </div>
         )}
