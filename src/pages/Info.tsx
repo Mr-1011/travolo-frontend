@@ -28,6 +28,46 @@ const Info = () => {
 
         <div className="flex flex-col gap-4">
           <div>
+            <h2 className="text-2xl font-bold mb-2" id="most-important-note">
+              Most Important Note
+            </h2>
+            <p className="mt-2">
+              We do <strong>not</strong> collect names, emails, IP addresses, or any personally identifying details. Your data is used <strong>only for this academic research</strong> and will be deleted after the project ends. The app, algorithm, and destination database will become open source, but <strong>no user data will ever be shared or included</strong>.
+            </p>
+            <p className="mt-2">
+              However, to evaluate how recommendation quality changes with input, we do temporarily store the preferences you submit, such as your travel interests, ideal temperature range, preferred regions, travel budget, and optional photo-based preferences. We also store your selected travel duration, months, and destination likes/dislikes.
+            </p>
+            <p className="mt-2">
+              Here is an example of the kind of data we store:
+            </p>
+            <pre className="bg-gray-100 text-sm p-4 rounded overflow-auto mt-2">
+              {`{
+  "culture": 5,
+  "adventure": 5,
+  "nature": 5,
+  "beaches": 2,
+  "nightlife": 1,
+  ...
+  "originLocation": {
+    "name": "München, Bayern, Deutschland",
+    "lat": 48.1371079,
+    "lon": 11.5753822
+  },
+  ...
+  "photoAnalysis": {
+    "imageCount": 1,
+    "imageSummary": "...",
+    "imageAnalysis": {
+      "adventure": 2,
+      "nature": 3,
+      ...
+    }
+  }
+}`}
+            </pre>
+          </div>
+
+          <div>
             <h2 className="text-2xl font-bold mb-2" id="introduction">1. Introduction to Travolo and Research Motivation</h2>
             <p>
               Travolo is a user-friendly, browser-based travel recommender system designed to balance personalization and privacy. Instead of demanding all your data upfront, it guides you through a step-by-step input flow where you choose how much to share. At any point, Travolo can generate personalized travel suggestions based on the information you've given so far. It never forces you to provide data you're uncomfortable with. The app is part of an academic research project studying the trade-off between recommendation accuracy and user data disclosure. The goal is to show that high-quality travel recommendations are possible without compromising user privacy.

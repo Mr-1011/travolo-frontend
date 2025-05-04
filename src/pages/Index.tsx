@@ -24,7 +24,9 @@ const Index = () => {
           <div className="mb-8 text-left">
             <p className="text-xl mb-4">My Name is <span className="font-bold">Furkan Imamoglu</span> and this is my Master Thesis Project</p>
             <p className="text-gray-600 mb-6">
-              I am evaluating the tradeoff between accuracy and privacy in hybrid travel recommender systems. You will see 9 individual steps that I will go through to build this application. You decide when to stop and see the recommendations.
+              Travolo recommends travel destinations based on your preferences while exploring the tradeoff between privacy and accuracy.
+              You'll see up to 9 steps each one helps improve your results. However, you decide how much you want to share and when to stop.
+              Let's find your next destination!
             </p>
           </div>
           <AnimatedProgressSteps />
