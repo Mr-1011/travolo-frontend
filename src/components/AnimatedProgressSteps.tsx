@@ -44,7 +44,7 @@ const AnimatedProgressSteps: React.FC = () => {
             <div
               key={index}
               className={`
-                w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 
+                w-20 h-20 lg:w-20 lg:h-20
                 flex items-center justify-center 
                 border rounded-md bg-white 
                 transition-all duration-500 ease-in-out
@@ -55,7 +55,7 @@ const AnimatedProgressSteps: React.FC = () => {
                 src={icon}
                 alt={`Step ${index + 1}`}
                 className={`
-                  w-10 h-10 md:w-12 md:h-12 lg:w-20 lg:h-20 
+                  w-10 h-10 lg:w-12 lg:h-12 
                   transition-all duration-500 ease-in-out
                   ${isCurrentlyActiveStep ? '' : 'filter grayscale'} 
                 `}

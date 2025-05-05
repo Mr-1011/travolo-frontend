@@ -21,7 +21,7 @@ const Index = () => {
         <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto py-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-travel-blue mb-12">Welcome to Travolo</h1>
 
-          <div className="mb-8 text-left">
+          <div className="mb-4 text-left">
             <p className="text-xl mb-4">My Name is <span className="font-bold">Furkan Imamoglu</span> and this is my Master Thesis Project</p>
             <p className="text-gray-600 mb-6">
               Travolo recommends travel destinations based on your preferences while exploring the tradeoff between privacy and accuracy.
