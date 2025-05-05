@@ -35,7 +35,7 @@ const AnimatedProgressSteps: React.FC = () => {
   return (
     <div className="flex flex-col items-center p-6 border border-gray-400 rounded-lg">
       {/* Step Boxes */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-4">
         {icons.map((icon, index) => {
           // A step is active if its index is less than or equal to the current activeStep index
           const isCurrentlyActiveStep = index <= activeStep;
@@ -64,21 +64,6 @@ const AnimatedProgressSteps: React.FC = () => {
           );
         })}
       </div>
-
-      {/* Get Recommendations Indicator */}
-      <div
-        className={`
-          px-6 py-3 
-          font-semibold text-center
-          rounded-lg shadow-md 
-          transition-colors duration-300 ease-in-out
-          w-full max-w-xs md:max-w-sm lg:max-w-md 
-          ${activeStep === targetStepIndex ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} 
-        `}
-      >
-        Get Recommendations
-      </div>
-
     </div>
   );
 };
