@@ -21,7 +21,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   const icons = steps.map((_, index) => `/icons/step-${index + 1}.png`);
 
   return (
-    <div className="mb-4 sm:mb-8">
+    <div className="mb-6 sm:mb-8">
       <div className="block sm:hidden">
         <div className="relative w-full mt-2 mb-4">
           {/* Progress Bar Line */}

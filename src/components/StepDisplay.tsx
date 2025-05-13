@@ -162,7 +162,7 @@ const StepDisplay: React.FC<StepDisplayProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-white rounded-xl shadow-md pb-10">
-      <div className="px-6 sm:px-6 py-2 sm:py-6 flex-1 overflow-y-auto min-h-[92vh]">
+      <div className="px-6 sm:px-6 py-4 sm:py-6 flex-1 overflow-y-auto min-h-[92vh]">
         <ProgressIndicator
           currentStep={currentStep}
           steps={questionSteps}
