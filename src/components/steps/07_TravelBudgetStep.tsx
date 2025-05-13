@@ -41,7 +41,7 @@ const TravelBudgetStep: React.FC<TravelBudgetStepProps> = ({
   return (
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-1">Set Your Travel Budget</h2>
-      <p className="text-gray-600 mb-6">What kind of budget are you planning for this trip?</p>
+      <p className="text-gray-600 mb-6">What budget do you have in mind?</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {budgetOptions.map((option) => (
           <div

@@ -133,23 +133,23 @@ const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
+          <DialogTitle className="text-2xl font-bold flex items-center">
             {destination.city}, {destination.country}
             {confidence !== undefined && (
               <span className="ml-5 bg-[#3c83f6] text-white rounded-full px-3 py-1 text-base font-medium align-middle">
-                {confidence}% match
+                {confidence}%
               </span>
             )}
           </DialogTitle>
         </DialogHeader>
 
         {/* Scrollable Content Area */}
-        <div className="flex-grow overflow-y-auto pr-2 pl-1 space-y-6 py-4">
+        <div className="flex-grow overflow-y-auto pr-2 pl-1 space-y-6 py-1">
           {/* Image Section - Add transition and conditional height */}
           <div className={`
             w-full relative overflow-hidden rounded-lg bg-gray-200
             transition-all duration-300 ease-in-out
-            ${isImageZoomed ? 'h-[90vh]' : 'h-64 md:h-80'}
+            ${isImageZoomed ? 'h-[60vh]' : 'h-64 md:h-80'}
           `}>
             {/* Image Loading Placeholder */}
             {imageLoading && (

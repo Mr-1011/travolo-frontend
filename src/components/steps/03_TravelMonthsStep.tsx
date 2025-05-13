@@ -28,7 +28,7 @@ const TravelMonthsStep: React.FC<TravelMonthsStepProps> = ({
 
       <div>
         <h2 className="text-2xl font-bold mb-1">Select Your Travel Months</h2>
-        <p className="text-gray-600 mb-6">When would you like to travel? Select all months that work for you.</p>
+        <p className="text-gray-600 mb-6">Which months work for you?</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {months.map((month) => {
             const isSelected = selectedMonths.includes(month);

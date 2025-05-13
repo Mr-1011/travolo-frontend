@@ -159,11 +159,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-1">Upload Photos from a Past Trip</h2>
+      <h2 className="text-2xl font-bold mb-1">Upload a Travel Photo</h2>
       <p className="text-gray-600 mb-6">
-        We will analyze your photos with a image analysis model to understand what you like.
+        We'll analyze your photo to learn what you enjoy when traveling
         <br />
-        <span className="text-sm text-gray-500">(The image are not stored)</span>
+        <span className="text-sm text-gray-500">(The photo is processed but never stored)</span>
       </p>
       <div
         className={`relative border-2 border-dashed rounded-lg p-4 text-center ${isDragging ? 'border-[#3c83f6] bg-[#3c83f6]/5' : 'border-gray-300'

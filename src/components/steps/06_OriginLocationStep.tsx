@@ -96,9 +96,7 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
   return (
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-1">Set Your Origin Location</h2>
-      <p className="text-gray-600 mb-6">
-        Lets us know where you're travelling from to help us refine recommendations.
-      </p>
+      <p className="text-gray-600 mb-6">Where are you starting your trip?</p>
 
       {/* Modified flex container for responsiveness */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-2 space-y-2 sm:space-y-0">
