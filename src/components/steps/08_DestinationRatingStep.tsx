@@ -175,7 +175,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   if (!isMobile) {
     return (
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <h2 className="text-2xl font-bold mb-1">Rate These Destinations</h2>
         <p className="text-gray-600 mb-6">This will help us understand what you like</p>
         <div className="space-y-6">
           {allDestinations.map((destination, index) => {
@@ -197,7 +197,7 @@ const DestinationRatingStep: React.FC<DestinationRatingStepProps> = ({
   return (
     <div className="w-full">
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-2">Rate These Destinations</h2>
+        <h2 className="text-2xl font-bold mb-1">Rate These Destinations</h2>
         <p className="text-gray-600 mb-6">This will help us understand what you like.</p>
       </div>
       <div className="flex flex-col items-center justify-center ml-2">

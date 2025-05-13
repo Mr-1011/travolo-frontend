@@ -99,7 +99,7 @@ const OriginLocationStep: React.FC<OriginLocationStepProps> = ({
       <p className="text-gray-600 mb-6">Where are you starting your trip?</p>
 
       {/* Modified flex container for responsiveness */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-2 space-y-2 sm:space-y-0">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-2 space-y-4 sm:space-y-0">
         <div className="flex-grow relative">
           <Input
             type="text"

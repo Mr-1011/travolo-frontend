@@ -17,7 +17,7 @@ export const RegionIcon: React.FC<RegionIconProps> = ({ regionId, isSelected }) 
         return (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20.335 38.847"
+            viewBox="0 0 35 38.847"
             className="w-full h-full"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -35,7 +35,7 @@ export const RegionIcon: React.FC<RegionIconProps> = ({ regionId, isSelected }) 
         return (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20.335 38.847"
+            viewBox="0 0 40 38.847"
             className="w-full h-full"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -63,7 +63,7 @@ export const RegionIcon: React.FC<RegionIconProps> = ({ regionId, isSelected }) 
         return (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20.335 38.847"
+            viewBox="0 0 50 38.847"
             className="w-full h-full"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -118,7 +118,7 @@ export const RegionIcon: React.FC<RegionIconProps> = ({ regionId, isSelected }) 
         return (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20.335 38.847"
+            viewBox="0 0 15 38.847"
             className="w-full h-full"
             preserveAspectRatio="xMidYMid meet"
           >
