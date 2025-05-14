@@ -47,7 +47,7 @@ const PreferredRegionStep: React.FC<PreferredRegionStepProps> = ({
       <p className="text-gray-600 mb-6">Which areas of the world are you open to?</p>
 
       <Tabs defaultValue="map" className="w-full">
-        <TabsList className="w-full mb-6 grid grid-cols-2">
+        <TabsList className="w-full mb-4 grid grid-cols-2">
           <TabsTrigger value="map">Map</TabsTrigger>
           <TabsTrigger value="list">List</TabsTrigger>
         </TabsList>

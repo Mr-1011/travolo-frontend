@@ -17,7 +17,10 @@ const MobileIndex = () => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 min-h-screen">
       <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
-        <img src="/images/travolo.png" alt="Header" className="w-32 object-cover mt-14 mb-20" />
+        <img src="/images/travolo.png" alt="Header"
+          loading="lazy"
+          draggable="false"
+          className="w-32 object-cover mt-14 mb-20" />
         <h1 className="text-4xl md:text-5xl font-bold text-travel-blue mb-4">Welcome to Travolo</h1>
 
         <div className="mb-4 text-left">
