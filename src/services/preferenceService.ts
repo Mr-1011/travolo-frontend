@@ -57,8 +57,6 @@ export const analyzeImagePreferences = async (
       const errorMsg = responseData?.error || `API error: ${response.status}`;
       throw new Error(errorMsg);
     }
-
-    console.log('Image analysis successful:', responseData);
     // Expecting { message, analysis: { imageAnalysis, imageSummary } }
     if (!responseData.analysis || !responseData.analysis.imageAnalysis || typeof responseData.analysis.imageSummary !== 'string') {
       console.error('Invalid response structure from backend:', responseData);

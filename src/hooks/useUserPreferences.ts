@@ -216,7 +216,6 @@ export function useUserPreferences() {
 
         // If we processed an analysisResult, consider the adjustment successful
         adjustmentSuccessful = true;
-        console.log('Applied photo analysis deltas:', imageAnalysis);
       } else {
         // If analysisResult is null (e.g., API error), ensure adjustment is marked as false
         adjustmentSuccessful = false;
@@ -247,7 +246,6 @@ export function useUserPreferences() {
         imageCount: (prev.photoAnalysis?.imageCount || 0) + 1
       }
     }));
-    console.log('Photo count incremented.');
   };
 
   // Kept for compatibility or potential future use, logs a warning
@@ -267,7 +265,6 @@ export function useUserPreferences() {
   };
 
   const handleGetRecommendations = async (onComplete?: (recommendations: Recommendation[], recommendationRecordId: string | null) => void) => {
-    console.log('Get Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
     setIsLoadingRecommendations(true);
     setRecommendationError(null); // Clear previous errors
     setRecommendations([]); // Clear previous recommendations immediately
@@ -321,7 +318,6 @@ export function useUserPreferences() {
   };
 
   const handleRegenerateRecommendations = (onComplete?: (recommendations: Recommendation[], recommendationRecordId: string | null) => void) => {
-    console.log('Regenerate Recommendations called - User Preferences:', JSON.stringify(preferences, null, 2));
     // Re-use the handleGetRecommendations logic for regeneration
     // Pass the onComplete callback along
     handleGetRecommendations(onComplete);
@@ -384,8 +380,6 @@ export function useUserPreferences() {
     setIsLoadingRecommendations(false);
     setRecommendationError(null);
 
-    // Log the reset
-    console.log('All preferences and related storage reset to default values (excluding messages).');
   };
 
   return {

@@ -50,7 +50,6 @@ type FetchRecommendationsResult = {
  * @throws {Error} - Throws an error if the API call fails.
  */
 export const fetchRecommendations = async (userPreferences: UserPreferences): Promise<FetchRecommendationsResult> => {
-  console.log("Sending user preferences to backend:", userPreferences);
   try {
     // Construct the URL using the base URL
     const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
@@ -111,7 +110,6 @@ export const submitRecommendationFeedback = async (
   destinationId: string,
   feedback: 'like' | 'dislike'
 ): Promise<void> => {
-  console.log(`Submitting feedback for recommendation ${recommendationId}, destination ${destinationId}: ${feedback}`);
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations/${recommendationId}/feedback`, {
       method: 'POST',
@@ -131,10 +129,7 @@ export const submitRecommendationFeedback = async (
       }
       throw new Error(errorMsg);
     }
-
-    const responseData = await response.json(); // Assuming the backend sends back a confirmation message
-    console.log('Feedback submission successful:', responseData);
-
+    const responseData = await response.json();
   } catch (error) {
     console.error('Error submitting recommendation feedback:', error);
     if (error instanceof Error) {

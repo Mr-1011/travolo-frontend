@@ -63,9 +63,7 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
       }
 
       try {
-        console.log(`Calling submitRecommendationFeedback with ID: ${recommendationRecordId}, Dest: ${destinationId}, Rating: ${finalRating}`);
         await submitRecommendationFeedback(recommendationRecordId, destinationId, finalRating);
-        console.log(`Feedback submitted for ${destinationId}: ${finalRating}`);
       } catch (error) {
         console.error(`Failed to submit feedback for ${destinationId}:`, error);
         // Optional: Revert UI state or show error message to user
@@ -78,11 +76,6 @@ const RecommendationsView: React.FC<RecommendationsViewProps> = ({
       }
     } else {
       // Optional: If clearing a rating needs an API call (e.g., update feedback to null),
-      // you would add that logic here.
-      // For now, we just log the clearing action based on the current API design.
-      console.log(`Rating cleared for ${destinationId}. No feedback sent.`);
-      // If the backend *requires* an update even for clearing, you might call:
-      // await submitRecommendationFeedback(recommendationRecordId, destinationId, 'neutral'); // Or whatever the backend expects
     }
   };
 

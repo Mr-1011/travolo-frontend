@@ -39,9 +39,7 @@ const PreferencesPage = () => {
     const loadDestinations = async () => {
       if (currentStep === 'rate-destinations') {
         try {
-          console.log('Fetching destinations for rating step');
           const destinations = await fetchDestinations();
-          console.log('Fetched destinations:', destinations);
           setRatingDestinations(destinations);
         } catch (error) {
           console.error('Error fetching destinations:', error);
@@ -63,7 +61,6 @@ const PreferencesPage = () => {
     if (currentIndex < questionSteps.length - 1) {
       setCurrentStep(questionSteps[currentIndex + 1].id);
     } else {
-      console.log("Last step reached, calling handleGetRecommendations with navigation callback");
       handlers.handleGetRecommendations((newRecommendations, fetchedRecordId) => {
         navigate('/results', { state: { recommendations: newRecommendations, recommendationRecordId: fetchedRecordId } });
       });
@@ -79,7 +76,6 @@ const PreferencesPage = () => {
 
   // Modified to call handler with navigation callback
   const handleGetRecommendations = () => {
-    console.log("handleGetRecommendations called with navigation callback");
     handlers.handleGetRecommendations((newRecommendations, fetchedRecordId) => {
       navigate('/results', { state: { recommendations: newRecommendations, recommendationRecordId: fetchedRecordId } });
     });
