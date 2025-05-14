@@ -130,7 +130,6 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({ onAnalysisComplete, o
         filesToUpload,
         currentThemePreferences
       );
-      console.log('Backend Analysis Result:', analysisResult);
 
       // Call the callback prop with the analysis summary and result object
       onAnalysisComplete({
