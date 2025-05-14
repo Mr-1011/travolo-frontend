@@ -16,7 +16,8 @@ const MobileIndex = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-md p-6 min-h-screen">
-      <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto pb-12">
+      <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
+        <img src="/images/travolo.png" alt="Header" className="w-32 object-cover mt-20 mb-24" />
         <h1 className="text-4xl md:text-5xl font-bold text-travel-blue mb-4">Welcome to Travolo</h1>
 
         <div className="mb-4 text-left">
@@ -25,7 +26,7 @@ const MobileIndex = () => {
             Travolo learns your preferences in up to 9 quick steps. The more you share, the better the recommendations. You decide how much to share and when to stop.
           </p>
         </div>
-        <AnimatedProgressSteps />
+
       </div>
 
       <div className="text-center gap-4 flex justify-center">

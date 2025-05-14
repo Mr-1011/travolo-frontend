@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import AnimatedProgressSteps from '@/components/AnimatedProgressSteps';
 
 const DesktopIndex = () => {
   const navigate = useNavigate();
@@ -49,7 +48,7 @@ const DesktopIndex = () => {
 
         {/* Right Side: AnimatedProgressSteps */}
         <div className="w-1/2 flex items-center justify-center">
-          <AnimatedProgressSteps />
+          <img src="/images/travolo.png" alt="Header" className="w-64 object-cover" />
         </div>
       </div>
     </div>
