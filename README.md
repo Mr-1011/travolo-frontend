@@ -6,7 +6,9 @@ Travolo is an intelligent travel recommendation platform that combines the power
 
 Whether you're a culture enthusiast seeking historical treasures, an adventure seeker craving adrenaline-pumping activities, or someone looking for peaceful seclusion, Travolo helps you discover destinations that align perfectly with your interests, budget, and travel constraints.
 
----
+
+
+
 
 ## 🎯 How It Works
 
@@ -15,65 +17,47 @@ Travolo guides you through a comprehensive yet user-friendly questionnaire desig
 ### Step 1: Travel Themes
 **What experiences are you looking for?**
 
-Select from nine distinct travel themes that define your ideal vacation style. Choose multiple themes that resonate with you:
-- **Culture**: Immerse yourself in rich history, traditions, and cultural heritage
-- **Adventure**: Seek adrenaline-fueled activities and thrilling experiences
-- **Nature**: Connect with the natural world and stunning landscapes
-- **Beaches**: Relax on pristine shores with sun, sand, and sea
-- **Nightlife**: Experience vibrant bars, clubs, and after-dark entertainment
-- **Cuisine**: Savor authentic local flavors and culinary adventures
-- **Wellness**: Focus on health, spa treatments, and rejuvenation
-- **Urban**: Embrace the energy of bustling cities and modern attractions
-- **Seclusion**: Find peace and tranquility away from crowds
+![step_1](https://github.com/user-attachments/assets/d9aa533a-5ba7-48a5-bbf0-47b2e43e1250)
 
 ### Step 2: Weather Preferences
 **What's your ideal temperature?**
 
-Use our interactive slider to set your preferred temperature range (°C). Whether you love tropical warmth or cooler climates, we'll match you with destinations that offer your ideal weather conditions.
+![step_2](https://github.com/user-attachments/assets/9142ecd0-2b0f-486e-afb0-9a33afaa82f5)
 
 ### Step 3: Travel Months
 **When do you want to travel?**
 
-Select the months that work best for your schedule. Our system considers seasonal variations, weather patterns, and local events to recommend the perfect timing for each destination.
+![step_3](https://github.com/user-attachments/assets/afd01a24-6530-4cb9-862f-9fafd5b1fcff)
 
 ### Step 4: Trip Duration
 **How long do you want to travel?**
 
-Choose from flexible duration options:
-- **Day trip** (1 day): Perfect for nearby escapes
-- **Weekend** (2–3 days): Quick getaways and city breaks
-- **Short trip** (4–6 days): Focused exploration of key highlights
-- **One week** (7–9 days): Comprehensive destination experience
-- **Long trip** (10+ days): Extended adventures and deep immersion
+![step_4](https://github.com/user-attachments/assets/57b92330-5b2a-472d-93f5-ec2481398f85)
 
 ### Step 5: Preferred Regions
 **Where in the world do you want to go?**
 
-Select from major geographical regions using our interactive world map:
-- Europe, Asia, North America, South America, Africa, Middle East, or choose "Anywhere" for global recommendations.
+![step_5](https://github.com/user-attachments/assets/3b5cb48b-86f9-469a-8d18-90e2fd1e3476)
 
 ### Step 6: Origin Location
 **Where are you traveling from?**
 
-Enter your departure city to help us calculate travel distances, flight connections, and provide more accurate recommendations based on your location.
+![step_6](https://github.com/user-attachments/assets/1e2e752b-2f54-457d-ad58-ad9a9f3b384b)
 
 ### Step 7: Travel Budget
 **What's your budget range?**
 
-Choose the budget level that fits your travel style:
-- **Budget**: Hostels, public transport, local eateries
-- **Mid-range**: 3-star hotels, restaurants, comfortable transportation
-- **Luxury**: High-end accommodations, fine dining, premium experiences
+![step_7](https://github.com/user-attachments/assets/2aa503a7-52ba-46ae-b2f7-21e159c5eed3)
 
 ### Step 8: Destination Rating
 **Help us learn your preferences**
 
-Rate up to 10 randomly selected destinations using our intuitive swipe interface (mobile) or like/dislike buttons (desktop). This helps our AI understand your preferences and improve recommendation accuracy.
+![step_8](https://github.com/user-attachments/assets/381a707b-ad86-47e7-8cf8-b88eb6447dd8)
 
 ### Step 9: Photo Upload
 **Show us what you love**
 
-Upload up to 3 photos from your favorite travel experiences. Our AI analyzes the visual elements to understand your aesthetic preferences and refine recommendations accordingly. Photos are processed but never stored, ensuring your privacy.
+![step_9](https://github.com/user-attachments/assets/a38808f2-776b-4ef8-87c6-7c782c82d750)
 
 ---
 
@@ -114,8 +98,7 @@ Create a `.env` (or `.env.local`) in the project root with the following keys:
 VITE_OPENCAGE_API_KEY=
 VITE_API_BASE_URL_DEV=http://localhost:3001
 VITE_API_BASE_URL_PROD=
-VITE_APP_ENV=development
-
+VITE_APP_ENV=development=
 ```
 
 ---
