@@ -1,27 +1,91 @@
 # Travolo
 
-A progressive web application that guides users through a rich, interactive questionnaire and then generates personalised travel destination recommendations.
+**Discover Your Perfect Travel Destination**
+
+Travolo is an intelligent travel recommendation platform that combines the power of AI with user preferences to create personalized travel experiences. Through an intuitive 9-step questionnaire, we gather your travel preferences, analyze your choices, and deliver tailored destination recommendations that match your unique travel style.
+
+Whether you're a culture enthusiast seeking historical treasures, an adventure seeker craving adrenaline-pumping activities, or someone looking for peaceful seclusion, Travolo helps you discover destinations that align perfectly with your interests, budget, and travel constraints.
 
 ---
 
-- **Structured Preference Collection** – Nine clearly defined steps gather all relevant travel criteria:
-1. **Travel Themes**: Select interests from options like Culture, Adventure, Nature, Beaches, Nightlife, Cuisine, Wellness, Urban, and Seclusion.
-2. **Weather Preference**: Select a preferred temperature range (in Celsius) using a slider. Min -10 to Max 40.
-3. **Travel Months**: Select ideal time periods for travel. Select Months in a year.
-4. **Trip Duration**: Specify length of stay: Day trip (1 day), Weekend (2–3 days), Short trip (4–6 days), One week (7–9 days), Long trip (10+ days)
-5. **Preferred Regions**: Select geographic areas of interest: Europe, Asia, North America, South America, Africa, Middle East, Anywhere.
-6. **Origin Location**: Specify your starting location 
-7. **Budget**: Indicate spending capacity by selecting from options like Budget, Mid-range, or Luxury.
-8. **Destination Ratings**: Rate up to 10 random destinations (like/dislike) using a card-swiping interface to refine recommendations.
-9. **Photo Upload**: Optionally upload up to 3 photos from past trips for visual preference analysis
+## 🎯 How It Works
 
-- **Recommendation Engine** – Generates a ranked list of destinations accompanied by match percentages and key attributes (budget, ideal duration, seasonal temperatures).
+Travolo guides you through a comprehensive yet user-friendly questionnaire designed to understand your travel preferences in detail. Each step is carefully crafted to capture different aspects of your ideal travel experience.
 
-- **Detailed Destination View** – Modal with category ratings, temperature chart, budget guidance and feedback form.
+### Step 1: Travel Themes
+**What experiences are you looking for?**
 
-- **User Feedback Capture** – Like/dislike toggles and open-text comments are sent back to the API for continuous improvement.
+Select from nine distinct travel themes that define your ideal vacation style. Choose multiple themes that resonate with you:
+- **Culture**: Immerse yourself in rich history, traditions, and cultural heritage
+- **Adventure**: Seek adrenaline-fueled activities and thrilling experiences
+- **Nature**: Connect with the natural world and stunning landscapes
+- **Beaches**: Relax on pristine shores with sun, sand, and sea
+- **Nightlife**: Experience vibrant bars, clubs, and after-dark entertainment
+- **Cuisine**: Savor authentic local flavors and culinary adventures
+- **Wellness**: Focus on health, spa treatments, and rejuvenation
+- **Urban**: Embrace the energy of bustling cities and modern attractions
+- **Seclusion**: Find peace and tranquility away from crowds
 
-- **Responsive & Persistent** – Fully functional on mobile and desktop; current progress is saved to localStorage to survive page refreshes.
+### Step 2: Weather Preferences
+**What's your ideal temperature?**
+
+Use our interactive slider to set your preferred temperature range (°C). Whether you love tropical warmth or cooler climates, we'll match you with destinations that offer your ideal weather conditions.
+
+### Step 3: Travel Months
+**When do you want to travel?**
+
+Select the months that work best for your schedule. Our system considers seasonal variations, weather patterns, and local events to recommend the perfect timing for each destination.
+
+### Step 4: Trip Duration
+**How long do you want to travel?**
+
+Choose from flexible duration options:
+- **Day trip** (1 day): Perfect for nearby escapes
+- **Weekend** (2–3 days): Quick getaways and city breaks
+- **Short trip** (4–6 days): Focused exploration of key highlights
+- **One week** (7–9 days): Comprehensive destination experience
+- **Long trip** (10+ days): Extended adventures and deep immersion
+
+### Step 5: Preferred Regions
+**Where in the world do you want to go?**
+
+Select from major geographical regions using our interactive world map:
+- Europe, Asia, North America, South America, Africa, Middle East, or choose "Anywhere" for global recommendations.
+
+### Step 6: Origin Location
+**Where are you traveling from?**
+
+Enter your departure city to help us calculate travel distances, flight connections, and provide more accurate recommendations based on your location.
+
+### Step 7: Travel Budget
+**What's your budget range?**
+
+Choose the budget level that fits your travel style:
+- **Budget**: Hostels, public transport, local eateries
+- **Mid-range**: 3-star hotels, restaurants, comfortable transportation
+- **Luxury**: High-end accommodations, fine dining, premium experiences
+
+### Step 8: Destination Rating
+**Help us learn your preferences**
+
+Rate up to 10 randomly selected destinations using our intuitive swipe interface (mobile) or like/dislike buttons (desktop). This helps our AI understand your preferences and improve recommendation accuracy.
+
+### Step 9: Photo Upload
+**Show us what you love**
+
+Upload up to 3 photos from your favorite travel experiences. Our AI analyzes the visual elements to understand your aesthetic preferences and refine recommendations accordingly. Photos are processed but never stored, ensuring your privacy.
+
+---
+
+## ✨ Key Features
+
+- **AI-Powered Recommendations** – Advanced algorithms analyze your preferences to deliver highly personalized suggestions
+- **Smart Matching** – Each recommendation comes with a confidence score showing how well it matches your criteria
+- **Comprehensive Destination Data** – Detailed information including weather patterns, budget estimates, ideal duration, and category ratings
+- **Interactive Experience** – Swipe interface for mobile, responsive design for all devices
+- **Privacy-First** – Photos are analyzed but never stored; all data remains secure
+- **Progressive Enhancement** – Continue where you left off with automatic progress saving
+- **Real-time Feedback** – Rate destinations and provide feedback to improve future recommendations
 
 ---
 
@@ -42,39 +106,17 @@ A progressive web application that guides users through a rich, interactive ques
 
 ---
 
-## Project Structure
-
-```
-src/
- ├─ components/
- │   ├─ steps/            # One file per questionnaire step
- │   ├─ DestinationCard.tsx
- │   ├─ DestinationDetailModal.tsx
- │   ├─ WorldMap.tsx      # Interactive SVG map wrapper
- │   ├─ TemperatureChart.tsx
- │   └─ …
- │
- ├─ hooks/                # Custom React hooks (e.g. useUserPreferences)
- ├─ services/             # Thin API wrappers (destinationService, recommendationService …)
- ├─ pages/                # Route end-points (PreferencesPage, ResultsPage)
- └─ types/                # Shared TypeScript types
-```
-
----
-
 ## Environment Variables
 
 Create a `.env` (or `.env.local`) in the project root with the following keys:
 
 ```
-# Base URLs for the backend API
+VITE_OPENCAGE_API_KEY=
 VITE_API_BASE_URL_DEV=http://localhost:3001
-
-# Build mode – "production" picks the *_PROD* URL, anything else uses *_DEV*
+VITE_API_BASE_URL_PROD=
 VITE_APP_ENV=development
-```
 
-> The file is consumed inside `src/config/apiConfig.ts` – adjust if your backend runs elsewhere.
+```
 
 ---
 
@@ -86,25 +128,14 @@ $ git clone <repository-url>
 $ cd travolo-frontend
 $ npm install
 
-# 2. Start the dev server (http://localhost:5173 by default)
 $ npm run dev
 ```
 
 `vite` will pick up your `.env` file, reload on changes and open the browser automatically.
 
-### Available Scripts
-
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start Vite in development mode |
-| `npm run build` | Create an optimised production bundle in `dist/` |
-| `npm run build:dev` | Build using the *development* env (helpful for Netlify previews) |
-| `npm run preview` | Serve the _built_ bundle locally to verify integrity |
-| `npm run lint` | Run ESLint over the entire codebase |
-
 ---
 
-## API End-Points (quick reference)
+## API Endpoints (Quick Reference)
 
 The frontend expects a REST backend that implements:
 
@@ -115,8 +146,6 @@ The frontend expects a REST backend that implements:
 | `POST` | `/api/preferences/analyze-images` | Accepts uploaded photos & returns theme adjustments |
 | `POST` | `/api/recommendations` | Generates personalised recommendation list |
 | `POST` | `/api/recommendations/:id/feedback` | Like / dislike feedback after results |
-
-Feel free to stub or mock these routes while developing.
 
 ---
 
